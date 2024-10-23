@@ -1,0 +1,377 @@
+[gd_scene load_steps=22 format=3 uid="uid://pbtey7m812pp"]
+
+[ext_resource type="Script" path="res://scripts/menu_selector.gd" id="1_7rj1q"]
+[ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="2_63dwq"]
+[ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="3_15jvb"]
+[ext_resource type="FontFile" uid="uid://d24a2l3buuc71" path="res://assets/fonts/icomoon.ttf" id="3_nq85l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_peqht"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2g3mj"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6c18l"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_21jhi"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3glxx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_60xcc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_mhxll"]
+font_size = 14
+
+[sub_resource type="LabelSettings" id="LabelSettings_4hsn6"]
+line_spacing = 0.0
+font = ExtResource("3_nq85l")
+
+[sub_resource type="LabelSettings" id="LabelSettings_v3415"]
+font_size = 17
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_avl6x"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3y2y1"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4mht4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_3ugdl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vhgqv"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6n6o7"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_y82yb"]
+line_spacing = 0.0
+font = ExtResource("3_nq85l")
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_ausqt"]
+font_size = 20
+
+[node name="MenuSelector" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7rj1q")
+
+[node name="deselect_button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_peqht")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_2g3mj")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_6c18l")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_21jhi")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_3glxx")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_60xcc")
+disabled = true
+
+[node name="Menu" type="Control" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_left = -200.0
+grow_vertical = 2
+
+[node name="background" type="ColorRect" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_63dwq")
+color = Color(0.278431, 0.278431, 0.278431, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Container" type="Control" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="background" type="ColorRect" parent="Menu/VBoxContainer/Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_63dwq")
+color = Color(0.129412, 0.129412, 0.129412, 1)
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "   Menu"
+label_settings = SubResource("LabelSettings_mhxll")
+vertical_alignment = 1
+
+[node name="record_scene_button" type="Button" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 1
+theme = ExtResource("2_63dwq")
+
+[node name="container" type="HBoxContainer" parent="Menu/VBoxContainer/record_scene_button"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="icon" type="Label" parent="Menu/VBoxContainer/record_scene_button/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "    "
+label_settings = SubResource("LabelSettings_4hsn6")
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/record_scene_button/container"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "Record"
+label_settings = SubResource("LabelSettings_v3415")
+
+[node name="keyword_scene_button" type="Button" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 1
+theme = ExtResource("2_63dwq")
+
+[node name="container" type="HBoxContainer" parent="Menu/VBoxContainer/keyword_scene_button"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="icon" type="Label" parent="Menu/VBoxContainer/keyword_scene_button/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "    "
+label_settings = SubResource("LabelSettings_4hsn6")
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/keyword_scene_button/container"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "Keyword"
+label_settings = SubResource("LabelSettings_v3415")
+
+[node name="randomtune_scene_button" type="Button" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 1
+theme = ExtResource("2_63dwq")
+
+[node name="container" type="HBoxContainer" parent="Menu/VBoxContainer/randomtune_scene_button"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="icon" type="Label" parent="Menu/VBoxContainer/randomtune_scene_button/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "    "
+label_settings = SubResource("LabelSettings_4hsn6")
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/randomtune_scene_button/container"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "Random Tune"
+label_settings = SubResource("LabelSettings_v3415")
+
+[node name="settings_scene_button" type="Button" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 1
+theme = ExtResource("2_63dwq")
+
+[node name="container" type="HBoxContainer" parent="Menu/VBoxContainer/settings_scene_button"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="icon" type="Label" parent="Menu/VBoxContainer/settings_scene_button/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "    "
+label_settings = SubResource("LabelSettings_4hsn6")
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/settings_scene_button/container"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "Settings"
+label_settings = SubResource("LabelSettings_v3415")
+
+[node name="help_scene_button" type="Button" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 1
+theme = ExtResource("2_63dwq")
+
+[node name="container" type="HBoxContainer" parent="Menu/VBoxContainer/help_scene_button"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="icon" type="Label" parent="Menu/VBoxContainer/help_scene_button/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "    "
+label_settings = SubResource("LabelSettings_4hsn6")
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/help_scene_button/container"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "Help
+"
+label_settings = SubResource("LabelSettings_v3415")
+
+[node name="about_scene_button" type="Button" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 1
+theme = ExtResource("2_63dwq")
+
+[node name="container" type="HBoxContainer" parent="Menu/VBoxContainer/about_scene_button"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="icon" type="Label" parent="Menu/VBoxContainer/about_scene_button/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "    "
+label_settings = SubResource("LabelSettings_4hsn6")
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/about_scene_button/container"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "About"
+label_settings = SubResource("LabelSettings_v3415")
+
+[node name="Container" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="background" type="ColorRect" parent="Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_63dwq")
+color = Color(0.129412, 0.129412, 0.129412, 1)
+
+[node name="container" type="HBoxContainer" parent="Container"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="gap" type="Label" parent="Container/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = " "
+
+[node name="menu_button" type="Button" parent="Container/container"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_avl6x")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_3y2y1")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_4mht4")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_3ugdl")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_vhgqv")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_6n6o7")
+
+[node name="icon" type="Label" parent="Container/container/menu_button"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -15.5
+offset_right = 15.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_15jvb")
+text = ""
+label_settings = SubResource("LabelSettings_y82yb")
+
+[node name="label" type="Label" parent="Container/container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = " Menu"
+label_settings = SubResource("LabelSettings_ausqt")
+
+[connection signal="pressed" from="deselect_button" to="." method="_on_deselect_button_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/record_scene_button" to="." method="_on_record_scene_button_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/keyword_scene_button" to="." method="_on_keyword_scene_button_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/randomtune_scene_button" to="." method="_on_randomtune_scene_button_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/settings_scene_button" to="." method="_on_settings_scene_button_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/help_scene_button" to="." method="_on_help_scene_button_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/about_scene_button" to="." method="_on_about_scene_button_pressed"]
+[connection signal="pressed" from="Container/container/menu_button" to="." method="_on_menu_button_pressed"]
