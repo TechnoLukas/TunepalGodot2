@@ -1,2 +1,2 @@
 # TunepalGodot2
-Rework of TunepalGodot though with more modern design.
+Rework of Tunepal though with more modern design.
