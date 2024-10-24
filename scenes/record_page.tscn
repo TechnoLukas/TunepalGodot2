@@ -1,17 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://buov6vxoq7vj3"]
+[gd_scene load_steps=2 format=3 uid="uid://hm457dvpto61"]
 
-[ext_resource type="PackedScene" uid="uid://pbtey7m812pp" path="res://scenes/menu_selector.tscn" id="1_qg6oi"]
 [ext_resource type="Texture2D" uid="uid://c5aavi3u5tjx3" path="res://assets/images/tunepal.png" id="2_8s8ke"]
 
-[node name="Node2D" type="Control"]
+[node name="RecordPage" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
 
 [node name="background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -40,7 +37,3 @@ pivot_offset = Vector2(448, 448)
 size_flags_horizontal = 0
 size_flags_vertical = 0
 texture = ExtResource("2_8s8ke")
-
-[node name="MenuSelector" parent="." instance=ExtResource("1_qg6oi")]
-layout_mode = 1
-title = "Record"
