@@ -5,6 +5,21 @@ var stuff
 @onready var item = $BottomSection/SectionWithMargin/ScrollContainer/ListContainer/list_item
 @onready var search_line = $TopSection/SectionWithMargin/group/search_field/line_edit
 
+var accented_characters = {
+		r"\\'a": "á",
+		r"\\'A": "Á",
+		r"\\'e": "é",
+		r"\\'E": "É",
+		r"\\'i": "í",
+		r"\\'I": "Í",
+		r"\\'o": "ó",
+		r"\\'O": "Ó",
+		r"\\'u": "ú",
+		r"\\'U": "Ú",
+		r"\\'n": "ñ",
+		# Add other substitutions as needed
+	}
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	stuff = sqlite.query_result
@@ -21,11 +36,16 @@ func add_item(item, title):
 	item_list.add_child(new_item)
 	new_item.get_node("label").text=title
 	new_item.visible=true
-	#print(title)
+	print(title)
 
 func update_list(text):
 	for i in range(0, stuff.size()):
 		var title = stuff[i]["title"]
+		for character in accented_characters:
+			if character in title:
+				title=title.replace(character, accented_characters[character])
+		
+		print(title)
 		if search_line.text == "":
 			add_item(item, title)
 		else:
