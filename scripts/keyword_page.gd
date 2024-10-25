@@ -36,7 +36,7 @@ func add_item(item, title):
 	item_list.add_child(new_item)
 	new_item.get_node("label").text=title
 	new_item.visible=true
-	print(title)
+	#print(title)
 
 func update_list(text):
 	for i in range(0, stuff.size()):
