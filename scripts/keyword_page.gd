@@ -6,18 +6,46 @@ var stuff
 @onready var search_line = $TopSection/SectionWithMargin/group/search_field/line_edit
 
 var accented_characters = {
-		r"\\'a": "á",
-		r"\\'A": "Á",
-		r"\\'e": "é",
-		r"\\'E": "É",
-		r"\\'i": "í",
-		r"\\'I": "Í",
-		r"\\'o": "ó",
-		r"\\'O": "Ó",
-		r"\\'u": "ú",
-		r"\\'U": "Ú",
-		r"\\'n": "ñ",
-		# Add other substitutions as needed
+		# Acute accents
+		r"\\'a": "á", r"\\'A": "Á",
+		r"\\'e": "é", r"\\'E": "É",
+		r"\\'i": "í", r"\\'I": "Í",
+		r"\\'o": "ó", r"\\'O": "Ó",
+		r"\\'u": "ú", r"\\'U": "Ú",
+		r"\\'n": "ń", r"\\'N": "Ń",
+		
+		# Grave accents
+		r"\\`a": "à", r"\\`A": "À",
+		r"\\`e": "è", r"\\`E": "È",
+		r"\\`i": "ì", r"\\`I": "Ì",
+		r"\\`o": "ò", r"\\`O": "Ò",
+		r"\\`u": "ù", r"\\`U": "Ù",
+		
+		# Circumflex accents
+		r"\\^a": "â", r"\\^A": "Â",
+		r"\\^e": "ê", r"\\^E": "Ê",
+		r"\\^i": "î", r"\\^I": "Î",
+		r"\\^o": "ô", r"\\^O": "Ô",
+		r"\\^u": "û", r"\\^U": "Û",
+		
+		# Umlauts / diaeresis
+		r'\\"a': "ä", r'\\"A': "Ä",
+		r'\\"e': "ë", r'\\"E': "Ë",
+		r'\\"i': "ï", r'\\"I': "Ï",
+		r'\\"o': "ö", r'\\"O': "Ö",
+		r'\\"u': "ü", r'\\"U': "Ü",
+		r'\\"y': "ÿ", r'\\"Y': "Ÿ",
+		
+		# Tilde accents
+		r"\\~a": "ã", r"\\~A": "Ã",
+		r"\\~n": "ñ", r"\\~N": "Ñ",
+		r"\\~o": "õ", r"\\~O": "Õ",
+		
+		# Special symbols
+		r"{\\aa}": "å", r"{\\AA}": "Å",
+		r"{\\o}": "ø", r"{\\O}": "Ø",
+		r"{\\ae}": "æ", r"{\\AE}": "Æ",
+		r"{\\ss}": "ß",
 	}
 
 # Called when the node enters the scene tree for the first time.
@@ -44,8 +72,7 @@ func update_list(text):
 		for character in accented_characters:
 			if character in title:
 				title=title.replace(character, accented_characters[character])
-		
-		print(title)
+
 		if search_line.text == "":
 			add_item(item, title)
 		else:
