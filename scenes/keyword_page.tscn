@@ -1,12 +1,32 @@
-[gd_scene format=3 uid="uid://c45a4yixb3jbm"]
+[gd_scene load_steps=9 format=3 uid="uid://c45a4yixb3jbm"]
+
+[ext_resource type="Script" path="res://scripts/keyword_page.gd" id="1_ql4et"]
+[ext_resource type="Script" path="res://scripts/scroll_container.gd" id="2_xvb40"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_frgol"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b5402"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_caf8p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ikmr8"]
+bg_color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ihgh0"]
+bg_color = Color(0.25, 0.25, 0.25, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_rh7tp"]
+font_size = 25
 
 [node name="KeywordPage" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 50.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_ql4et")
 
 [node name="background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -16,3 +36,166 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.196078, 0.196078, 0.196078, 1)
+
+[node name="TopSection" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+anchors_preset = 0
+offset_right = 360.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="SectionWithMargin" type="Control" parent="TopSection"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="group" type="HBoxContainer" parent="TopSection/SectionWithMargin"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="search_field" type="Control" parent="TopSection/SectionWithMargin/group"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="background" type="ColorRect" parent="TopSection/SectionWithMargin/group/search_field"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+color = Color(0.349065, 0.349065, 0.349065, 1)
+
+[node name="line_edit" type="LineEdit" parent="TopSection/SectionWithMargin/group/search_field"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_frgol")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_b5402")
+placeholder_text = "Keyword Search"
+
+[node name="close_field" type="Button" parent="TopSection/SectionWithMargin/group"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_caf8p")
+theme_override_styles/hover = SubResource("StyleBoxFlat_ikmr8")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_ihgh0")
+theme_override_styles/normal = SubResource("StyleBoxFlat_ikmr8")
+
+[node name="close_field" type="ColorRect" parent="TopSection/SectionWithMargin/group/close_field"]
+visible = false
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.349065, 0.349065, 0.349065, 1)
+
+[node name="icon" type="Label" parent="TopSection/SectionWithMargin/group/close_field"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "X"
+label_settings = SubResource("LabelSettings_rh7tp")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BottomSection" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SectionWithMargin" type="Control" parent="BottomSection"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="BottomSection/SectionWithMargin"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+script = ExtResource("2_xvb40")
+
+[node name="ListContainer" type="VBoxContainer" parent="BottomSection/SectionWithMargin/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+
+[node name="list_item" type="Control" parent="BottomSection/SectionWithMargin/ScrollContainer/ListContainer"]
+visible = false
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="label" type="Label" parent="BottomSection/SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "The Thing"
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="BottomSection/SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+grow_horizontal = 2
+grow_vertical = 0

@@ -19,17 +19,22 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 50.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 3
 
 [node name="KeywordPage" parent="pages" instance=ExtResource("1_71yh5")]
 visible = false
 layout_mode = 1
+offset_top = 0.0
 
 [node name="RecordPage" parent="pages" instance=ExtResource("1_eooa8")]
 visible = false
 layout_mode = 1
+offset_top = 0.0
 
 [node name="MenuSelector" parent="." instance=ExtResource("2_dr84s")]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 1
-title = "Record"
+mouse_filter = 2
