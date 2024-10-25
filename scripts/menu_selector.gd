@@ -4,7 +4,7 @@ extends Control
 @onready var menu_button = $Container/container/menu_button
 @onready var menu = $Menu
 @onready var lable = $Container/container/label
-@export var title = ""
+var title = ""
 
 # Swipe Animation Variables
 @onready var deselect_button = $deselect_button
@@ -12,7 +12,7 @@ var swipe_right_speed = 4
 var swipe_left_speed = 6
 var current_menu_position = Vector2()
 var action = "" # swipe_right & swipe_left
-var transparency = 0.5 # transparency 1.0 to 0.2
+var transparency = 0.5 # transparency 1.0 to 0.5
 var t = 0.0
 
 # Page selection Variables
@@ -22,7 +22,7 @@ var pagenames = {
 				}
 
 func _ready() -> void:
-	update_title()
+	open_page("keyword")
 	
 func update_title():
 	lable.text = title
@@ -63,17 +63,19 @@ func swipe_actions(delta):
 func open_menu():
 	menu_button.disabled = true
 	deselect_button.disabled=false
+	deselect_button.mouse_filter = MouseFilter.MOUSE_FILTER_STOP
 	if t!=0: t = 1.0-t
 	action = "swipe_right"
 	
 func close_menu():
 	menu_button.disabled = false
 	deselect_button.disabled=true
+	deselect_button.mouse_filter = MouseFilter.MOUSE_FILTER_IGNORE
 	if t!=0: t = 1.0-t
 	action = "swipe_left"
 	
 func open_page(string):
-	var pages = get_parent().get_child(0).get_children()
+	var pages = get_parent().find_child("pages").get_children()
 	for page in pages:
 		if page.name == pagenames[string]["node"]:
 			page.visible = true
