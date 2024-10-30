@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://c45a4yixb3jbm"]
+[gd_scene load_steps=10 format=3 uid="uid://c45a4yixb3jbm"]
 
 [ext_resource type="Script" path="res://scripts/keyword_page.gd" id="1_ql4et"]
 [ext_resource type="Script" path="res://scripts/scroll_container.gd" id="2_xvb40"]
+[ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="3_ap7qn"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_frgol"]
 
@@ -125,11 +126,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="BottomSection" type="Control" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 60.0
+offset_top = 50.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -140,6 +142,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
+offset_top = 10.0
 offset_right = -10.0
 offset_bottom = -10.0
 grow_horizontal = 2
@@ -199,6 +202,11 @@ anchor_bottom = 1.0
 offset_top = -4.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="TunesList" parent="." instance=ExtResource("3_ap7qn")]
+layout_mode = 1
+anchors_preset = -1
+offset_top = 50.0
 
 [connection signal="text_changed" from="TopSection/SectionWithMargin/group/search_field/line_edit" to="." method="_on_line_edit_text_changed"]
 [connection signal="text_submitted" from="TopSection/SectionWithMargin/group/search_field/line_edit" to="." method="_on_line_edit_text_submitted"]

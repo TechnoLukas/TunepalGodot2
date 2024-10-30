@@ -15,6 +15,10 @@ run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.3", "Mobile")
 config/icon="res://assets/images/icon192x192.png"
 
+[audio]
+
+driver/enable_input=true
+
 [autoload]
 
 sqlite="*res://scripts/sqlite.gd"
@@ -26,6 +30,10 @@ window/size/viewport_height=640
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=6
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
 
 [input_devices]
 

@@ -1,6 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://hm457dvpto61"]
+[gd_scene load_steps=9 format=3 uid="uid://hm457dvpto61"]
 
+[ext_resource type="Script" path="res://scripts/record_page.gd" id="1_xbjfh"]
 [ext_resource type="Texture2D" uid="uid://c5aavi3u5tjx3" path="res://assets/images/tunepal.png" id="2_8s8ke"]
+[ext_resource type="AudioStream" uid="uid://fnmxaoydgs1j" path="res://assets/mixkit-fast-small-sweep-transition-166.wav" id="3_htku8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qnlb8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bmkxf"]
+bg_color = Color(0.278431, 0.278431, 0.278431, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u7k8r"]
+bg_color = Color(0.219608, 0.219608, 0.219608, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_a6gjf"]
+font_size = 26
+
+[sub_resource type="AudioStreamMicrophone" id="AudioStreamMicrophone_p8lu4"]
 
 [node name="RecordPage" type="Control"]
 layout_mode = 3
@@ -10,6 +25,7 @@ anchor_bottom = 1.0
 offset_top = 50.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_xbjfh")
 
 [node name="background" type="ColorRect" parent="."]
 layout_mode = 1
@@ -20,7 +36,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.196078, 0.196078, 0.196078, 1)
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="tunepal_icon" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -38,3 +54,69 @@ pivot_offset = Vector2(448, 448)
 size_flags_horizontal = 0
 size_flags_vertical = 0
 texture = ExtResource("2_8s8ke")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="top_part" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="center_part" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="bottom_part" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="record_button" type="Button" parent="VBoxContainer/bottom_part"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -125.0
+offset_top = -25.0
+offset_right = 125.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(125, 25)
+theme_override_styles/focus = SubResource("StyleBoxEmpty_qnlb8")
+theme_override_styles/hover = SubResource("StyleBoxFlat_bmkxf")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_u7k8r")
+theme_override_styles/normal = SubResource("StyleBoxFlat_bmkxf")
+
+[node name="label" type="Label" parent="VBoxContainer/bottom_part/record_button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Tap to record"
+label_settings = SubResource("LabelSettings_a6gjf")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AudioStreamRecorder" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamMicrophone_p8lu4")
+autoplay = true
+bus = &"Record"
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="AudioStreamTest" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_htku8")
+
+[connection signal="pressed" from="VBoxContainer/bottom_part/record_button" to="." method="_on_record_button_pressed"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
