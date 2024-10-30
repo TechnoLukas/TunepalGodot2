@@ -22,7 +22,7 @@ var pagenames = {
 				}
 
 func _ready() -> void:
-	open_page("keyword")
+	open_page("record")
 	
 func update_title():
 	lable.text = title
