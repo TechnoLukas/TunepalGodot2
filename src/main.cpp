@@ -23,7 +23,7 @@ int main()
     transcriber.setSignal(signal);
     transcriber.transcribe(& progress, & interrupted);
     */
-    createMidiFile("X:100\nABCDEFGABCDEFG", "temp.mid", 1, 1);
+    // createMidiFile("X:100\nABCDEFGABCDEFG", "temp.mid", 1, 1);
     //delete signal;
     return 0;
 }
