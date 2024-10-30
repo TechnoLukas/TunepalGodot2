@@ -3,8 +3,8 @@ extends Control
 @onready var record_button = $VBoxContainer/bottom_part/record_button
 @onready var timer = $Timer
 
-var countdown_time=2
-var recording_time=9
+var countdown_time=0
+var recording_time=5
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -55,7 +55,12 @@ func stop_recording():
 	var recording = record.get_recording()
 	
 	var audio_data = recording.get_data()
-	print(sqlite.query_result[0].keys())
+	# print(sqlite.query_result[0].keys())
+	
+	print("Format ", recording.format)
+	print("Mix rate ", recording.mix_rate)
+	print("Stereo ", recording.stereo)
+	
 	print(sqlite.query_result[0]["midi_sequence"])
 	# print("Audio buffer as array of floats:", audio_data)
 			

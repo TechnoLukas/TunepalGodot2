@@ -41,7 +41,6 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 	int i;
 	for (i = 0 ; i < numHops ; i ++)
 	{
-		UtilityFunctions::print("i: ", i);
 		int startAt = hopSize * i;
 		* progress = (float) i / (float) numHops;
 		// if (* interrupted)
@@ -59,7 +58,7 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 		PowerSpectrum(FRAME_SIZE, signal + startAt, spectrum);
     
 		float frequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
-		//UtilityFunctions::print("freq: ", frequency);
+		UtilityFunctions::print("freq: ", frequency);
 		
         string currentNote;
 		if (midi)
@@ -69,7 +68,9 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
         else {
             currentNote = speller.spellFrequency(frequency);
         }
-        if (currentNote != lastNote)
+		//UtilityFunctions::print("currentNote: ", currentNote.c_str());
+		
+		if (currentNote != lastNote)
         {
             TranscribedNote note;
             note.spelling = currentNote;
@@ -83,7 +84,7 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 	numHops = i;
 	printTranscription();
 	postProcess(midi);
-	printf("transcription: %s\n", transcription.c_str());
+	UtilityFunctions::print("transcription: ", transcription.c_str());
 	return transcription;
 }
 
@@ -199,13 +200,36 @@ Transcriber::Transcriber()
 
 Transcriber::Transcriber(const godot::PackedByteArray & audioData)
 {
-	int numSamples = audioData.size() / 2;
+	// Godot is sending us stereo data, so we need to convert it to mono
+	int numSamples = audioData.size() / 4; // Divide by 4 since each sample is 2 bytes for left channel and 2 bytes for right channel
 	signal = new float[numSamples];
 	UtilityFunctions::print("numSamples: ", numSamples);
 	for (int signalIndex = 0 ; signalIndex < numSamples; signalIndex ++)
-	{
-		signal[signalIndex] = ((audioData[(signalIndex * 2) + 1] << 8) + audioData[signalIndex * 2]);
+	{		
+		signal[signalIndex] = ((audioData[(signalIndex * 4) + 1] << 8) + audioData[signalIndex * 4]);
+
+		if (signalIndex < 1000)
+		{
+			UtilityFunctions::print("audiodata: ", audioData[signalIndex * 4]);
+			UtilityFunctions::print("signal: ", signal[signalIndex]);
+		}
 	}  
+
+	this->numSamples = numSamples;
+	// }
+	// 	int numSamples = audioData.size() / 2;
+	// 	signal = new float[numSamples];
+	// 	UtilityFunctions::print("numSamples: ", numSamples);
+	// 	for (int signalIndex = 0 ; signalIndex < numSamples; signalIndex ++)
+	// 	{		
+	// 		signal[signalIndex] = ((audioData[(signalIndex * 2) + 1] << 8) + audioData[signalIndex * 2]);
+
+	// 		if (signalIndex < 1000)
+	// 		{
+	// 			UtilityFunctions::print("audiodata: ", audioData[signalIndex]);
+	// 			UtilityFunctions::print("signal: ", signal[signalIndex]);
+	// 		}
+	// 	}  
 	
 	this->numSamples = numSamples;
 }
