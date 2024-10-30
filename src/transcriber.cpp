@@ -100,7 +100,8 @@ void Transcriber::postProcess(bool midi)
 	// Now do the last note
 	notes[notes.size() - 1].duration = SAMPLE_TIME - notes[notes.size() - 1].onset;
 			
-	float durations[notes.size()];
+	// Hardcode!!!
+	float durations[10000];
 	for (int i = 0 ; i < notes.size() ; i ++)
 	{
 		durations[i] = notes[i].duration;
