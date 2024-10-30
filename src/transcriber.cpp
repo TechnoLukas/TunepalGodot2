@@ -58,7 +58,7 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 		PowerSpectrum(FRAME_SIZE, signal + startAt, spectrum);
     
 		float frequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
-		UtilityFunctions::print("freq: ", frequency);
+		//UtilityFunctions::print("freq: ", frequency);
 		
         string currentNote;
 		if (midi)
@@ -119,7 +119,7 @@ void Transcriber::postProcess(bool midi)
 	
 	FuzzyHistogram fuzzyHistogram;
 	float quaverLength = fuzzyHistogram.calculatePeek(durations, notes.size(), 0.33f, 0.1f);
-	cout << "quaverLength " << quaverLength << endl;
+	UtilityFunctions::print("quaverLength ", quaverLength);
 	// Now calculate the quaver quantisation for each note
 	for (int i = 0 ; i < notes.size() ; i ++)
 	{
@@ -132,7 +132,7 @@ void Transcriber::postProcess(bool midi)
 	for (int i = 0 ; i < notes.size() ; i ++)
 	{
 		// Skip Z's at the start
-		cout << notes[i].spelling << endl;
+		UtilityFunctions::print(notes[i].spelling.c_str());
 		if (notes[i].spelling != "Z")
 		{
 			pastSilence = true;
@@ -152,7 +152,7 @@ void Transcriber::postProcess(bool midi)
 			}
 		}
 	}	
-	cout << transcription << endl;
+	UtilityFunctions::print(transcription.c_str());
 	// Remove Z's at the end
 	if (transcription.size() > 0)
 	{
@@ -170,7 +170,7 @@ void Transcriber::postProcess(bool midi)
 			}
 		}		
 	}
-	cout << transcription << endl;
+	UtilityFunctions::print(transcription.c_str());
 	// Count the Z's
 	if (transcription.size() > 0)
 	{
@@ -184,10 +184,10 @@ void Transcriber::postProcess(bool midi)
 		}
 		// If more than 50%, we heard mostly silence
 		float normalZ = (float) numZ / (float) transcription.size();
-		cout << "Normal z" << normalZ << endl;
+		UtilityFunctions::print("Normal z ", normalZ);
 		if (normalZ > 0.5f)
 		{
-			cout << "Transcription is mostly silence, so I'm removing all the notes" << endl;
+			UtilityFunctions::print("Transcription is mostly silence, so I'm removing all the notes");
 			transcription = "";
 		}
 	}	
@@ -201,17 +201,17 @@ Transcriber::Transcriber()
 Transcriber::Transcriber(const godot::PackedByteArray & audioData)
 {
 	// Godot is sending us stereo data, so we need to convert it to mono
-	int numSamples = audioData.size() / 4; // Divide by 4 since each sample is 2 bytes for left channel and 2 bytes for right channel
+	int numSamples = audioData.size() / 2; 
 	signal = new float[numSamples];
 	UtilityFunctions::print("numSamples: ", numSamples);
 	for (int signalIndex = 0 ; signalIndex < numSamples; signalIndex ++)
 	{		
-		signal[signalIndex] = ((audioData[(signalIndex * 4) + 1] << 8) + audioData[signalIndex * 4]);
+		signal[signalIndex] = ((audioData[(signalIndex * 2) + 1] << 8) + audioData[signalIndex * 2]);
 
-		if (signalIndex < 1000)
+		if (signalIndex < 5000)
 		{
-			UtilityFunctions::print("audiodata: ", audioData[signalIndex * 4]);
-			UtilityFunctions::print("signal: ", signal[signalIndex]);
+			//UtilityFunctions::print("audiodata: ", audioData[signalIndex * 4]);
+			UtilityFunctions::print(signal[signalIndex]);
 		}
 	}  
 
