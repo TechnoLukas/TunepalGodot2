@@ -53,7 +53,9 @@ func stop_recording():
 	#audio_stream_recorder.stop()
 	record.set_recording_active(false)
 	var recording = record.get_recording()
-	
+	recording.set_mix_rate(22050)
+	recording.set_format(1)
+	recording.set_stereo(false)
 	var audio_data = recording.get_data()
 	# print(sqlite.query_result[0].keys())
 	
