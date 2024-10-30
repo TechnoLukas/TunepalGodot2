@@ -40,7 +40,7 @@ public:
 	void postProcess(bool);
 	void printTranscription();
 	//Transcriber(char * audioData, int numSamples);
-    Transcriber(godot::PackedByteArray audioData);
+    Transcriber(const godot::PackedByteArray & audioData);
     Transcriber();
 	~Transcriber();
 };

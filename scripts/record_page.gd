@@ -57,12 +57,17 @@ func stop_recording():
 	var audio_data = recording.get_data()
 	print(sqlite.query_result[0].keys())
 	print(sqlite.query_result[0]["midi_sequence"])
-	print("Audio buffer as array of floats:", audio_data)
+	# print("Audio buffer as array of floats:", audio_data)
 			
 			
 	# Testing with output !!
-	var data = recording.get_data()
-	print(data.size())
+	# var data = recording.get_data()
+	# print(data.size())
+	
+	var s = tunepal.transcribe(audio_data, 0)
+	
+	print("Transcription: " + s)
+	
 	$AudioStreamPlayer.stream = recording
 	$AudioStreamPlayer.play()
 	

@@ -15,8 +15,12 @@
 #include <math.h>
 #include <iostream>
 
+#include <godot_cpp/variant/utility_functions.hpp>
+
 
 using namespace std;
+using namespace godot;
+
 
 void Transcriber::setSignal(float * signal)
 {
@@ -37,12 +41,13 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 	int i;
 	for (i = 0 ; i < numHops ; i ++)
 	{
+		UtilityFunctions::print("i: ", i);
 		int startAt = hopSize * i;
 		* progress = (float) i / (float) numHops;
-		if (* interrupted)
-		{
-			return "";
-		}
+		// if (* interrupted)
+		// {
+		// 	return "";
+		// }
 		
 		// can we get another frame out without going over?
 		if (startAt + FRAME_SIZE >= numSamples)
@@ -54,6 +59,8 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 		PowerSpectrum(FRAME_SIZE, signal + startAt, spectrum);
     
 		float frequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
+		//UtilityFunctions::print("freq: ", frequency);
+		
         string currentNote;
 		if (midi)
         {
@@ -82,9 +89,11 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 
 void Transcriber::printTranscription()
 {
-	for (int i = 0 ; i < notes.size() ; i ++)
+	char str[2048];
+;	for (int i = 0 ; i < notes.size() ; i ++)
 	{
-		printf("%s %f %f %f %f\n", notes[i].spelling.c_str(), notes[i].frequency, notes[i].qq, notes[i].onset, notes[i].duration);
+		sprintf(str, "%s %f %f %f %f\n", notes[i].spelling.c_str(), notes[i].frequency, notes[i].qq, notes[i].onset, notes[i].duration);
+		UtilityFunctions::print(str);
 	}
 		
 }
@@ -188,10 +197,11 @@ Transcriber::Transcriber()
     numSamples = SAMPLE_RATE * SAMPLE_TIME;
 }
 
-Transcriber::Transcriber(godot::PackedByteArray audioData)
+Transcriber::Transcriber(const godot::PackedByteArray & audioData)
 {
 	int numSamples = audioData.size() / 2;
 	signal = new float[numSamples];
+	UtilityFunctions::print("numSamples: ", numSamples);
 	for (int signalIndex = 0 ; signalIndex < numSamples; signalIndex ++)
 	{
 		signal[signalIndex] = ((audioData[(signalIndex * 2) + 1] << 8) + audioData[signalIndex * 2]);

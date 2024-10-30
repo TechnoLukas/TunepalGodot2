@@ -11,6 +11,7 @@ using namespace std;
 void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("say_hello"), &Tunepal::say_hello);
 	ClassDB::bind_method(D_METHOD("edSubstring"), &Tunepal::edSubstring);
+	ClassDB::bind_method(D_METHOD("transcribe"), &Tunepal::transcribe);
 }
 
 Tunepal::Tunepal() {
@@ -28,7 +29,7 @@ void Tunepal::_process(double delta) {
 	//set_position(new_position);
 }
 
-godot::String transcribe(const godot::PackedByteArray signal, const int fundamental)
+godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)
 {
 		Transcriber transcriber(signal);
 
