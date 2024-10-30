@@ -24,7 +24,7 @@ public:
 
 	int edSubstring(const godot::String needle, const godot::String haystack, const int thread_id);
 
-	godot::String transcribe(const godot::PackedFloat32Array signal, const int fundamental);
+	godot::String transcribe(const godot::PackedByteArray & signal, const int fundamental);
 
 
     // int edSubstring(string
