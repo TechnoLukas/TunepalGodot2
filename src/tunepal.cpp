@@ -38,6 +38,7 @@ godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const i
 		//return env->NewStringUTF("HELLO!");
         string transcription = transcriber.transcribe(& f, & b, false);
 	
+		UtilityFunctions::print("i got: ", transcription.c_str());
 		return godot::String(transcription.c_str());
         		
 }
