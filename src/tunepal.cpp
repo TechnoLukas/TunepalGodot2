@@ -1,4 +1,5 @@
 #include "tunepal.h"
+#include "transcriber.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #include<string>
@@ -27,6 +28,18 @@ void Tunepal::_process(double delta) {
 	//set_position(new_position);
 }
 
+godot::String transcribe(const godot::PackedByteArray signal, const int fundamental)
+{
+		Transcriber transcriber(signal);
+
+		float f = 0.0f;
+        bool b = false;
+		//return env->NewStringUTF("HELLO!");
+        string transcription = transcriber.transcribe(& f, & b, false);
+	
+		return godot::String(transcription.c_str());
+        		
+}
 
 int Tunepal::edSubstring(const godot::String pattern, const godot::String text, const int thread_id)
 {
