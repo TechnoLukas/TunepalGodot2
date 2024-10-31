@@ -9,7 +9,7 @@ class Tunepal : public Node2D {
 	GDCLASS(Tunepal, Node2D)
 
 private:
-	
+	godot::Array result;
 
 protected:
 	static void _bind_methods();
@@ -30,6 +30,7 @@ public:
 
 	bool Tunepal::_sort_by_distance(const Variant &a, const Variant &b) const;
 
+	void Tunepal::finished_searching();
 
     // int edSubstring(string
 };

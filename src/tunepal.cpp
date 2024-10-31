@@ -14,6 +14,9 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("transcribe"), &Tunepal::transcribe);
 	ClassDB::bind_method(D_METHOD("findClosest"), &Tunepal::findClosest);
 	ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
+
+	ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
+    
 	
 }
 
@@ -55,7 +58,7 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
     godot::Array matches;
     
     // For each dictionary in the haystack
-    for (int i = 0; i < haystack.size(); i++)
+    for (int i = 0; i < 50; i++)
     {
 		if (i % 100 == 0)
 		{
@@ -78,7 +81,7 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
     matches.sort_custom(Callable(this, "_sort_by_distance"));
     
     // Create result array with top 10 matches
-    godot::Array result;
+    result.clear();
     int numToReturn = MIN(10, matches.size());
     
     for (int i = 0; i < numToReturn; i++)
@@ -89,8 +92,18 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
         result.push_back(tune);
     }
 
-	call_deferred("../finished_searching");
+
+	call_deferred("finished_searching");
+	// Emit signal with results	
+	// Return the top 10 matches
+	//
+	// 
     return result;
+}
+
+void Tunepal::finished_searching()
+{
+	emit_signal("search_completed", result);
 }
 
 bool Tunepal::_sort_by_distance(const Variant &a, const Variant &b) const

@@ -15,7 +15,6 @@ var tunepal = Tunepal.new()
 var thread: Thread
 var transcription:String
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	tunepal_test()
@@ -27,7 +26,7 @@ func _ready() -> void:
 	#AudioServer.get_bus_effect(record_bus_index, 0).set_buffer_length(.1)
 	#AudioServer.get_bus_effect(record_bus_index, 0).tap_back_pos = .05
 	#spectrum = AudioServer.get_bus_effect_instance(record_bus_index, 0)
-
+	tunepal.search_completed.connect(finished_searching)
 	add_child(tunepal)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -83,7 +82,7 @@ func stop_recording():
 	
 	thread = Thread.new()
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.query_result))
-	
+	$"../.."
 	# 
 	$AudioStreamPlayer.stream = recording
 	$AudioStreamPlayer.play()
