@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cyoh85bumfcfc"
-path="res://.godot/imported/icomoon.svg-88a9caf7df82f799d914e80ab56e3b2c.ctex"
+uid="uid://cce00s04ubpyf"
+path="res://.godot/imported/pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg-e2fbb7180eef6354ad800adab3602c28.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons_data/icomoon_fonts/fonts/icomoon.svg"
-dest_files=["res://.godot/imported/icomoon.svg-88a9caf7df82f799d914e80ab56e3b2c.ctex"]
+source_file="res://assets/icons_data/google_icons_set/pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg"
+dest_files=["res://.godot/imported/pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg-e2fbb7180eef6354ad800adab3602c28.ctex"]
 
 [params]
 

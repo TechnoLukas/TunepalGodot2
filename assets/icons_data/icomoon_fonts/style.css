@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?t4ghd3');
-  src:  url('fonts/icomoon.eot?t4ghd3#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?t4ghd3') format('truetype'),
-    url('fonts/icomoon.woff?t4ghd3') format('woff'),
-    url('fonts/icomoon.svg?t4ghd3#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?xqfyff');
+  src:  url('fonts/icomoon.eot?xqfyff#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?xqfyff') format('truetype'),
+    url('fonts/icomoon.woff?xqfyff') format('woff'),
+    url('fonts/icomoon.svg?xqfyff#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -59,5 +59,21 @@
 }
 .icon-arrow_back_ios_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
   content: "\e908";
+  color: #e8eaed;
+}
+.icon-add_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e909";
+  color: #e8eaed;
+}
+.icon-play_arrow_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90a";
+  color: #e8eaed;
+}
+.icon-stop_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90b";
+  color: #e8eaed;
+}
+.icon-pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90c";
   color: #e8eaed;
 }
