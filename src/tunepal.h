@@ -26,6 +26,10 @@ public:
 
 	godot::String transcribe(const godot::PackedByteArray & signal, const int fundamental);
 
+	godot::Array findClosesestMatch(const godot::String needle, const godot::Array haystack);
+
+	bool Tunepal::_sort_by_distance(const Variant &a, const Variant &b) const
+
 
     // int edSubstring(string
 };
