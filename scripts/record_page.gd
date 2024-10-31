@@ -4,7 +4,7 @@ extends Control
 @onready var timer = $Timer
 
 var countdown_time=0
-var recording_time=10
+var recording_time=12
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -76,12 +76,12 @@ func stop_recording():
 	
 	print("Transcription: " + s)
 	
-	# var results:Array = tunepal.findClosest(s, sqlite.query_result)
+	var results:Array = tunepal.findClosest(s, sqlite.query_result)
 	
-	# print("Results" + str(results))
+	print("Results" + str(results))
 	
-	#for i in range(results.size()):
-		#print(results[i]["title"] + "\t" + results[i]["alt_title"] + "\t" + results[i]["search_key"] + "\t" + results[i]["edit_distance"] + "\t")
+	for i in range(results.size()):
+		print(results[i]["title"] + "\t" + results[i]["alt_title"] + "\t" + results[i]["search_key"] + "\t" + results[i]["edit_distance"] + "\t")
 	
 	$AudioStreamPlayer.stream = recording
 	$AudioStreamPlayer.play()

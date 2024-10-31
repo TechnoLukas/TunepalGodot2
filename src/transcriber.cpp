@@ -195,7 +195,7 @@ void Transcriber::postProcess(bool midi)
 
 Transcriber::Transcriber()
 {
-    numSamples = SAMPLE_RATE * SAMPLE_TIME;
+    // numSamples = SAMPLE_RATE * SAMPLE_TIME;
 }
 
 Transcriber::Transcriber(const godot::PackedByteArray& audioData)
@@ -249,11 +249,7 @@ Transcriber::Transcriber(const godot::PackedByteArray& audioData)
             signal[i] = tempBuffer[lowIndex] * (1.0f - fraction) + 
                        tempBuffer[highIndex] * fraction;
         }
-        
-        if (i < 5000)
-        {
-            UtilityFunctions::print(signal[i]);
-        }
+
     }
     
     // Clean up temporary buffer
