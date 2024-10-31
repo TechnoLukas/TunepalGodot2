@@ -45,6 +45,98 @@ godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const i
 
 godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot::Array haystack)
 {
+    godot::Array matches;
+    
+    // For each dictionary in the haystack
+    for (int i = 0; i < haystack.size(); i++)
+    {
+        Dictionary tune = haystack[i];
+        String search_key = tune["search_key"];
+        
+        // Calculate edit distance using search_key
+        float distance = edSubstring(needle, search_key);
+        
+        Dictionary match;
+        match["distance"] = distance;
+        match["tune"] = tune;
+        
+        matches.push_back(match);
+    }
+
+    // Sort matches by edit distance (lowest to highest)
+    matches.sort_custom(Callable(this, "_sort_by_distance"));
+    
+    // Create result array with top 10 matches
+    godot::Array result;
+    int numToReturn = MIN(10, matches.size());
+    
+    for (int i = 0; i < numToReturn; i++)
+    {
+        Dictionary match = matches[i];
+        Dictionary tune = match["tune"];
+        tune["edit_distance"] = match["distance"];
+        result.push_back(tune);
+    }
+
+    return result;
+}
+
+bool Tunepal::_sort_by_distance(const Variant &a, const Variant &b) const
+{
+    Dictionary dict_a = a;
+    Dictionary dict_b = b;
+    
+    float distance_a = dict_a["distance"];
+    float distance_b = dict_b["distance"];
+    
+    return distance_a < distance_b;
+}
+
+/*
+godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot::Array haystack)
+{
+    // Create a vector to store matches with their distances
+    std::vector<std::pair<float, Dictionary>> matches;
+    matches.reserve(haystack.size());
+
+    // For each dictionary in the haystack
+    for (int i = 0; i < haystack.size(); i++)
+    {
+        Dictionary tune = haystack[i];
+        String midi_sequence = tune["midi_sequence"];
+        
+        // Calculate edit distance
+        float distance = edSubstring(needle, midi_sequence);
+        
+        // Store the distance and the full dictionary
+        matches.push_back(std::make_pair(distance, tune));
+    }
+
+    // Sort matches by edit distance (lowest to highest)
+    std::sort(matches.begin(), matches.end(),
+        [](const std::pair<float, Dictionary>& a, const std::pair<float, Dictionary>& b) {
+            return a.first < b.first;
+        });
+
+    // Create result array with top 10 matches
+    godot::Array result;
+    int numToReturn = std::min(10, static_cast<int>(matches.size()));
+    
+    for (int i = 0; i < numToReturn; i++)
+    {
+        Dictionary matchedTune = matches[i].second;
+        // Add the edit distance to the dictionary for reference
+        matchedTune["edit_distance"] = matches[i].first;
+        result.push_back(matchedTune);
+    }
+
+    return result;
+}
+*/
+
+/*
+godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot::Array haystack)
+{
 
 	// The haystack is an array of Dictionary
 	// Each dictionary has the following keys:
@@ -54,8 +146,11 @@ godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot
 	// The function should return an array of dictionaries, sorted by edit distance lowest to highest
 	// Only return the top 10 matches
 
-	return godot::Dictionary();
+	
+
+	return godot::Array();
 }
+*/
 
 int Tunepal::edSubstring(const godot::String pattern, const godot::String text, const int thread_id)
 {
