@@ -31,9 +31,13 @@ void Tunepal::_process(double delta) {
 	//set_position(new_position);
 }
 
+int g_fundamental = 3;
+
 godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)
 {
 		Transcriber transcriber(signal);
+
+		g_fundamental = fundamental;
 
 		float f = 0.0f;
         bool b = false;

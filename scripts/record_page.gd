@@ -4,7 +4,7 @@ extends Control
 @onready var timer = $Timer
 
 var countdown_time=0
-var recording_time=10
+var recording_time=2
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -71,7 +71,7 @@ func stop_recording():
 	# var data = recording.get_data()
 	# print(data.size())
 	
-	var s = tunepal.transcribe(audio_data, 0)
+	var s = tunepal.transcribe(audio_data, 3)
 	
 	print("Transcription: " + s)
 	

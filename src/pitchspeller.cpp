@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include <float.h>
+#include <godot_cpp/variant/utility_functions.hpp>
 
 //const char * PitchSpeller::noteNames[] =  {"D,", "E,", "F,", "G,", "A,", "B,", "C", "C", "D", "E", "F", "G", "A", "B","c", "c", "d", "e", "f", "g", "a", "b", "c'", "c'", "d'", "e'", "f'", "g'", "a'", "b'", "c''", "c''", "d''"}; 
 const char * PitchSpeller::noteNames[] =  {"D", "E", "F", "G", "A", "B", "C", "C", "D", "E", "F", "G", "A", "B","C", "C", "D", "E", "F", "G", "A", "B", "C", "C", "D", "E", "F", "G", "A", "B", "C", "C", "D"}; 
@@ -20,10 +21,17 @@ const float PitchSpeller::RANGE = 0.1f;
 const float PitchSpeller::RATIO = 1.05946309436f;
 
 extern int g_fundamental;
+using namespace godot;
+
+
 
 PitchSpeller::PitchSpeller()
 {
-	printf("Using Fundamental: %s\n", PitchSpeller::fundamentalSpellings[g_fundamental]);
+	char msg[1024];
+	sprintf(msg, "Fundamental: %i %s\n", g_fundamental, PitchSpeller::fundamentalSpellings[g_fundamental]);
+	
+	UtilityFunctions::print(msg);
+	
 	fundamental = fundamentals[g_fundamental];
 	pitchModel = PitchSpeller::FLUTE;
 }

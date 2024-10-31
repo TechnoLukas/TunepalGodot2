@@ -8,7 +8,7 @@
 
 using namespace std;
 
-int g_fundamental = 3;
+// int g_fundamental = 3;
 
 int main()
 {
