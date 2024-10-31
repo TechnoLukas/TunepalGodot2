@@ -200,6 +200,71 @@ Transcriber::Transcriber()
 
 Transcriber::Transcriber(const godot::PackedByteArray& audioData)
 {
+    // Calculate original number of samples (stereo to mono)
+    int originalNumSamples = audioData.size() / 4;
+    
+    // Calculate downsampling ratio (48000 -> 22050)
+    const float downsampleRatio = 48000.0f / 22050.0f;  // approximately 2.176871
+    
+    // Calculate final number of samples after downsampling
+    int finalNumSamples = static_cast<int>(originalNumSamples / downsampleRatio);
+    signal = new float[finalNumSamples];
+    
+    // Temporary buffer for full-rate mono samples
+    float* tempBuffer = new float[originalNumSamples];
+    
+    // First convert stereo to mono at original sample rate
+    for (int i = 0; i < originalNumSamples; i++)
+    {
+        // Get bytes for left channel
+        uint8_t leftLow = audioData[i * 4];
+        uint8_t leftHigh = audioData[i * 4 + 1];
+        
+        // Get bytes for right channel
+        uint8_t rightLow = audioData[i * 4 + 2];
+        uint8_t rightHigh = audioData[i * 4 + 3];
+        
+        // Combine bytes into 16-bit signed integers for each channel
+        int16_t leftSample = (leftHigh << 8) | leftLow;
+        int16_t rightSample = (rightHigh << 8) | rightLow;
+        
+        // Convert to float and average the channels
+        tempBuffer[i] = (leftSample + rightSample) / (2.0f * 32768.0f);
+    }
+    
+    // Now downsample using linear interpolation
+    for (int i = 0; i < finalNumSamples; i++)
+    {
+        float exactPosition = i * downsampleRatio;
+        int lowIndex = static_cast<int>(exactPosition);
+        int highIndex = lowIndex + 1;
+        
+        if (highIndex >= originalNumSamples)
+        {
+            signal[i] = tempBuffer[lowIndex];
+        }
+        else
+        {
+            float fraction = exactPosition - lowIndex;
+            signal[i] = tempBuffer[lowIndex] * (1.0f - fraction) + 
+                       tempBuffer[highIndex] * fraction;
+        }
+        
+        if (i < 5000)
+        {
+            UtilityFunctions::print(signal[i]);
+        }
+    }
+    
+    // Clean up temporary buffer
+    delete[] tempBuffer;
+    
+    this->numSamples = finalNumSamples;
+}
+
+/*
+Transcriber::Transcriber(const godot::PackedByteArray& audioData)
+{
     // Since we're getting stereo data (4 bytes per sample - 2 bytes per channel),
     // the number of mono samples will be size/4
     int numSamples = audioData.size() / 4;
@@ -231,6 +296,7 @@ Transcriber::Transcriber(const godot::PackedByteArray& audioData)
     
     this->numSamples = numSamples;
 }
+*/
 
 /*
 Transcriber::Transcriber(const godot::PackedByteArray & audioData)

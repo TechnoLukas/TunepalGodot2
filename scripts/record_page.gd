@@ -4,7 +4,7 @@ extends Control
 @onready var timer = $Timer
 
 var countdown_time=0
-var recording_time=2
+var recording_time=10
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -39,6 +39,7 @@ func button_lable_set(text):
 func _on_record_button_pressed() -> void:
 	record_button.disabled=true
 	action = "countdown"
+	timer.wait_time = countdown_time
 	timer.start(countdown_time)
 	
 func start_recording():
