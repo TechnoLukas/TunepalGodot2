@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://c45a4yixb3jbm"]
+[gd_scene load_steps=11 format=3 uid="uid://c45a4yixb3jbm"]
 
 [ext_resource type="Script" path="res://scripts/keyword_page.gd" id="1_ql4et"]
+[ext_resource type="FontFile" uid="uid://c2eo6w1wwgvnp" path="res://assets/fonts/icomoon.ttf" id="2_j3cns"]
 [ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="3_ap7qn"]
 [ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="4_bsida"]
 
@@ -17,7 +18,8 @@ bg_color = Color(0.34902, 0.34902, 0.34902, 1)
 bg_color = Color(0.25, 0.25, 0.25, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_rh7tp"]
-font_size = 25
+font = ExtResource("2_j3cns")
+font_size = 30
 
 [node name="KeywordPage" type="Control"]
 layout_mode = 3
@@ -120,7 +122,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "X"
+text = ""
 label_settings = SubResource("LabelSettings_rh7tp")
 horizontal_alignment = 1
 vertical_alignment = 1

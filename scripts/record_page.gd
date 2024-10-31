@@ -26,7 +26,7 @@ func _ready() -> void:
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if action == "countdown":
 		button_lable_set(str(round(timer.time_left)))
 	elif action == "recording":

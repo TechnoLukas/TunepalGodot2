@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/tunepage.gd" id="1_7nh84"]
 [ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="1_fdvmm"]
 [ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="2_tfmek"]
-[ext_resource type="FontFile" uid="uid://d24a2l3buuc71" path="res://assets/fonts/icomoon.ttf" id="3_xye2h"]
+[ext_resource type="FontFile" uid="uid://c2eo6w1wwgvnp" path="res://assets/fonts/icomoon.ttf" id="3_xye2h"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nyajq"]
 
@@ -105,7 +105,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 theme = ExtResource("2_tfmek")
-text = "<"
+text = " "
 label_settings = SubResource("LabelSettings_tuikw")
 
 [node name="label" type="Label" parent="Container/container"]

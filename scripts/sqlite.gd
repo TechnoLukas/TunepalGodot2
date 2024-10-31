@@ -47,8 +47,6 @@ var accented_characters = {
 	r"{\\ss}": "ß",
 }
 
-signal output_received(text)
-
 func _ready():
 	if OS.get_name() in ["Android", "iOS", "Web"]:
 		db_name = "user://assets/data/tunepal"
@@ -61,7 +59,7 @@ func _ready():
 	db.open_db()
 	db.read_only = true
 	# source = 2 norbeck
-	await db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;")
+	db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;")
 	query_result = db.query_result
 	for i in range(0, query_result.size()):
 		var title = query_result[i]["title"]
