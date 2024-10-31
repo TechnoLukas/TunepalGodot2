@@ -71,7 +71,6 @@ func _ready():
 
 func cprint(text : String) -> void:
 	print(text)
-	emit_signal("output_received", text)
 
 func copy_data_to_user() -> void:
 	var original_data_path := "res://assets/data"
