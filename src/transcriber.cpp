@@ -198,15 +198,59 @@ Transcriber::Transcriber()
     numSamples = SAMPLE_RATE * SAMPLE_TIME;
 }
 
+Transcriber::Transcriber(const godot::PackedByteArray& audioData)
+{
+    // Godot is sending us stereo data, so we need to convert it to mono
+    int numSamples = audioData.size() / 2;
+    signal = new float[numSamples];
+    
+    for (int signalIndex = 0; signalIndex < numSamples; signalIndex++)
+    {
+        // Get the two bytes that make up our 16-bit sample
+        uint8_t b0 = audioData[signalIndex * 4];        // Low byte
+        uint8_t b1 = audioData[signalIndex * 4 + 1];    // High byte
+        
+        // Combine the bytes into a 16-bit signed integer
+        int16_t sample = (b1 << 8) | b0;
+        
+        // Convert to float in the range [-1.0, 1.0]
+        signal[signalIndex] = sample / 32768.0f;
+        
+        // if (signalIndex < 5000)
+        // {
+        //     UtilityFunctions::print(signal[signalIndex]);
+        // }
+    }
+    
+    this->numSamples = numSamples;
+}
+
+/*
 Transcriber::Transcriber(const godot::PackedByteArray & audioData)
 {
 	// Godot is sending us stereo data, so we need to convert it to mono
 	int numSamples = audioData.size() / 2; 
 	signal = new float[numSamples];
 	UtilityFunctions::print("numSamples: ", numSamples);
+
+	// for (int signalIndex = 0 ; signalIndex < numSamples; signalIndex ++)
+	// {
+	// 	signal[signalIndex] = ((audioData[(signalIndex * 2) + 1] << 8) + audioData[signalIndex * 2]);
+	// }
+
+	
+
+
 	for (int signalIndex = 0 ; signalIndex < numSamples; signalIndex ++)
 	{		
+
+		unsigned char b0, b1;
+
+		b0 = audioData[(signalIndex * 2) + 1];
+		b1 = audioData[signalIndex * 2];
+
 		signal[signalIndex] = ((audioData[(signalIndex * 2) + 1] << 8) + audioData[signalIndex * 2]);
+		signal[signalIndex] = (b0 << 8) + b1;
 
 		if (signalIndex < 5000)
 		{
@@ -233,6 +277,8 @@ Transcriber::Transcriber(const godot::PackedByteArray & audioData)
 	
 	this->numSamples = numSamples;
 }
+
+*/
 
 Transcriber::~Transcriber()
 {
