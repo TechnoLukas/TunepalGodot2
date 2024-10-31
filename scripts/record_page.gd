@@ -12,6 +12,10 @@ var record_bus_index
 
 var tunepal = Tunepal.new()
 
+var thread: Thread
+var transcription:String
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	tunepal_test()
@@ -24,6 +28,7 @@ func _ready() -> void:
 	#AudioServer.get_bus_effect(record_bus_index, 0).tap_back_pos = .05
 	#spectrum = AudioServer.get_bus_effect_instance(record_bus_index, 0)
 
+	add_child(tunepal)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -72,24 +77,14 @@ func stop_recording():
 	# var data = recording.get_data()
 	# print(data.size())
 	
-	var s = tunepal.transcribe(audio_data, 3)
+	transcription = tunepal.transcribe(audio_data, 3)
 	
-	print("Transcription: " + s)
+	print("Transcription: " + transcription)
 	
-	var results:Array = tunepal.findClosest(s, sqlite.query_result)
+	thread = Thread.new()
+	thread.start(tunepal.findClosest.bind(transcription, sqlite.query_result))
 	
-	# print("Results" + str(results))
-	
-	for i in range(results.size()):
-		# print(results[i])
-		
-		var confidence = 1.0 - (results[i]["edit_distance"] / s.length())
-		print(str(results[i]["title"])
-		 + "\t" + str(results[i]["alt_title"])
-#		 + "\t" + str(results[i]["search_key"])
-		 + "\t" + str(confidence)
-		 )
-	
+	# 
 	$AudioStreamPlayer.stream = recording
 	$AudioStreamPlayer.play()
 	
@@ -97,12 +92,30 @@ func stop_recording():
 	action = ""
 	button_lable_set(default_lable_value)
 	
+
 func tunepal_test():
 	var pattern = "BREXDDDDD"
 	var text = "THERE IS NO BREAD"
 	tunepal.say_hello()
 	print(tunepal.edSubstring(pattern, text, 0))
 	pass
+	
+func finished_searching():
+	var results:Array = thread.wait_to_finish()
+	
+	# print("Results" + str(results))
+	
+	for i in range(results.size()):
+		# print(results[i])
+		
+		var confidence = 1.0 - (results[i]["edit_distance"] / transcription.length())
+		print(str(results[i]["title"])
+		 + "\t" + str(results[i]["alt_title"])
+#		 + "\t" + str(results[i]["search_key"])
+		 + "\t" + str(confidence)
+		 )
+	
+	
 
 func _on_timer_timeout() -> void:
 	if action == "countdown":
