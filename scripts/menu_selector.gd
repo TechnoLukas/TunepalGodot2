@@ -27,9 +27,9 @@ func _ready() -> void:
 func update_title():
 	lable.text = title
 
-func set_color(tr):
+func set_color(button_transparency):
 	var style = StyleBoxFlat.new()
-	style.bg_color=Color(0.0,0.0,0.0,tr)
+	style.bg_color=Color(0.0,0.0,0.0,button_transparency)
 	deselect_button.add_theme_stylebox_override("normal",style)
 	deselect_button.add_theme_stylebox_override("hover",style)
 	deselect_button.add_theme_stylebox_override("pressed",style)

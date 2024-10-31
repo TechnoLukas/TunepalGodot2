@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://c2eo6w1wwgvnp"
-path="res://.godot/imported/icomoon.ttf-1c6a4edf9304c05f4021a4b2012d5523.fontdata"
+uid="uid://bwpbby3akmvi"
+path="res://.godot/imported/icomoon.ttf-58e02e29371fe2a3eb9359c52a00c84e.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/icomoon.ttf"
-dest_files=["res://.godot/imported/icomoon.ttf-1c6a4edf9304c05f4021a4b2012d5523.fontdata"]
+source_file="res://assets/icons_data/icomoon_fonts/fonts/icomoon.ttf"
+dest_files=["res://.godot/imported/icomoon.ttf-58e02e29371fe2a3eb9359c52a00c84e.fontdata"]
 
 [params]
 

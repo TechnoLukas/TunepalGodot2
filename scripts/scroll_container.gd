@@ -74,8 +74,8 @@ func _input(ev) -> void:
 		
 		if swiping:
 			var delta : Vector2 = ev.global_position - swipe_mouse_start
-			set_h_scroll(swipe_start.x - delta.x)
-			set_v_scroll(swipe_start.y - delta.y)
+			set_h_scroll(int(swipe_start.x - delta.x))
+			set_v_scroll(int(swipe_start.y - delta.y))
 			swipe_mouse_times.append(Time.get_ticks_msec())
 			swipe_mouse_positions.append(ev.global_position)
 			ev.position = Vector2.ZERO
