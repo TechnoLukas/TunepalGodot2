@@ -4,7 +4,7 @@ extends Control
 @onready var timer = $Timer
 
 var countdown_time=0
-var recording_time=12
+var recording_time=3
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -99,8 +99,7 @@ func tunepal_test():
 	print(tunepal.edSubstring(pattern, text, 0))
 	pass
 	
-func finished_searching():
-	var results:Array = thread.wait_to_finish()
+func finished_searching(results:Array):
 	
 	# print("Results" + str(results))
 	

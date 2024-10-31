@@ -14,6 +14,7 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("transcribe"), &Tunepal::transcribe);
 	ClassDB::bind_method(D_METHOD("findClosest"), &Tunepal::findClosest);
 	ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
+	ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
 
 	ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
     
