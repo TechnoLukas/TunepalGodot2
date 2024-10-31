@@ -57,6 +57,10 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
     // For each dictionary in the haystack
     for (int i = 0; i < haystack.size(); i++)
     {
+		if (i % 100 == 0)
+		{
+			UtilityFunctions::print("i: ", i);
+		}
         Dictionary tune = haystack[i];
         String search_key = tune["search_key"];
         
@@ -85,6 +89,7 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
         result.push_back(tune);
     }
 
+	call_deferred("../finished_searching");
     return result;
 }
 
@@ -162,7 +167,7 @@ godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot
 int Tunepal::edSubstring(const godot::String pattern, const godot::String text, const int thread_id)
 {
 	//return 666;
-	int matrix[400][400];
+	static int matrix[400][400];
 	int pLength = pattern.length();
 	int tLength = text.length();
 	int difference = 0;
