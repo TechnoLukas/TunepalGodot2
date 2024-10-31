@@ -61,16 +61,16 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
     // For each dictionary in the haystack
     for (int i = 0; i < haystack.size(); i++)
     {
-		if (i % 100 == 0)
-		{
-			UtilityFunctions::print("i: ", i);
-		}
+		
         Dictionary tune = haystack[i];
         String search_key = tune["search_key"];
         
         // Calculate edit distance using search_key
         float distance = edSubstring(needle, search_key, 0);
-        
+        if (i % 100 == 0)
+		{
+			UtilityFunctions::print("i: ", i, search_key, distance);
+		}
         Dictionary match;
         match["distance"] = distance;
         match["tune"] = tune;

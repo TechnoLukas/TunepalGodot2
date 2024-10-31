@@ -4,7 +4,7 @@ extends Control
 @onready var timer = $Timer
 
 var countdown_time=0
-var recording_time=3
+var recording_time=10
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -109,8 +109,8 @@ func finished_searching(results:Array):
 		var confidence = 1.0 - (results[i]["edit_distance"] / transcription.length())
 		print(str(results[i]["title"])
 		 + "\t" + str(results[i]["alt_title"])
-#		 + "\t" + str(results[i]["search_key"])
-		 + "\t" + str(confidence)
+		 + "\t" + str(results[i]["search_key"])
+		 + "\t" + str(results[i]["edit_distance"])
 		 )
 	
 	
