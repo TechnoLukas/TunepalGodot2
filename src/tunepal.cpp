@@ -178,13 +178,30 @@ godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot
 }
 */
 
-int MAX_KEY_LENGTH = 1000;
-int MAX_QUERY_LENGTH = 300;
+const int MAX_KEY_LENGTH = 1000;
+const int MAX_QUERY_LENGTH = 300;
 
-int Tunepal::edSubstring(const godot::String pattern, const godot::String text, const int thread_id)
+/*
+int Tunepal::edSubstring(const godot::String pattern_param, const godot::String text_param, const int thread_id)
 {
 	//return 666;
-	static int matrix[400][400];
+
+	godot::String pattern = pattern_param;
+	if (pattern_param.length() > MAX_QUERY_LENGTH)
+	{
+		pattern = pattern_param.substr(0, MAX_QUERY_LENGTH);
+		// out.println("The maximum length for a query is 300 notes. Try a shorter piece.");
+	}
+
+	godot::String text = text_param;
+	if (text_param.length() > MAX_QUERY_LENGTH)
+	{
+		text = text_param.substr(0, MAX_QUERY_LENGTH);
+		// out.println("The maximum length for a query is 300 notes. Try a shorter piece.");
+	}
+	
+
+	static int matrix[MAX_QUERY_LENGTH + 1][MAX_KEY_LENGTH + 1];
 	int pLength = pattern.length();
 	int tLength = text.length();
 	int difference = 0;
@@ -256,6 +273,55 @@ int Tunepal::edSubstring(const godot::String pattern, const godot::String text, 
 	}
 	float ed = min;
 	return ed;
+}
+*/
+
+int Tunepal::edSubstring(const godot::String& pattern_param, const godot::String& text_param, const int thread_id) {
+    // Early returns
+    if (pattern_param.length() == 0 || text_param.length() == 0) return 0;
+
+    // Get substring if needed
+    const godot::String& pattern = (pattern_param.length() > MAX_QUERY_LENGTH) ? 
+        pattern_param.substr(0, MAX_QUERY_LENGTH) : pattern_param;
+    const godot::String& text = (text_param.length() > MAX_QUERY_LENGTH) ? 
+        text_param.substr(0, MAX_QUERY_LENGTH) : text_param;
+
+    const int pLength = pattern.length();
+    const int tLength = text.length();
+
+    // Use vector for automatic cleanup and better memory management
+    std::vector<int> matrix((pLength + 1) * (tLength + 1));
+
+    // Initialize first row and column
+    for (int i = 0; i <= tLength; i++) matrix[i] = 0;
+    for (int i = 1; i <= pLength; i++) matrix[i * (tLength + 1)] = i;
+
+    // Convert strings to char arrays for faster access
+    const char* pattern_chars = pattern.ascii().get_data();
+    const char* text_chars = text.ascii().get_data();
+
+    // Main calculation
+    for (int j = 1; j <= tLength; j++) {
+        for (int i = 1; i <= pLength; i++) {
+            const char sc = pattern_chars[i - 1];
+            const int difference = ((text_chars[j - 1] != sc) && sc != 'Z') ? 1 : 0;
+            const int idx = i * (tLength + 1) + j;
+            const int prev_idx = (i - 1) * (tLength + 1) + j - 1;
+            matrix[idx] = std::min({
+                matrix[prev_idx + 1] + 1,        // deletion
+                matrix[prev_idx + tLength + 1] + 1,  // insertion
+                matrix[prev_idx] + difference     // substitution
+            });
+        }
+    }
+
+    // Find minimum in last row
+    int min = matrix[pLength * (tLength + 1)];
+    for (int i = 1; i <= tLength; i++) {
+        min = std::min(min, matrix[pLength * (tLength + 1) + i]);
+    }
+
+    return min;
 }
 
 void Tunepal::say_hello()
