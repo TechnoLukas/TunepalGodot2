@@ -43,6 +43,20 @@ godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const i
         		
 }
 
+godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot::Array haystack)
+{
+
+	// The haystack is an array of Dictionary
+	// Each dictionary has the following keys:
+	// id, midi_sequence, tune_type, time_sig, notation, sourceid, shortName, url, sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key
+	// Call this function below to return the edit distance between pattern and subsequences of text
+	// Tunepal::edSubstring(const godot::String pattern, const godot::String text)
+	// The function should return an array of dictionaries, sorted by edit distance lowest to highest
+	// Only return the top 10 matches
+
+	return godot::Dictionary();
+}
+
 int Tunepal::edSubstring(const godot::String pattern, const godot::String text, const int thread_id)
 {
 	//return 666;
