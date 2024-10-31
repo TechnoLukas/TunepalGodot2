@@ -78,10 +78,17 @@ func stop_recording():
 	
 	var results:Array = tunepal.findClosest(s, sqlite.query_result)
 	
-	print("Results" + str(results))
+	# print("Results" + str(results))
 	
 	for i in range(results.size()):
-		print(results[i]["title"] + "\t" + results[i]["alt_title"] + "\t" + results[i]["search_key"] + "\t" + results[i]["edit_distance"] + "\t")
+		# print(results[i])
+		
+		var confidence = 1.0 - (results[i]["edit_distance"] / s.length())
+		print(str(results[i]["title"])
+		 + "\t" + str(results[i]["alt_title"])
+#		 + "\t" + str(results[i]["search_key"])
+		 + "\t" + str(confidence)
+		 )
 	
 	$AudioStreamPlayer.stream = recording
 	$AudioStreamPlayer.play()
