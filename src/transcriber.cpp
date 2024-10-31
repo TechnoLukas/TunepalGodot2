@@ -200,21 +200,28 @@ Transcriber::Transcriber()
 
 Transcriber::Transcriber(const godot::PackedByteArray& audioData)
 {
-    // Godot is sending us stereo data, so we need to convert it to mono
-    int numSamples = audioData.size() / 2;
+    // Since we're getting stereo data (4 bytes per sample - 2 bytes per channel),
+    // the number of mono samples will be size/4
+    int numSamples = audioData.size() / 4;
     signal = new float[numSamples];
     
     for (int signalIndex = 0; signalIndex < numSamples; signalIndex++)
     {
-        // Get the two bytes that make up our 16-bit sample
-        uint8_t b0 = audioData[signalIndex * 4];        // Low byte
-        uint8_t b1 = audioData[signalIndex * 4 + 1];    // High byte
+        // Get bytes for left channel
+        uint8_t leftLow = audioData[signalIndex * 4];        // Low byte left
+        uint8_t leftHigh = audioData[signalIndex * 4 + 1];   // High byte left
         
-        // Combine the bytes into a 16-bit signed integer
-        int16_t sample = (b1 << 8) | b0;
+        // Get bytes for right channel
+        uint8_t rightLow = audioData[signalIndex * 4 + 2];   // Low byte right
+        uint8_t rightHigh = audioData[signalIndex * 4 + 3];  // High byte right
         
-        // Convert to float in the range [-1.0, 1.0]
-        signal[signalIndex] = sample / 32768.0f;
+        // Combine bytes into 16-bit signed integers for each channel
+        int16_t leftSample = (leftHigh << 8) | leftLow;
+        int16_t rightSample = (rightHigh << 8) | rightLow;
+        
+        // Convert to float and average the channels
+        // Divide by 32768.0f to normalize to [-1.0, 1.0] range
+        signal[signalIndex] = (leftSample + rightSample) / (2.0f * 32768.0f);
         
         // if (signalIndex < 5000)
         // {

@@ -12,6 +12,8 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("say_hello"), &Tunepal::say_hello);
 	ClassDB::bind_method(D_METHOD("edSubstring"), &Tunepal::edSubstring);
 	ClassDB::bind_method(D_METHOD("transcribe"), &Tunepal::transcribe);
+	ClassDB::bind_method(D_METHOD("findClosest"), &Tunepal::findClosest);
+	
 }
 
 Tunepal::Tunepal() {
@@ -43,7 +45,7 @@ godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const i
         		
 }
 
-godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot::Array haystack)
+godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array haystack)
 {
     godot::Array matches;
     
@@ -54,7 +56,7 @@ godot::Array Tunepal::findClosesestMatch(const godot::String needle, const godot
         String search_key = tune["search_key"];
         
         // Calculate edit distance using search_key
-        float distance = edSubstring(needle, search_key);
+        float distance = edSubstring(needle, search_key, 0);
         
         Dictionary match;
         match["distance"] = distance;
