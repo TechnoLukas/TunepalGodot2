@@ -28,6 +28,11 @@ func _ready() -> void:
 	#spectrum = AudioServer.get_bus_effect_instance(record_bus_index, 0)
 	tunepal.search_completed.connect(finished_searching)
 	add_child(tunepal)
+	
+	thread = Thread.new()
+	var transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
+	thread.start(tunepal.findClosest.bind(transcription, sqlite.query_result))
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -82,7 +87,6 @@ func stop_recording():
 	
 	thread = Thread.new()
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.query_result))
-	$"../.."
 	# 
 	$AudioStreamPlayer.stream = recording
 	$AudioStreamPlayer.play()
@@ -109,7 +113,7 @@ func finished_searching(results:Array):
 		var confidence = 1.0 - (results[i]["edit_distance"] / transcription.length())
 		print(str(results[i]["title"])
 		 + "\t" + str(results[i]["alt_title"])
-		 + "\t" + str(results[i]["search_key"])
+# 		 + "\t" + str(results[i]["search_key"])
 		 + "\t" + str(results[i]["edit_distance"])
 		 )
 	
