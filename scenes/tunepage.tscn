@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=3 uid="uid://wan12wmkrg8x"]
+[gd_scene load_steps=18 format=3 uid="uid://wan12wmkrg8x"]
 
 [ext_resource type="Script" path="res://scripts/tunepage.gd" id="1_7nh84"]
 [ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="1_fdvmm"]
 [ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="2_tfmek"]
 [ext_resource type="FontFile" uid="uid://c85ye11x231t5" path="res://assets/fonts/icomoon.ttf" id="3_xye2h"]
 [ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="5_8j08h"]
+[ext_resource type="Script" path="res://addons/simple_midi/midi_file_player_example.gd" id="6_ou3gq"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nyajq"]
 
@@ -301,5 +302,10 @@ label_settings = SubResource("LabelSettings_do5pl")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="MidiPlayer" type="Node" parent="."]
+auto_translate_mode = 2
+script = ExtResource("6_ou3gq")
+
 [connection signal="pressed" from="Container/container/return_button" to="." method="_on_return_button_pressed"]
 [connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button" to="." method="_on_play_and_pause_button_pressed"]
+[connection signal="finished" from="MidiPlayer" to="." method="_on_midi_player_finished"]
