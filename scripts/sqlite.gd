@@ -48,14 +48,7 @@ var accented_characters = {
 }
 
 func _ready():
-	if OS.get_name() in ["Android", "iOS", "Web"]:
-		db_name = "user://assets/data/tunepal"
-		copy_data_to_user()
-		print("finished")
-	else:
-		db_name = "res://assets/data/tunepal"
-	
-	db.path = db_name
+	db.path =  clientside.prefix + "://assets/data/tunepal"
 	db.open_db()
 	db.read_only = true
 	# source = 2 norbeck
@@ -68,29 +61,3 @@ func _ready():
 				title=title.replace(character, accented_characters[character])
 		query_result[i]["accented_title"] = title
 	db.close_db()
-
-func cprint(text : String) -> void:
-	print(text)
-
-func copy_data_to_user() -> void:
-	var original_data_path := "res://assets/data"
-	var copy_assets_path := "user://assets"
-	var copy_data_path := "user://assets/data"
-
-	DirAccess.make_dir_absolute(copy_assets_path)
-	DirAccess.make_dir_absolute(copy_data_path)
-	var dir = DirAccess.open(original_data_path)
-	
-	print(dir.get_files())
-	if dir:
-		dir.list_dir_begin();
-		var file_name = dir.get_next()
-		while (file_name != ""):
-			if dir.current_is_dir():
-				pass
-			else:
-				cprint("Copying " + file_name + " to /user-folder")
-				dir.copy(original_data_path + "/" + file_name, copy_data_path + "/" + file_name)
-			file_name = dir.get_next()
-	else:
-		cprint("An error occurred when trying to access the path.")
