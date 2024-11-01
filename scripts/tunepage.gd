@@ -6,6 +6,8 @@ extends Control
 @onready var add_button = $BottomSection/SectionWithMargin/HBoxContainer/add_buttton
 @onready var play_and_pause_button = $BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button
 
+@onready var midi_player = $MidiPlayer
+
 var symbols = ["",""]
 var symbols_idx = 0
 
@@ -19,11 +21,21 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 
+func string_to_packed_byte_array(input_string: String) -> PackedByteArray:
+	var byte_array = PackedByteArray()
+	var values = input_string.split(",")  # Split the string by commas
+	for value in values:
+		byte_array.push_back(int(value.strip_edges()))  # Convert each item to integer and add to array
+	return byte_array
 
 func _on_tunes_list_show_tune_page(data: Variant) -> void:
 	self.visible=true
+	#print(data.keys())
+	var midi_sequence = string_to_packed_byte_array(data["midi_sequence"])
+	print(midi_sequence)
 	tune_label.text = data["accented_title"]
 	abc_field.text=data["notation"]
+	midi_player.loadmidi("res://assets/Roscommon.mid")
 
 func _on_return_button_pressed() -> void:
 	self.visible=false
@@ -38,6 +50,14 @@ func _on_play_and_pause_button_pressed():
 
 func play():
 	print("to play")
+	midi_player.play()
 
 func pause():
 	print("to pause")
+	midi_player.stop()
+
+
+func _on_midi_player_finished() -> void:
+	print("finised")
+	symbols_idx = 0
+	play_and_pause_button.get_node("label").text=symbols[symbols_idx]
