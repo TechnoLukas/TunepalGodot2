@@ -29,16 +29,18 @@ func _ready() -> void:
 	tunepal.search_completed.connect(finished_searching)
 	add_child(tunepal)
 	
-	thread = Thread.new()
-	var transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
-	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
-	
 	var tune = sqlite.tunes[0]
 	var notation:String = tune["notation"]
 	var file_name:String = tune["file_name"]
 	var midi_file_name = "temp_tune.mid"
 	tunepal.create_midi_file(notation, file_name, midi_file_name, 0 , 0, 0, 0)
 
+	
+	thread = Thread.new()
+	var transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
+	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
+	
+	
 func showpage():
 	self.visible = true
 	
