@@ -32,6 +32,8 @@ public:
 
 	void Tunepal::finished_searching();
 
+	void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords);
+
     // int edSubstring(string
 };
 
