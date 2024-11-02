@@ -1,0 +1,79 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?xqfyff');
+  src:  url('fonts/icomoon.eot?xqfyff#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?xqfyff') format('truetype'),
+    url('fonts/icomoon.woff?xqfyff') format('woff'),
+    url('fonts/icomoon.svg?xqfyff#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-help_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e900";
+  color: #e8eaed;
+}
+.icon-info_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e901";
+  color: #e8eaed;
+}
+.icon-menu_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e902";
+  color: #e8eaed;
+}
+.icon-mic_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e903";
+  color: #e8eaed;
+}
+.icon-music_note_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e904";
+  color: #e8eaed;
+}
+.icon-search_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e905";
+  color: #e8eaed;
+}
+.icon-settings_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e906";
+  color: #e8eaed;
+}
+.icon-close_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e907";
+  color: #e8eaed;
+}
+.icon-arrow_back_ios_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e908";
+  color: #e8eaed;
+}
+.icon-add_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e909";
+  color: #e8eaed;
+}
+.icon-play_arrow_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90a";
+  color: #e8eaed;
+}
+.icon-stop_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90b";
+  color: #e8eaed;
+}
+.icon-pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90c";
+  color: #e8eaed;
+}

@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://c45a4yixb3jbm"]
+[gd_scene load_steps=11 format=3 uid="uid://c45a4yixb3jbm"]
 
 [ext_resource type="Script" path="res://scripts/keyword_page.gd" id="1_ql4et"]
-[ext_resource type="Script" path="res://scripts/scroll_container.gd" id="2_xvb40"]
+[ext_resource type="FontFile" uid="uid://c85ye11x231t5" path="res://assets/fonts/icomoon.ttf" id="2_j3cns"]
 [ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="3_ap7qn"]
+[ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="4_bsida"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_frgol"]
 
@@ -17,7 +18,8 @@ bg_color = Color(0.34902, 0.34902, 0.34902, 1)
 bg_color = Color(0.25, 0.25, 0.25, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_rh7tp"]
-font_size = 25
+font = ExtResource("2_j3cns")
+font_size = 30
 
 [node name="KeywordPage" type="Control"]
 layout_mode = 3
@@ -120,94 +122,22 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "X"
+text = ""
 label_settings = SubResource("LabelSettings_rh7tp")
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="BottomSection" type="Control" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 50.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="SectionWithMargin" type="Control" parent="BottomSection"]
-clip_contents = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = 10.0
-offset_right = -10.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.34902, 0.34902, 0.34902, 1)
-
-[node name="ScrollContainer" type="ScrollContainer" parent="BottomSection/SectionWithMargin"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = 5.0
-offset_right = -5.0
-offset_bottom = -5.0
-grow_horizontal = 2
-grow_vertical = 2
-horizontal_scroll_mode = 0
-script = ExtResource("2_xvb40")
-
-[node name="ListContainer" type="VBoxContainer" parent="BottomSection/SectionWithMargin/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 0
-
-[node name="list_item" type="Control" parent="BottomSection/SectionWithMargin/ScrollContainer/ListContainer"]
-visible = false
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 2
-
-[node name="label" type="Label" parent="BottomSection/SectionWithMargin/ScrollContainer/ListContainer/list_item"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "The Thing"
-vertical_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="BottomSection/SectionWithMargin/ScrollContainer/ListContainer/list_item"]
-clip_contents = true
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -4.0
-grow_horizontal = 2
-grow_vertical = 0
 
 [node name="TunesList" parent="." instance=ExtResource("3_ap7qn")]
 layout_mode = 1
 anchors_preset = -1
 offset_top = 50.0
 
+[node name="Tunepage" parent="." instance=ExtResource("4_bsida")]
+visible = false
+layout_mode = 1
+offset_top = 0.0
+
 [connection signal="text_changed" from="TopSection/SectionWithMargin/group/search_field/line_edit" to="." method="_on_line_edit_text_changed"]
 [connection signal="text_submitted" from="TopSection/SectionWithMargin/group/search_field/line_edit" to="." method="_on_line_edit_text_submitted"]
 [connection signal="pressed" from="TopSection/SectionWithMargin/group/close_field" to="." method="_on_close_field_pressed"]
+[connection signal="show_tune_page" from="TunesList" to="Tunepage" method="show_tune_page"]

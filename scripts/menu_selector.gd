@@ -18,7 +18,8 @@ var t = 0.0
 # Page selection Variables
 var pagenames = {
 				"record":{"node":"RecordPage","title":"Record"},
-				"keyword":{"node":"KeywordPage","title":"Search Tune"}
+				"keyword":{"node":"KeywordPage","title":"Search Tune"},
+				"randomtune":{"node":"RandomtunePage","title":"Random Tune"}
 				}
 
 func _ready() -> void:
@@ -27,9 +28,9 @@ func _ready() -> void:
 func update_title():
 	lable.text = title
 
-func set_color(tr):
+func set_color(button_transparency):
 	var style = StyleBoxFlat.new()
-	style.bg_color=Color(0.0,0.0,0.0,tr)
+	style.bg_color=Color(0.0,0.0,0.0,button_transparency)
 	deselect_button.add_theme_stylebox_override("normal",style)
 	deselect_button.add_theme_stylebox_override("hover",style)
 	deselect_button.add_theme_stylebox_override("pressed",style)
@@ -78,11 +79,13 @@ func open_page(string):
 	var pages = get_parent().find_child("pages").get_children()
 	for page in pages:
 		if page.name == pagenames[string]["node"]:
-			page.visible = true
+			#page.visible = true
+			page.showpage()
 			title = pagenames[string]["title"]
 			update_title()
 		else:
-			page.visible = false
+			#page.visible = false
+			page.hidepage()
 	
 	
 func _process(delta: float) -> void:
@@ -106,6 +109,7 @@ func _on_keyword_scene_button_pressed() -> void:
 
 func _on_randomtune_scene_button_pressed() -> void:
 	close_menu()
+	open_page("randomtune")
 
 func _on_settings_scene_button_pressed() -> void:
 	close_menu()

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cqlu0litbx2mt"]
+[gd_scene load_steps=4 format=3 uid="uid://cqlu0litbx2mt"]
 
 [ext_resource type="Script" path="res://scripts/scroll_container.gd" id="1_lohka"]
 [ext_resource type="Script" path="res://scripts/tunelist.gd" id="1_vsy3t"]
+[ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="3_2l4vj"]
 
 [node name="TunesList" type="Control"]
 layout_mode = 3
@@ -24,6 +25,7 @@ color = Color(0.196078, 0.196078, 0.196078, 1)
 [node name="SectionWithMargin" type="Control" parent="."]
 clip_contents = true
 layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
@@ -47,9 +49,7 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 5.0
 offset_top = 5.0
-offset_right = -5.0
 offset_bottom = -5.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -63,15 +63,26 @@ size_flags_vertical = 3
 theme_override_constants/separation = 0
 
 [node name="list_item" type="Control" parent="SectionWithMargin/ScrollContainer/ListContainer"]
-visible = false
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+[node name="button" type="Button" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme = ExtResource("3_2l4vj")
+
+[node name="label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_right = -5.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "The Thing"
@@ -80,10 +91,12 @@ vertical_alignment = 1
 [node name="HSeparator" type="HSeparator" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 clip_contents = true
 layout_mode = 1
-anchors_preset = 12
+anchors_preset = -1
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 5.0
 offset_top = -4.0
+offset_right = -5.0
 grow_horizontal = 2
 grow_vertical = 0

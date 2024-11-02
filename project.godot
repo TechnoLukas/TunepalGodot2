@@ -22,6 +22,7 @@ driver/enable_input=true
 [autoload]
 
 sqlite="*res://scripts/sqlite.gd"
+clientside="*res://scripts/clientside.gd"
 
 [display]
 
@@ -33,11 +34,7 @@ window/handheld/orientation=6
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg")
-
-[input_devices]
-
-pointing/emulate_touch_from_mouse=true
+enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg", "res://addons/midi/plugin.cfg")
 
 [rendering]
 
