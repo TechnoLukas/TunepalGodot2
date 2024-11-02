@@ -1,0 +1,166 @@
+[gd_scene load_steps=7 format=3 uid="uid://dvi4mukmocqmu"]
+
+[ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="1_b8jfc"]
+[ext_resource type="Script" path="res://scripts/usertunes_page.gd" id="1_rqqos"]
+[ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="2_bsldg"]
+[ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="2_k7taf"]
+[ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="3_1icd0"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_73j5i"]
+font = ExtResource("3_1icd0")
+font_size = 35
+
+[node name="UsertunesPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rqqos")
+
+[node name="background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.196078, 0.196078, 0.196078, 1)
+
+[node name="TopSection" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="SectionWithMargin" type="Control" parent="TopSection"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="background" type="ColorRect" parent="TopSection/SectionWithMargin"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="TopSection/SectionWithMargin"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="save_button" type="Button" parent="TopSection/SectionWithMargin/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_k7taf")
+
+[node name="background" type="ColorRect" parent="TopSection/SectionWithMargin/HBoxContainer/save_button"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="label" type="Label" parent="TopSection/SectionWithMargin/HBoxContainer/save_button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = ""
+label_settings = SubResource("LabelSettings_73j5i")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="open_button" type="Button" parent="TopSection/SectionWithMargin/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_k7taf")
+
+[node name="background" type="ColorRect" parent="TopSection/SectionWithMargin/HBoxContainer/open_button"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="label" type="Label" parent="TopSection/SectionWithMargin/HBoxContainer/open_button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = ""
+label_settings = SubResource("LabelSettings_73j5i")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="stop_button" type="Button" parent="TopSection/SectionWithMargin/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("2_k7taf")
+
+[node name="background" type="ColorRect" parent="TopSection/SectionWithMargin/HBoxContainer/stop_button"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="label" type="Label" parent="TopSection/SectionWithMargin/HBoxContainer/stop_button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = ""
+label_settings = SubResource("LabelSettings_73j5i")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TunesList" parent="." instance=ExtResource("1_b8jfc")]
+layout_mode = 1
+anchors_preset = -1
+offset_top = 50.0
+
+[node name="Tunepage" parent="." instance=ExtResource("2_bsldg")]
+visible = false
+layout_mode = 1
+offset_top = 0.0
+
+[connection signal="show_tune_page" from="TunesList" to="Tunepage" method="show_tune_page"]
+[connection signal="returned" from="Tunepage" to="." method="_on_tunepage_returned"]

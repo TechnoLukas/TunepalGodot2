@@ -31,9 +31,9 @@ func _ready() -> void:
 	
 	thread = Thread.new()
 	var transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
-	thread.start(tunepal.findClosest.bind(transcription, sqlite.query_result))
+	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	
-	var tune = sqlite.query_result[0]
+	var tune = sqlite.tunes[0]
 	var notation:String = tune["notation"]
 	var file_name:String = tune["file_name"]
 	var midi_file_name = "temp_tune.mid"

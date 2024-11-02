@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/menu_selector.gd" id="1_7rj1q"]
 [ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="2_63dwq"]
 [ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="3_15jvb"]
-[ext_resource type="FontFile" uid="uid://c85ye11x231t5" path="res://assets/fonts/icomoon.ttf" id="3_nq85l"]
+[ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="3_nq85l"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_peqht"]
 
@@ -213,6 +213,35 @@ theme = ExtResource("2_63dwq")
 text = "Random Tune"
 label_settings = SubResource("LabelSettings_v3415")
 
+[node name="s_scene_button" type="Button" parent="Menu/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+focus_mode = 1
+theme = ExtResource("2_63dwq")
+
+[node name="container" type="HBoxContainer" parent="Menu/VBoxContainer/s_scene_button"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="icon" type="Label" parent="Menu/VBoxContainer/s_scene_button/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "    "
+label_settings = SubResource("LabelSettings_4hsn6")
+
+[node name="label" type="Label" parent="Menu/VBoxContainer/s_scene_button/container"]
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_63dwq")
+text = "My Tunes"
+label_settings = SubResource("LabelSettings_v3415")
+
 [node name="settings_scene_button" type="Button" parent="Menu/VBoxContainer"]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
@@ -372,6 +401,7 @@ label_settings = SubResource("LabelSettings_ausqt")
 [connection signal="pressed" from="Menu/VBoxContainer/record_scene_button" to="." method="_on_record_scene_button_pressed"]
 [connection signal="pressed" from="Menu/VBoxContainer/keyword_scene_button" to="." method="_on_keyword_scene_button_pressed"]
 [connection signal="pressed" from="Menu/VBoxContainer/randomtune_scene_button" to="." method="_on_randomtune_scene_button_pressed"]
+[connection signal="pressed" from="Menu/VBoxContainer/s_scene_button" to="." method="_on_usertunes_scene_button_pressed"]
 [connection signal="pressed" from="Menu/VBoxContainer/settings_scene_button" to="." method="_on_settings_scene_button_pressed"]
 [connection signal="pressed" from="Menu/VBoxContainer/help_scene_button" to="." method="_on_help_scene_button_pressed"]
 [connection signal="pressed" from="Menu/VBoxContainer/about_scene_button" to="." method="_on_about_scene_button_pressed"]
