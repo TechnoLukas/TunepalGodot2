@@ -4,6 +4,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include<string>
 #include<ios>
+#include "utils.h"
 
 using namespace godot;
 using namespace std;
@@ -15,7 +16,7 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("findClosest"), &Tunepal::findClosest);
 	ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
 	ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
-
+	ClassDB::bind_method(D_METHOD("create_midi_file"), &Tunepal::create_midi_file);
 	ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
     
 	
@@ -37,6 +38,17 @@ void Tunepal::_process(double delta) {
 }
 
 int g_fundamental = 3;
+
+void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
+{
+
+	const char * notation_chars = notation.ascii().get_data();
+	const char * abc_file_chars = abc_file_name.ascii().get_data();
+	const char * midi_file_chars = midi_file_name.ascii().get_data();
+	createMidiFile(notation_chars, abc_file_chars, midi_file_chars, speed, transpose, melody, chords);
+	UtilityFunctions::print(midi_file_name);
+}
+
 
 godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)
 {
