@@ -140,4 +140,4 @@ offset_top = 0.0
 [connection signal="text_changed" from="TopSection/SectionWithMargin/group/search_field/line_edit" to="." method="_on_line_edit_text_changed"]
 [connection signal="text_submitted" from="TopSection/SectionWithMargin/group/search_field/line_edit" to="." method="_on_line_edit_text_submitted"]
 [connection signal="pressed" from="TopSection/SectionWithMargin/group/close_field" to="." method="_on_close_field_pressed"]
-[connection signal="show_tune_page" from="TunesList" to="Tunepage" method="_on_tunes_list_show_tune_page"]
+[connection signal="show_tune_page" from="TunesList" to="Tunepage" method="show_tune_page"]

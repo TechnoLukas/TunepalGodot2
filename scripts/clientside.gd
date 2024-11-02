@@ -9,7 +9,7 @@ func _init() -> void:
 	else:
 		prefix = "res"
 		
-	print("AAAAAAAAAAAAAAAAAAAA", prefix)
+	print("Resource prefix is '", prefix,"'")
 
 func copy_assets_to_user():
 	var original_assets_path := "res://assets"

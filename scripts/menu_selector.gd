@@ -18,7 +18,8 @@ var t = 0.0
 # Page selection Variables
 var pagenames = {
 				"record":{"node":"RecordPage","title":"Record"},
-				"keyword":{"node":"KeywordPage","title":"Search Tune"}
+				"keyword":{"node":"KeywordPage","title":"Search Tune"},
+				"randomtune":{"node":"RandomtunePage","title":"Random Tune"}
 				}
 
 func _ready() -> void:
@@ -78,11 +79,13 @@ func open_page(string):
 	var pages = get_parent().find_child("pages").get_children()
 	for page in pages:
 		if page.name == pagenames[string]["node"]:
-			page.visible = true
+			#page.visible = true
+			page.showpage()
 			title = pagenames[string]["title"]
 			update_title()
 		else:
-			page.visible = false
+			#page.visible = false
+			page.hidepage()
 	
 	
 func _process(delta: float) -> void:
@@ -106,6 +109,7 @@ func _on_keyword_scene_button_pressed() -> void:
 
 func _on_randomtune_scene_button_pressed() -> void:
 	close_menu()
+	open_page("randomtune")
 
 func _on_settings_scene_button_pressed() -> void:
 	close_menu()

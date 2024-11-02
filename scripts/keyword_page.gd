@@ -52,6 +52,12 @@ func _ready() -> void:
 	stuff = sqlite.query_result
 	tunelist.clear_list()
 	update_list("")
+	
+func showpage():
+	self.visible = true
+	
+func hidepage():
+	self.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
