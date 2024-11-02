@@ -19,11 +19,12 @@ func _ready() -> void:
 	
 	record_bus_index = AudioServer.get_bus_index("Record")
 	record = AudioServer.get_bus_effect(record_bus_index, 0)
-	
-	#AudioServer.get_bus_effect(record_bus_index, 0).set_buffer_length(.1)
-	#AudioServer.get_bus_effect(record_bus_index, 0).tap_back_pos = .05
-	#spectrum = AudioServer.get_bus_effect_instance(record_bus_index, 0)
 
+func showpage():
+	self.visible = true
+	
+func hidepage():
+	self.visible = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

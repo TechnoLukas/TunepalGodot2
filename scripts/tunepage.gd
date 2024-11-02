@@ -1,5 +1,7 @@
 extends Control
 
+@onready var return_button = $Container/container/return_button
+
 @onready var tune_label = $Container/container/label
 @onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/abc_field
 
@@ -30,11 +32,10 @@ func string_to_packed_byte_array(input_string: String) -> PackedByteArray:
 	return byte_array
 	
 
-func _on_tunes_list_show_tune_page(data: Variant) -> void:
+func show_tune_page(data: Variant) -> void:
 	self.visible=true
 	#print(data.keys())
 	var midi_sequence = string_to_packed_byte_array(data["midi_sequence"])
-	print(midi_sequence)
 	tune_label.text = data["accented_title"]
 	abc_field.text=data["notation"]
 	

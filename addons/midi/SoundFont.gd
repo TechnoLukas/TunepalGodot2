@@ -214,7 +214,6 @@ class SoundFontParseResult:
 ## @return	サウンドフォント
 func read_file( path:String ) -> SoundFontParseResult:
 	var result: = SoundFontParseResult.new( )
-	print(path)
 	var f: = FileAccess.open( path, FileAccess.READ )
 	if f.get_error( ) != OK:
 		result.error = f.get_error( )
