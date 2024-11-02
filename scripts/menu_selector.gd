@@ -19,7 +19,8 @@ var t = 0.0
 var pagenames = {
 				"record":{"node":"RecordPage","title":"Record"},
 				"keyword":{"node":"KeywordPage","title":"Search Tune"},
-				"randomtune":{"node":"RandomtunePage","title":"Random Tune"}
+				"randomtune":{"node":"RandomtunePage","title":"Random Tune"},
+				"usertunes":{"node":"UsertunesPage","title":"My Tunes"}, 
 				}
 
 func _ready() -> void:
@@ -110,6 +111,10 @@ func _on_keyword_scene_button_pressed() -> void:
 func _on_randomtune_scene_button_pressed() -> void:
 	close_menu()
 	open_page("randomtune")
+
+func _on_usertunes_scene_button_pressed() -> void:
+	close_menu()
+	open_page("usertunes")
 
 func _on_settings_scene_button_pressed() -> void:
 	close_menu()

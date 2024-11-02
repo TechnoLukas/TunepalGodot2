@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'icomoon';
-  src:  url('fonts/icomoon.eot?xqfyff');
-  src:  url('fonts/icomoon.eot?xqfyff#iefix') format('embedded-opentype'),
-    url('fonts/icomoon.ttf?xqfyff') format('truetype'),
-    url('fonts/icomoon.woff?xqfyff') format('woff'),
-    url('fonts/icomoon.svg?xqfyff#icomoon') format('svg');
+  src:  url('fonts/icomoon.eot?3t6bn0');
+  src:  url('fonts/icomoon.eot?3t6bn0#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?3t6bn0') format('truetype'),
+    url('fonts/icomoon.woff?3t6bn0') format('woff'),
+    url('fonts/icomoon.svg?3t6bn0#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -61,7 +61,7 @@
   content: "\e908";
   color: #e8eaed;
 }
-.icon-add_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+.icon-bookmark_add_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
   content: "\e909";
   color: #e8eaed;
 }
@@ -75,5 +75,21 @@
 }
 .icon-pause_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
   content: "\e90c";
+  color: #e8eaed;
+}
+.icon-bookmarks_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90d";
+  color: #e8eaed;
+}
+.icon-bookmark_remove_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90e";
+  color: #e8eaed;
+}
+.icon-folder_open_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e90f";
+  color: #e8eaed;
+}
+.icon-save_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24:before {
+  content: "\e910";
   color: #e8eaed;
 }

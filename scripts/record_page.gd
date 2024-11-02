@@ -56,8 +56,8 @@ func stop_recording():
 	var recording = record.get_recording()
 	
 	var audio_data = recording.get_data()
-	print(sqlite.query_result[0].keys())
-	print(sqlite.query_result[0]["midi_sequence"])
+	print(sqlite.tunes[0].keys())
+	print(sqlite.tunes[0]["midi_sequence"])
 	print("Audio buffer as array of floats:", audio_data)
 			
 			

@@ -2,7 +2,8 @@ extends Node
 
 @onready var db = SQLite.new()
 @onready var db_name
-var query_result = []
+var tunes = []
+var user_tunes = []
 
 var accented_characters = {
 	# Acute accents
@@ -53,11 +54,11 @@ func _ready():
 	db.read_only = true
 	# source = 2 norbeck
 	db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;")
-	query_result = db.query_result
-	for i in range(0, query_result.size()):
-		var title = query_result[i]["title"]
+	tunes = db.query_result
+	for i in range(0, tunes.size()):
+		var title = tunes[i]["title"]
 		for character in accented_characters:
 			if character in title:
 				title=title.replace(character, accented_characters[character])
-		query_result[i]["accented_title"] = title
+		tunes[i]["accented_title"] = title
 	db.close_db()
