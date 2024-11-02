@@ -1,0 +1,310 @@
+[gd_scene load_steps=18 format=3 uid="uid://wan12wmkrg8x"]
+
+[ext_resource type="Script" path="res://scripts/tunepage.gd" id="1_7nh84"]
+[ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="1_fdvmm"]
+[ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="2_tfmek"]
+[ext_resource type="FontFile" uid="uid://c85ye11x231t5" path="res://assets/fonts/icomoon.ttf" id="3_xye2h"]
+[ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="5_8j08h"]
+[ext_resource type="Script" path="res://addons/midi/MidiPlayer.gd" id="6_06vdd"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nyajq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ivtp2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oasu4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_00t71"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y7ldf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lg63x"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_tuikw"]
+line_spacing = 0.0
+font = ExtResource("3_xye2h")
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_b1mpa"]
+font_size = 20
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_spwj8"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2kgbk"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_do5pl"]
+font = ExtResource("3_xye2h")
+font_size = 35
+
+[node name="Tunepage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7nh84")
+
+[node name="background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.196078, 0.196078, 0.196078, 1)
+
+[node name="Container" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="background" type="ColorRect" parent="Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_fdvmm")
+color = Color(0.129412, 0.129412, 0.129412, 1)
+
+[node name="container" type="HBoxContainer" parent="Container"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="gap" type="Label" parent="Container/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "  "
+
+[node name="return_button" type="Button" parent="Container/container"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_nyajq")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ivtp2")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_oasu4")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_00t71")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_y7ldf")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_lg63x")
+
+[node name="icon" type="Label" parent="Container/container/return_button"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -15.5
+offset_right = 15.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("2_tfmek")
+text = " "
+label_settings = SubResource("LabelSettings_tuikw")
+
+[node name="label" type="Label" parent="Container/container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_fdvmm")
+text = "Tune name"
+label_settings = SubResource("LabelSettings_b1mpa")
+text_overrun_behavior = 3
+
+[node name="MiddleSection" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SectionWithMargin" type="Control" parent="MiddleSection"]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="background" type="ColorRect" parent="MiddleSection/SectionWithMargin"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MiddleSection/SectionWithMargin"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_spwj8")
+
+[node name="abc_field" type="Label" parent="MiddleSection/SectionWithMargin/ScrollContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxEmpty_2kgbk")
+text = "ABC"
+autowrap_mode = 3
+
+[node name="BottomSection" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="SectionWithMargin" type="Control" parent="BottomSection"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BottomSection/SectionWithMargin"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 5
+
+[node name="add_buttton" type="Button" parent="BottomSection/SectionWithMargin/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("5_8j08h")
+
+[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin/HBoxContainer/add_buttton"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="label" type="Label" parent="BottomSection/SectionWithMargin/HBoxContainer/add_buttton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = ""
+label_settings = SubResource("LabelSettings_do5pl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="play_and_pause_button" type="Button" parent="BottomSection/SectionWithMargin/HBoxContainer"]
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("5_8j08h")
+
+[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="label" type="Label" parent="BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = ""
+label_settings = SubResource("LabelSettings_do5pl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="stop_button" type="Button" parent="BottomSection/SectionWithMargin/HBoxContainer"]
+visible = false
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+focus_mode = 0
+theme = ExtResource("5_8j08h")
+
+[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin/HBoxContainer/stop_button"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="label" type="Label" parent="BottomSection/SectionWithMargin/HBoxContainer/stop_button"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = ""
+label_settings = SubResource("LabelSettings_do5pl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MidiPlayer" type="Node" parent="."]
+script = ExtResource("6_06vdd")
+
+[connection signal="pressed" from="Container/container/return_button" to="." method="_on_return_button_pressed"]
+[connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button" to="." method="_on_play_and_pause_button_pressed"]
+[connection signal="finished" from="MidiPlayer" to="." method="_on_midi_player_finished"]

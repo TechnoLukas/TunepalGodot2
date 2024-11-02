@@ -52,30 +52,28 @@ func _ready() -> void:
 	stuff = sqlite.query_result
 	tunelist.clear_list()
 	update_list("")
+	
+func showpage():
+	self.visible = true
+	
+func hidepage():
+	self.visible = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func update_list(text):
 	for i in range(0, stuff.size()):
-		var title = stuff[i]["title"]
+		var title = stuff[i]["accented_title"]
 		var alt_title = stuff[i]["alt_title"]
-		for character in accented_characters:
-			if character in title:
-				title=title.replace(character, accented_characters[character])
 
 		if search_line.text == "":
-			tunelist.add_item(title)
+			tunelist.add_item(stuff[i])
 		else:
 			if (search_line.text in title) or (alt_title!=null and (search_line.text in alt_title)):
-				tunelist.add_item(title)
-	
-func _on_line_edit_text_changed(new_text: String) -> void:
-	pass
-	#clear_list()
-	#update_list(new_text)
+				tunelist.add_item(stuff[i])
 
 func _on_line_edit_text_submitted(new_text: String) -> void:
 	tunelist.clear_list()

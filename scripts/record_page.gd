@@ -39,8 +39,14 @@ func _ready() -> void:
 	var midi_file_name = "temp_tune.mid"
 	tunepal.create_midi_file(notation, file_name, midi_file_name, 0 , 0, 0, 0)
 
+func showpage():
+	self.visible = true
+	
+func hidepage():
+	self.visible = false
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if action == "countdown":
 		button_lable_set(str(round(timer.time_left)))
 	elif action == "recording":

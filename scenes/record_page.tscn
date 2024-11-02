@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://hm457dvpto61"]
+[gd_scene load_steps=8 format=3 uid="uid://hm457dvpto61"]
 
 [ext_resource type="Script" path="res://scripts/record_page.gd" id="1_xbjfh"]
 [ext_resource type="Texture2D" uid="uid://c5aavi3u5tjx3" path="res://assets/images/tunepal.png" id="2_8s8ke"]
-[ext_resource type="AudioStream" uid="uid://fnmxaoydgs1j" path="res://assets/mixkit-fast-small-sweep-transition-166.wav" id="3_htku8"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qnlb8"]
 
@@ -115,9 +114,6 @@ bus = &"Record"
 [node name="Timer" type="Timer" parent="."]
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-
-[node name="AudioStreamTest" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("3_htku8")
 
 [connection signal="pressed" from="VBoxContainer/bottom_part/record_button" to="." method="_on_record_button_pressed"]
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
