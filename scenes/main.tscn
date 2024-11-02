@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://buov6vxoq7vj3"]
+[gd_scene load_steps=6 format=3 uid="uid://buov6vxoq7vj3"]
 
 [ext_resource type="PackedScene" uid="uid://c45a4yixb3jbm" path="res://scenes/keyword_page.tscn" id="1_71yh5"]
 [ext_resource type="PackedScene" uid="uid://hm457dvpto61" path="res://scenes/record_page.tscn" id="1_eooa8"]
 [ext_resource type="PackedScene" uid="uid://pbtey7m812pp" path="res://scenes/menu_selector.tscn" id="2_dr84s"]
 [ext_resource type="PackedScene" uid="uid://d1hk03qmyllbk" path="res://scenes/randomtune_page.tscn" id="3_7moky"]
+[ext_resource type="PackedScene" uid="uid://dvi4mukmocqmu" path="res://scenes/usertunes_page.tscn" id="4_00loi"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -36,6 +37,11 @@ layout_mode = 1
 offset_top = 0.0
 
 [node name="RandomtunePage" parent="pages" instance=ExtResource("3_7moky")]
+visible = false
+layout_mode = 1
+offset_top = 0.0
+
+[node name="UsertunesPage" parent="pages" instance=ExtResource("4_00loi")]
 visible = false
 layout_mode = 1
 offset_top = 0.0

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/tunepage.gd" id="1_7nh84"]
 [ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="1_fdvmm"]
 [ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="2_tfmek"]
-[ext_resource type="FontFile" uid="uid://c85ye11x231t5" path="res://assets/fonts/icomoon.ttf" id="3_xye2h"]
+[ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="3_xye2h"]
 [ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="5_8j08h"]
 [ext_resource type="Script" path="res://addons/midi/MidiPlayer.gd" id="6_06vdd"]
 
@@ -217,13 +217,13 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 5
 
-[node name="add_buttton" type="Button" parent="BottomSection/SectionWithMargin/HBoxContainer"]
+[node name="add_and_remove_button" type="Button" parent="BottomSection/SectionWithMargin/HBoxContainer"]
 custom_minimum_size = Vector2(40, 0)
 layout_mode = 2
 focus_mode = 0
 theme = ExtResource("5_8j08h")
 
-[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin/HBoxContainer/add_buttton"]
+[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button"]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -233,7 +233,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.34902, 0.34902, 0.34902, 1)
 
-[node name="label" type="Label" parent="BottomSection/SectionWithMargin/HBoxContainer/add_buttton"]
+[node name="label" type="Label" parent="BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -305,6 +305,8 @@ vertical_alignment = 1
 [node name="MidiPlayer" type="Node" parent="."]
 script = ExtResource("6_06vdd")
 
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="Container/container/return_button" to="." method="_on_return_button_pressed"]
+[connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button" to="." method="_on_add_and_remove_button_pressed"]
 [connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button" to="." method="_on_play_and_pause_button_pressed"]
 [connection signal="finished" from="MidiPlayer" to="." method="_on_midi_player_finished"]
