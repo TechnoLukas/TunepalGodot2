@@ -108,7 +108,6 @@ vertical_alignment = 1
 [node name="AudioStreamRecorder" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMicrophone_p8lu4")
 autoplay = true
-mix_target = 2
 bus = &"Record"
 
 [node name="Timer" type="Timer" parent="."]
