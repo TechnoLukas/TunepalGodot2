@@ -54,7 +54,9 @@ func _ready() -> void:
 	
 	thread = Thread.new()
 	transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
-	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
+	tunepal.findClosest(transcription, sqlite.tunes)
+	
+	# thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	##
 	
 func showpage():

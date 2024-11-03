@@ -81,13 +81,13 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
         // Calculate edit distance using search_key
         int distance = edSubstring(needle, search_key, 0);
         int distanceOld = edSubstringOld(needle, search_key, 0);
-		UtilityFunctions::print(needle);
-		UtilityFunctions::print(search_key);
-		UtilityFunctions::print("dist: " , distance);
-		UtilityFunctions::print("distOld: " , distanceOld);
+		//UtilityFunctions::print(needle);
+		//UtilityFunctions::print(search_key);
+		//UtilityFunctions::print("dist: " , distance);
+		//UtilityFunctions::print("distOld: " , distanceOld);
 		if (distance == distanceOld)
 		{
-			UtilityFunctions::print("SAME");
+			//UtilityFunctions::print("SAME");
 		}
 		else
 		{
@@ -419,7 +419,6 @@ int Tunepal::edSubstring(const godot::String& pattern_param, const godot::String
 int Tunepal::edSubstring(const godot::String pattern_param, const godot::String text_param, const int thread_id) {
     if (pattern_param.length() == 0 || text_param.length() == 0) return 0;
 
-    // Get substring if needed
     const godot::String pattern = (pattern_param.length() > MAX_QUERY_LENGTH) ? 
         pattern_param.substr(0, MAX_QUERY_LENGTH) : pattern_param;
     const godot::String text = (text_param.length() > MAX_QUERY_LENGTH) ? 
@@ -428,15 +427,16 @@ int Tunepal::edSubstring(const godot::String pattern_param, const godot::String 
     const int pLength = pattern.length();
     const int tLength = text.length();
 
-    // Use vector for automatic cleanup and better memory management
-    std::vector<int> matrix((pLength + 1) * (tLength + 1));
+    // Initialize all elements to a large value first
+    
+    std::vector<int> matrix((MAX_QUERY_LENGTH + 1) * (MAX_KEY_LENGTH + 1), 0);
 
-    // Initialize first row with zeros
+    // Initialize first row explicitly with zeros
     for (int j = 0; j <= tLength; j++) {
         matrix[j] = 0;
     }
 
-    // Initialize first column with increasing numbers
+    // Initialize first column explicitly with increasing numbers
     for (int i = 0; i <= pLength; i++) {
         matrix[i * (tLength + 1)] = i;
     }
@@ -444,29 +444,33 @@ int Tunepal::edSubstring(const godot::String pattern_param, const godot::String 
     const char* pattern_chars = pattern.ascii().get_data();
     const char* text_chars = text.ascii().get_data();
 
-    // Main calculation - keep original order but use better indexing
+    // Main calculation 
     for (int i = 1; i <= pLength; i++) {
         const char sc = pattern_chars[i - 1];
+        const int row_offset = i * (tLength + 1);
+        const int prev_row_offset = (i - 1) * (tLength + 1);
+        
         for (int j = 1; j <= tLength; j++) {
             const int difference = ((text_chars[j - 1] != sc) && sc != 'Z') ? 1 : 0;
             
-            const int delete_cost = matrix[(i - 1) * (tLength + 1) + j] + 1;
-            const int insert_cost = matrix[i * (tLength + 1) + (j - 1)] + 1;
-            const int subst_cost = matrix[(i - 1) * (tLength + 1) + (j - 1)] + difference;
+            const int deletion = matrix[prev_row_offset + j] + 1;
+            const int insertion = matrix[row_offset + j - 1] + 1;
+            const int substitution = matrix[prev_row_offset + j - 1] + difference;
 
-            matrix[i * (tLength + 1) + j] = std::min({delete_cost, insert_cost, subst_cost});
+            matrix[row_offset + j] = std::min({deletion, insertion, substitution});
         }
     }
 
-
     // Find minimum in last row
-    int min = matrix[pLength * (tLength + 1)];
+    int min_dist = matrix[pLength * (tLength + 1)];
     for (int j = 1; j <= tLength; j++) {
-        min = std::min(min, matrix[pLength * (tLength + 1) + j]);
+        min_dist = std::min(min_dist, matrix[pLength * (tLength + 1) + j]);
     }
 
-    return min;
+    return min_dist;
 }
+
+
 void Tunepal::say_hello()
 {
     UtilityFunctions::print("Hello World");
