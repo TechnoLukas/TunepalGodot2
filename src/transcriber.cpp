@@ -198,6 +198,9 @@ Transcriber::Transcriber()
     // numSamples = SAMPLE_RATE * SAMPLE_TIME;
 }
 
+
+
+/*
 Transcriber::Transcriber(const godot::PackedByteArray& audioData)
 {
     // Calculate original number of samples (stereo to mono)
@@ -255,7 +258,7 @@ Transcriber::Transcriber(const godot::PackedByteArray& audioData)
 	{
 		if (i < 5000)
 		{
-			UtilityFunctions::print(signal[i]);
+			// UtilityFunctions::print(signal[i]);
 		}
 	}
     
@@ -265,7 +268,9 @@ Transcriber::Transcriber(const godot::PackedByteArray& audioData)
     this->numSamples = finalNumSamples;
 }
 
-/*
+*/
+
+/**/
 Transcriber::Transcriber(const godot::PackedByteArray& audioData)
 {
     // Since we're getting stereo data (4 bytes per sample - 2 bytes per channel),
@@ -291,15 +296,14 @@ Transcriber::Transcriber(const godot::PackedByteArray& audioData)
         // Divide by 32768.0f to normalize to [-1.0, 1.0] range
         signal[signalIndex] = (leftSample + rightSample) / (2.0f * 32768.0f);
         
-        // if (signalIndex < 5000)
-        // {
-        //     UtilityFunctions::print(signal[signalIndex]);
-        // }
+        if (signalIndex < 5000)
+        {
+             // UtilityFunctions::print(signal[signalIndex]);
+        }
     }
     
     this->numSamples = numSamples;
 }
-*/
 
 /*
 Transcriber::Transcriber(const godot::PackedByteArray & audioData)

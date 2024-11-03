@@ -112,6 +112,8 @@ mix_target = 2
 bus = &"Record"
 
 [node name="Timer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
