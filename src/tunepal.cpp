@@ -449,14 +449,15 @@ int Tunepal::edSubstring(const godot::String pattern_param, const godot::String 
         const char sc = pattern_chars[i - 1];
         for (int j = 1; j <= tLength; j++) {
             const int difference = ((text_chars[j - 1] != sc) && sc != 'Z') ? 1 : 0;
-            const int idx = i * (tLength + 1) + j;
-            matrix[idx] = std::min({
-                matrix[(i - 1) * (tLength + 1) + j] + 1,     // deletion
-                matrix[i * (tLength + 1) + (j - 1)] + 1,     // insertion 
-                matrix[(i - 1) * (tLength + 1) + (j - 1)] + difference  // substitution
-            });
+            
+            const int delete_cost = matrix[(i - 1) * (tLength + 1) + j] + 1;
+            const int insert_cost = matrix[i * (tLength + 1) + (j - 1)] + 1;
+            const int subst_cost = matrix[(i - 1) * (tLength + 1) + (j - 1)] + difference;
+
+            matrix[i * (tLength + 1) + j] = std::min({delete_cost, insert_cost, subst_cost});
         }
     }
+
 
     // Find minimum in last row
     int min = matrix[pLength * (tLength + 1)];
