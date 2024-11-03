@@ -22,7 +22,7 @@ public:
 
 	void say_hello();
 
-	int Tunepal::edSubstring(const godot::String& pattern_param, const godot::String& text_param, const int thread_id);
+	int Tunepal::edSubstring(const godot::String pattern_param, const godot::String text_param, const int thread_id);
 	int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::String text_param, const int thread_id);
 
 	godot::String transcribe(const godot::PackedByteArray & signal, const int fundamental);
