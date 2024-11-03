@@ -249,8 +249,15 @@ Transcriber::Transcriber(const godot::PackedByteArray& audioData)
             signal[i] = tempBuffer[lowIndex] * (1.0f - fraction) + 
                        tempBuffer[highIndex] * fraction;
         }
-
     }
+
+	for (int i = 0; i < finalNumSamples; i++)
+	{
+		if (i < 5000)
+		{
+			UtilityFunctions::print(signal[i]);
+		}
+	}
     
     // Clean up temporary buffer
     delete[] tempBuffer;

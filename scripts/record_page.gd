@@ -52,10 +52,10 @@ func _ready() -> void:
 	tunepal.create_midi_file(notation, file_name, midi_file_name, 0 , 0, 0, 0)
 
 	
-	thread = Thread.new()
-	transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
-	tunepal.findClosest(transcription, sqlite.tunes)
-	
+	#thread = Thread.new()
+	#transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
+	#tunepal.findClosest(transcription, sqlite.tunes)
+	#
 	# thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	##
 	
@@ -104,7 +104,7 @@ func stop_recording():
 	print("Mix rate ", recording.mix_rate)
 	print("Stereo ", recording.stereo)
 	
-	print(sqlite.query_result[0]["midi_sequence"])
+	# print(sqlite.query_result[0]["midi_sequence"])
 	# print("Audio buffer as array of floats:", audio_data)
 			
 			
@@ -117,7 +117,7 @@ func stop_recording():
 	print("Transcription: " + transcription)
 	
 	thread = Thread.new()
-	thread.start(tunepal.findClosest.bind(transcription, sqlite.query_result))
+	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	# 
 	$AudioStreamPlayer.stream = recording
 	$AudioStreamPlayer.play()
