@@ -79,8 +79,8 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
         String search_key = tune["search_key"];
         
         // Calculate edit distance using search_key
-        int distance = edSubstring(needle, search_key, 0);
-        int distanceOld = edSubstringOld(needle, search_key, 0);
+        int distance = edSubstringOld(needle, search_key, 0);
+        int distanceOld = distance; // edSubstringOld(needle, search_key, 0);
 		//UtilityFunctions::print(needle);
 		//UtilityFunctions::print(search_key);
 		//UtilityFunctions::print("dist: " , distance);
@@ -263,8 +263,13 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
 		matrix[i][0] = i;
 	}
 
-    const char* pattern_chars = pattern.ascii().get_data();
-    const char* text_chars = text.ascii().get_data();
+
+    char pattern_chars[MAX_QUERY_LENGTH + 1];
+    char text_chars[MAX_QUERY_LENGTH + 1];
+    //const char* pattern_chars = pattern.ascii().get_data();
+    strcpy(pattern_chars, pattern.ascii().get_data());
+    strcpy(text_chars, text.ascii().get_data());
+    // const char* text_chars = text.ascii().get_data();
 
 	for (int i = 1; i <= pLength; i++)
 	{
@@ -305,6 +310,14 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
 		}
 	}
 	float ed = min;
+
+    if (ed == 0)
+    {
+        UtilityFunctions::print("00000000");
+        UtilityFunctions::print(pattern_chars);
+        UtilityFunctions::print(text_chars);
+        UtilityFunctions::print("00000000");
+    }
 	return ed;
 }
 
