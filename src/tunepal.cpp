@@ -263,15 +263,17 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
 		matrix[i][0] = i;
 	}
 
+    const char* pattern_chars = pattern.ascii().get_data();
+    const char* text_chars = text.ascii().get_data();
 
 	for (int i = 1; i <= pLength; i++)
 	{
-		sc = pattern[i - 1];
+		sc = pattern_chars[i - 1];
 		for (int j = 1; j <= tLength; j++)
 		{
 			int v = matrix[i - 1][j - 1];
 			//if ((text.charAt(j - 1) != sc) && (text.charAt(j - 1) != 'Z') && sc != 'Z')                
-			if ((text[j - 1] != sc)  && sc != 'Z')
+			if ((text_chars[j - 1] != sc)  && sc != 'Z')
 			{
 				difference = 1;
 			}
@@ -279,7 +281,7 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
 			{
 				difference = 0;
 			}
-			matrix[i][j] = UtilityFunctions::min(UtilityFunctions::min(matrix[i - 1][j] + 1, matrix[i][j - 1] + 1), v + difference);
+			matrix[i][j] = min(min(matrix[i - 1][j] + 1, matrix[i][j - 1] + 1), v + difference);
 		}
 	}
 	//UtilityFunctions::print("Matrix:");
