@@ -416,7 +416,7 @@ int Tunepal::edSubstring(const godot::String& pattern_param, const godot::String
 
 */
 
-int Tunepal::edSubstring(const godot::String& pattern_param, const godot::String& text_param, const int thread_id) {
+int Tunepal::edSubstring(const godot::String pattern_param, const godot::String text_param, const int thread_id) {
     if (pattern_param.length() == 0 || text_param.length() == 0) return 0;
 
     // Get substring if needed
@@ -424,7 +424,7 @@ int Tunepal::edSubstring(const godot::String& pattern_param, const godot::String
         pattern_param.substr(0, MAX_QUERY_LENGTH) : pattern_param;
     const godot::String text = (text_param.length() > MAX_QUERY_LENGTH) ? 
         text_param.substr(0, MAX_QUERY_LENGTH) : text_param;
-        
+
     const int pLength = pattern.length();
     const int tLength = text.length();
 
