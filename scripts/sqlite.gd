@@ -57,8 +57,20 @@ func load_db(path):
 	db.path = path
 	db.open_db()
 	db.read_only = true
+<<<<<<< HEAD
 	db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;")
 	return_tune = db.query_result
+=======
+	# source = 2 norbeck
+	await db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, file_name, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;")
+	tunes = db.query_result
+	for i in range(0, tunes.size()):
+		var title = tunes[i]["title"]
+		for character in accented_characters:
+			if character in title:
+				title=title.replace(character, accented_characters[character])
+		tunes[i]["accented_title"] = title
+>>>>>>> main
 	db.close_db()
 	
 	if return_tune.size()!=0 and (not ("accented_title" in return_tune[0])):
