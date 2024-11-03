@@ -162,5 +162,22 @@ visible = false
 layout_mode = 1
 offset_top = 0.0
 
+[node name="FileDialog_Open" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(506, 340)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+use_native_dialog = true
+
+[node name="FileDialog_Save" type="FileDialog" parent="."]
+access = 2
+use_native_dialog = true
+
+[connection signal="pressed" from="TopSection/SectionWithMargin/HBoxContainer/save_button" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="TopSection/SectionWithMargin/HBoxContainer/open_button" to="." method="_on_open_button_pressed"]
 [connection signal="show_tune_page" from="TunesList" to="Tunepage" method="show_tune_page"]
 [connection signal="returned" from="Tunepage" to="." method="_on_tunepage_returned"]
+[connection signal="file_selected" from="FileDialog_Open" to="." method="_on_file_dialog_open_file_selected"]
+[connection signal="file_selected" from="FileDialog_Save" to="." method="_on_file_dialog_save_file_selected"]
