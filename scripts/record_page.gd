@@ -29,6 +29,22 @@ func _ready() -> void:
 	tunepal.search_completed.connect(finished_searching)
 	add_child(tunepal)
 	
+	# print(tunepal.edSubstring("BDEE", "DGGGDGBDEFGAB", 0))
+	print("Substring test")
+	print()
+	
+
+	
+
+	var needle = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
+	var search_key = "ADDDCBAAFGABAFEEEFGAFFEDBADEFGEDDDDDEFGFDEDCBABCDDDEFEEEAGFGADFEDDEFGEDDDD"
+
+	
+	print(tunepal.edSubstring(needle, search_key, 0))
+	print(tunepal.edSubstringOld(needle, search_key, 0))
+
+	
+	
 	var tune = sqlite.tunes[0]
 	var notation:String = tune["notation"]
 	var file_name:String = tune["file_name"]
@@ -37,9 +53,9 @@ func _ready() -> void:
 
 	
 	thread = Thread.new()
-	var transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
+	transcription = "GACEEEFGEDBBAGBAAACEEFGEDBGGGGEDEGAAAEGEDBBAGBAAACEEFGEDBGBDDAGACEEFG"
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
-	
+	##
 	
 func showpage():
 	self.visible = true
