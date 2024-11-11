@@ -2,6 +2,7 @@ extends Node
 
 var tunes = []
 var user_tunes = []
+var default_user_tunes_path = "://assets/data_persistent/user_tunes.json"
 
 var accented_characters = {
 	# Acute accents
@@ -49,6 +50,7 @@ var accented_characters = {
 func _ready():
 	var path = clientside.prefix + "://assets/data/tunepal"
 	tunes = load_db(path)
+	open_json(clientside.prefix + default_user_tunes_path)
 
 	
 func load_db(path):
