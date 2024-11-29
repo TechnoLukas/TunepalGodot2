@@ -18,6 +18,7 @@ var transcription:String
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	tunepal_test()
+	tunepal.say_hello()
 	default_lable_value = record_button.get_node("label").text
 	
 	record_bus_index = AudioServer.get_bus_index("Record")

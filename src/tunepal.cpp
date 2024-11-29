@@ -268,11 +268,11 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
     char text_chars[MAX_QUERY_LENGTH + 1];
     strcpy(pattern_chars, pattern.ascii().get_data());
     strcpy(text_chars, text.ascii().get_data());
-    // const char* text_chars = text.ascii().get_data();
+    // // const char* text_chars = text.ascii().get_data();
 //const char* pattern_chars = pattern.ascii().get_data();
     
-    const char* pattern_chars = pattern.ascii().get_data();
-    const char* text_chars = text.ascii().get_data();
+    //const char* pattern_chars = pattern.ascii().get_data();
+    //const char* text_chars = text.ascii().get_data();
 
 
 	for (int i = 1; i <= pLength; i++)
