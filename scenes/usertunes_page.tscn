@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://dvi4mukmocqmu"]
 
 [ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="1_b8jfc"]
-[ext_resource type="Script" path="res://scripts/usertunes_page.gd" id="1_rqqos"]
+[ext_resource type="Script" uid="uid://bcjklprwehuv1" path="res://scripts/usertunes_page.gd" id="1_rqqos"]
 [ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="2_bsldg"]
 [ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="2_k7taf"]
 [ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="3_1icd0"]

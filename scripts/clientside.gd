@@ -8,6 +8,7 @@ func _init() -> void:
 		prefix = "user"
 		copy_assets_to_user("res://assets/data", "user://assets/data")
 		copy_assets_to_user("res://assets/midi", "user://assets/midi")
+		copy_assets_to_user("res://assets/soundfonts", "user://assets/soundfonts")
 		if DirAccess.open("user://assets/data_persistent") == null:
 			copy_assets_to_user("res://assets/data_persistent", "user://assets/data_persistent")
 	else:
