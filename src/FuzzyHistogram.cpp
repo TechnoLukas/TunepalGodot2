@@ -13,7 +13,13 @@
 #include <vector>
 #include <algorithm>
 
+#include <godot_cpp/variant/utility_functions.hpp>
+
 using namespace std;
+
+using namespace std;
+using namespace godot;
+
 
 bool compareLengths(Candidate d1, Candidate d2)
 {
@@ -57,12 +63,14 @@ float FuzzyHistogram::calculatePeek(float * data, int count, float fuzz, float a
 			candidateLengths.push_back(newCandidate);
 		}
 	}
-	printf("Histogram:\n");
+	UtilityFunctions::print("Histogram:\n");
 	sort(candidateLengths.begin(), candidateLengths.end(), compareLengths);
 	for (int i= 0 ; i < candidateLengths.size(); i ++)
 	{
 		Candidate candidate = candidateLengths[i];
-		printf("%f - %d\n", candidate.value, candidate.count);
+		char buffer[1000];
+		sprintf(buffer, "%f - %d\n", candidate.value, candidate.count);
+		UtilityFunctions::print(buffer);
 
 	}
 	
