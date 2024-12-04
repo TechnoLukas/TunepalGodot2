@@ -48,7 +48,7 @@ func show_tune_page(data: Variant) -> void:
 	tune_label.text = data["accented_title"]
 	abc_field.text=data["notation"]
 	
-	midi_player.file = clientside.prefix + "://assets/Roscommon.mid"
+	midi_player.file = clientside.prefix + "://assets/midi/Roscommon.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
 	#midi_player.soundfont # "res://assets/Live HQ Natural SoundFont GM.sf2" is good
 	
@@ -108,8 +108,10 @@ func add():
 	#var tunes = sqlite.tunes
 	#var idx = tunes.find(this_tune)
 	sqlite.user_tunes.append(this_tune)
+	sqlite.save_json(clientside.prefix + sqlite.default_user_tunes_path)
 
 func remove():
 	print("to remove")
 	if this_tune in sqlite.user_tunes:
 		sqlite.user_tunes.pop_at(sqlite.user_tunes.find(this_tune))
+	sqlite.save_json(clientside.prefix + sqlite.default_user_tunes_path)

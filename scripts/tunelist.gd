@@ -29,6 +29,7 @@ func clear_list():
 	for i in range(1,item_list.get_children().size()):
 		item_list.get_children()[i].queue_free()
 	item_data={}
+	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

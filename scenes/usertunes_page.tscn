@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://dvi4mukmocqmu"]
 
 [ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="1_b8jfc"]
-[ext_resource type="Script" path="res://scripts/usertunes_page.gd" id="1_rqqos"]
+[ext_resource type="Script" uid="uid://bcjklprwehuv1" path="res://scripts/usertunes_page.gd" id="1_rqqos"]
 [ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="2_bsldg"]
 [ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="2_k7taf"]
 [ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="3_1icd0"]
@@ -162,5 +162,22 @@ visible = false
 layout_mode = 1
 offset_top = 0.0
 
+[node name="FileDialog_Open" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+size = Vector2i(506, 340)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+use_native_dialog = true
+
+[node name="FileDialog_Save" type="FileDialog" parent="."]
+access = 2
+use_native_dialog = true
+
+[connection signal="pressed" from="TopSection/SectionWithMargin/HBoxContainer/save_button" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="TopSection/SectionWithMargin/HBoxContainer/open_button" to="." method="_on_open_button_pressed"]
 [connection signal="show_tune_page" from="TunesList" to="Tunepage" method="show_tune_page"]
 [connection signal="returned" from="Tunepage" to="." method="_on_tunepage_returned"]
+[connection signal="file_selected" from="FileDialog_Open" to="." method="_on_file_dialog_open_file_selected"]
+[connection signal="file_selected" from="FileDialog_Save" to="." method="_on_file_dialog_save_file_selected"]

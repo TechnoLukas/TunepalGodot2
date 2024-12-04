@@ -8,7 +8,11 @@ var stuff
 func _ready() -> void:
 	stuff = sqlite.tunes
 	tunelist.clear_list()
+	var time1 = Time.get_ticks_msec()
+	
 	update_list("")
+	var time2 = Time.get_ticks_msec()
+	print("time: ",time2-time1)
 	
 func showpage():
 	self.visible = true
