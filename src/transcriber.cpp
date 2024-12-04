@@ -298,7 +298,7 @@ Transcriber::Transcriber(const godot::PackedByteArray& audioData)
         
         if (signalIndex < 5000)
         {
-             // UtilityFunctions::print(signal[signalIndex]);
+             UtilityFunctions::print(signal[signalIndex]);
         }
     }
     

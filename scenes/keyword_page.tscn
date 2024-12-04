@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://c45a4yixb3jbm"]
 
-[ext_resource type="Script" path="res://scripts/keyword_page.gd" id="1_ql4et"]
+[ext_resource type="Script" uid="uid://cpafhi0vhtct0" path="res://scripts/keyword_page.gd" id="1_ql4et"]
 [ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="2_j3cns"]
 [ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="3_ap7qn"]
 [ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="4_bsida"]
