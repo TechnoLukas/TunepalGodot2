@@ -53,7 +53,7 @@ func _ready():
 	db.open_db()
 	db.read_only = true
 	# source = 2 norbeck
-	await db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, file_name, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id;")
+	await db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, file_name, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 1 limit 1000;")
 	tunes = db.query_result
 	print(str(tunes.size()) + " tunes loaded")
 	for i in range(0, tunes.size()):

@@ -4,7 +4,7 @@ extends Control
 @onready var timer = $Timer
 
 var countdown_time=0
-var recording_time=12
+var recording_time=2
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -69,7 +69,6 @@ func hidepage():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if action == "countdown":
-		print(timer.wait_time)
 		button_lable_set(str(round(timer.time_left)))
 	elif action == "recording":
 		button_lable_set("Recording...")
@@ -87,7 +86,6 @@ func _on_record_button_pressed() -> void:
 func start_recording():
 	#audio_stream_recorder.play()
 	record.set_recording_active(true)
-	
 	button_lable_set("Recording ...")
 	action = "recording"
 	timer.wait_time = recording_time
