@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://hm457dvpto61"]
 
-[ext_resource type="Script" uid="uid://ce8gw8l3xjqna" path="res://scripts/record_page.gd" id="1_xbjfh"]
+[ext_resource type="Script" uid="uid://qk4appgi8v7o" path="res://scripts/record_page.gd" id="1_xbjfh"]
 [ext_resource type="Texture2D" uid="uid://c5aavi3u5tjx3" path="res://assets/images/tunepal.png" id="2_8s8ke"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_qnlb8"]
@@ -108,11 +108,9 @@ vertical_alignment = 1
 [node name="AudioStreamRecorder" type="AudioStreamPlayer" parent="."]
 stream = SubResource("AudioStreamMicrophone_p8lu4")
 autoplay = true
-mix_target = 2
 bus = &"Record"
 
 [node name="Timer" type="Timer" parent="."]
-one_shot = true
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 

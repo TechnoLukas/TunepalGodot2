@@ -25,6 +25,7 @@ var pagenames = {
 
 func _ready() -> void:
 	open_page("record")
+	OS.request_permissions()
 	
 func update_title():
 	lable.text = title

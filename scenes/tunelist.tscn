@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://cqlu0litbx2mt"]
 
-[ext_resource type="Script" path="res://scripts/scroll_container.gd" id="1_lohka"]
-[ext_resource type="Script" path="res://scripts/tunelist.gd" id="1_vsy3t"]
+[ext_resource type="Script" uid="uid://brv13q4w4qyed" path="res://scripts/scroll_container.gd" id="1_lohka"]
+[ext_resource type="Script" uid="uid://dht4gp5guhuuq" path="res://scripts/tunelist.gd" id="1_vsy3t"]
 [ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="3_2l4vj"]
 
 [node name="TunesList" type="Control"]
