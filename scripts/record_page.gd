@@ -1,21 +1,25 @@
 extends Control
 
-@onready var record_button = $VBoxContainer/bottom_part/record_button
+@onready var record_button = $record_button
+@onready var record_button_lable = $VBoxContainer/bottom_part/label
 @onready var timer = $Timer
+@onready var indicator = $Node2D
 
-var countdown_time=2
-var recording_time=9
+var countdown_time=3.0
+var recording_time=9.0
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
 var record_bus_index
+
+var arc_angle = 0.0
 
 var tunepal = Tunepal.new()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	tunepal_test()
-	default_lable_value = record_button.get_node("label").text
+	default_lable_value = record_button_lable.text
 	
 	record_bus_index = AudioServer.get_bus_index("Record")
 	record = AudioServer.get_bus_effect(record_bus_index, 0)
@@ -26,16 +30,18 @@ func showpage():
 func hidepage():
 	self.visible = false
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if action == "countdown":
-		button_lable_set(str(round(timer.time_left)))
+		button_lable_set(str(int(timer.time_left)+1))
 	elif action == "recording":
+		arc_angle = (timer.time_left/recording_time)
 		button_lable_set("Recording...")
-	# button_lable_set("..." + str(countdown_time-i) + "...")
+		indicator.angle = arc_angle*360
+	else:
+		indicator.angle=0
 
 func button_lable_set(text):
-	record_button.get_node("label").text=text
+	record_button_lable.text=text
 
 func _on_record_button_pressed() -> void:
 	record_button.disabled=true
