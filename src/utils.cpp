@@ -2,6 +2,7 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
+#include <cstring>
 
 extern "C" int tunePalEntry(int,char *argv[]);
 
