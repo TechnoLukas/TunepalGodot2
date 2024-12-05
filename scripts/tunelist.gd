@@ -14,7 +14,8 @@ func _ready() -> void:
 func add_item(data):
 	var new_item = item.duplicate()
 	item_list.add_child(new_item)
-	new_item.get_node("label").text=data["accented_title"]
+	new_item.get_node("h_container").get_node("title_label").text=data["accented_title"]
+	new_item.get_node("h_container").get_node("percent_label").text="10%"
 	new_item.get_node("button").pressed.connect(_button_pressed.bind(new_item.get_node("button"))) #.connect("pressed", self, "_button_pressed",[new_item.get_node("button")])
 	item_data[new_item] = data 
 	new_item.visible=true
