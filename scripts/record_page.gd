@@ -6,7 +6,7 @@ extends Control
 @onready var indicator = $Node2D
 	
 var countdown_time=3.0
-var recording_time=9
+var recording_time=12
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -103,7 +103,7 @@ func finished_searching(results:Array):
 	# print("Results" + str(results))
 	
 	for i in range(results.size()):
-		print(results[i])
+		# print(results[i])
 		
 		
 		var confidence = 1.0 - (results[i]["edit_distance"] / transcription.length())
