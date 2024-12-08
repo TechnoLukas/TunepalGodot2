@@ -5,8 +5,8 @@ extends Control
 @onready var timer = $Timer
 @onready var indicator = $Node2D
 	
-var countdown_time=3.0
-var recording_time=12
+var countdown_time=1.0
+var recording_time=1
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -76,11 +76,10 @@ func stop_recording():
 	transcription = tunepal.transcribe(audio_data, 3)
 	
 	print("Transcription: " + transcription)
+	transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"
 	# var results = tunepal.findClosest(transcription, sqlite.tunes)
 	thread = Thread.new()
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
-			
-			
 	# Testing with output !!
 	var data = recording.get_data()
 	print(data.size())
@@ -110,7 +109,7 @@ func finished_searching(results:Array):
 		print(str(results[i]["title"])
 		 + "\t" + str(results[i]["alt_title"])
 # 		 + "\t" + str(results[i]["search_key"])
-		 + "\t" + str(results[i]["edit_distance"])
+		 + "\t" + str(confidence)
 		 )
 
 func _on_timer_timeout() -> void:
