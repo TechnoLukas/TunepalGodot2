@@ -1,0 +1,140 @@
+[gd_scene load_steps=16 format=3 uid="uid://dunsex3itg2wp"]
+
+[ext_resource type="Script" uid="uid://bibxpnlpqp3o1" path="res://scripts/recording_results_page.gd" id="1_x6b4x"]
+[ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="2_b3u5r"]
+[ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="2_nvqje"]
+[ext_resource type="PackedScene" uid="uid://cqlu0litbx2mt" path="res://scenes/tunelist.tscn" id="3_5bbob"]
+[ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="3_g3jcc"]
+[ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="4_b3u5r"]
+[ext_resource type="Script" uid="uid://nugsa7lvntm6" path="res://addons/midi/MidiPlayer.gd" id="6_q4wew"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nyajq"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ivtp2"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_oasu4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_00t71"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y7ldf"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lg63x"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_tuikw"]
+line_spacing = 0.0
+font = ExtResource("2_nvqje")
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_b1mpa"]
+font_size = 20
+
+[node name="RecordingResultsPage" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_x6b4x")
+
+[node name="background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.196078, 0.196078, 0.196078, 1)
+
+[node name="Container" type="Control" parent="."]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+
+[node name="background" type="ColorRect" parent="Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_b3u5r")
+color = Color(0.129412, 0.129412, 0.129412, 1)
+
+[node name="container" type="HBoxContainer" parent="Container"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="gap" type="Label" parent="Container/container"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "  "
+
+[node name="return_button" type="Button" parent="Container/container"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_nyajq")
+theme_override_styles/disabled = SubResource("StyleBoxEmpty_ivtp2")
+theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_oasu4")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_00t71")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_y7ldf")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_lg63x")
+
+[node name="icon" type="Label" parent="Container/container/return_button"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -15.5
+offset_right = 15.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("3_g3jcc")
+text = " "
+label_settings = SubResource("LabelSettings_tuikw")
+
+[node name="label" type="Label" parent="Container/container"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_b3u5r")
+text = "Recording Results Page"
+label_settings = SubResource("LabelSettings_b1mpa")
+text_overrun_behavior = 3
+
+[node name="MiddleSection" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TunesList" parent="MiddleSection" instance=ExtResource("3_5bbob")]
+layout_mode = 1
+
+[node name="Tunepage" parent="MiddleSection" instance=ExtResource("4_b3u5r")]
+visible = false
+layout_mode = 1
+offset_top = 0.0
+
+[node name="MidiPlayer" type="Node" parent="."]
+script = ExtResource("6_q4wew")
+
+[connection signal="pressed" from="Container/container/return_button" to="." method="_on_return_button_pressed"]
+[connection signal="show_tune_page" from="MiddleSection/TunesList" to="MiddleSection/Tunepage" method="show_tune_page"]
+[connection signal="finished" from="MidiPlayer" to="." method="_on_midi_player_finished"]

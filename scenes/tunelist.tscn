@@ -77,7 +77,7 @@ grow_vertical = 2
 focus_mode = 0
 theme = ExtResource("3_2l4vj")
 
-[node name="label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+[node name="h_container" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -86,8 +86,19 @@ offset_left = 5.0
 offset_right = -5.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+
+[node name="title_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/h_container"]
+layout_mode = 2
+size_flags_horizontal = 3
 text = "The Thing"
 vertical_alignment = 1
+text_overrun_behavior = 4
+
+[node name="percent_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/h_container"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "0%"
 
 [node name="HSeparator" type="HSeparator" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 clip_contents = true

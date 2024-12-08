@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://hm457dvpto61"]
+[gd_scene load_steps=12 format=3 uid="uid://hm457dvpto61"]
 
 [ext_resource type="Script" uid="uid://qk4appgi8v7o" path="res://scripts/record_page.gd" id="1_xbjfh"]
 [ext_resource type="Texture2D" uid="uid://c5aavi3u5tjx3" path="res://assets/images/tunepal.png" id="2_8s8ke"]
 [ext_resource type="Script" uid="uid://v5kbuati30v7" path="res://scripts/tunepal_indicator.gd" id="3_erksd"]
+[ext_resource type="PackedScene" uid="uid://dunsex3itg2wp" path="res://scenes/recording_results_page.tscn" id="4_1wuus"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_a6gjf"]
 font_size = 26
@@ -133,6 +134,11 @@ theme_override_styles/normal = SubResource("StyleBoxEmpty_86vvd")
 
 [node name="Node2D" type="Node2D" parent="."]
 script = ExtResource("3_erksd")
+
+[node name="RecordingResultsPage" parent="." instance=ExtResource("4_1wuus")]
+visible = false
+layout_mode = 1
+offset_top = 0.0
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="pressed" from="record_button" to="." method="_on_record_button_pressed"]
