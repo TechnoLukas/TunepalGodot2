@@ -105,7 +105,7 @@ func finished_searching(results:Array):
 		# print(results[i])
 		
 		
-		var confidence = 1.0 - (results[i]["edit_distance"] / transcription.length())
+		var confidence = 1.0 - (float(results[i]["edit_distance"]) / float(transcription.length()))
 		print(str(results[i]["title"])
 		 + "\t" + str(results[i]["alt_title"])
 # 		 + "\t" + str(results[i]["search_key"])
