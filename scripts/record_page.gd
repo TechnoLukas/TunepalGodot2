@@ -4,7 +4,9 @@ extends Control
 @onready var record_button_lable = $VBoxContainer/bottom_part/label
 @onready var timer = $Timer
 @onready var indicator = $Node2D
-	
+@onready var recording_results_page = $RecordingResultsPage
+
+
 var countdown_time=1.0
 var recording_time=1
 var default_lable_value
@@ -80,6 +82,13 @@ func stop_recording():
 	# var results = tunepal.findClosest(transcription, sqlite.tunes)
 	thread = Thread.new()
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
+	
+	var result = thread.wait_to_finish()
+	print(result)
+	recording_results_page.visible=true
+	recording_results_page.load_tunelist(result)
+	
+	
 	# Testing with output !!
 	var data = recording.get_data()
 	print(data.size())
@@ -89,6 +98,9 @@ func stop_recording():
 	record_button.disabled=false
 	action = ""
 	button_lable_set(default_lable_value)
+	
+	
+
 	
 func tunepal_test():
 	var pattern = "BREXDDDDD"

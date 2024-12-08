@@ -11,16 +11,23 @@ signal show_tune_page(data)
 func _ready() -> void:
 	pass # Replace with function body.
 
-func add_item(data):
+func add_item(data, percentage=""):
 	var new_item = item.duplicate()
 	item_list.add_child(new_item)
-	new_item.get_node("label").text=data["accented_title"]
+	new_item.get_node("h_container").get_node("title_label").text=data["accented_title"]
+	var percent_label = new_item.get_node("h_container").get_node("percent_label")
+	if "edit_distance" in data: # TODO: Somehow detect the percentage and visualize it.
+		percent_label.visible=false
+	else:
+		percent_label.visible=false
+		#percent_label.text = str(data["edit_distance"])
 	new_item.get_node("button").pressed.connect(_button_pressed.bind(new_item.get_node("button"))) #.connect("pressed", self, "_button_pressed",[new_item.get_node("button")])
 	item_data[new_item] = data 
 	new_item.visible=true
 	
 func _button_pressed(which):
 	var data = item_data[which.get_parent()]
+	print(data)
 	show_tune_page.emit(data)
 	
 
