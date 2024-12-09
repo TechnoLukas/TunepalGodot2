@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://qk4appgi8v7o" path="res://scripts/record_page.gd" id="1_xbjfh"]
 [ext_resource type="Texture2D" uid="uid://c5aavi3u5tjx3" path="res://assets/images/tunepal.png" id="2_8s8ke"]
 [ext_resource type="Script" uid="uid://v5kbuati30v7" path="res://scripts/tunepal_indicator.gd" id="3_erksd"]
-[ext_resource type="PackedScene" uid="uid://dunsex3itg2wp" path="res://scenes/recording_results_page.tscn" id="4_1wuus"]
+[ext_resource type="PackedScene" path="res://scenes/recording_results_page.tscn" id="4_1wuus"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_a6gjf"]
 font_size = 26

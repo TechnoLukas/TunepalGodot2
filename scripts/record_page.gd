@@ -8,7 +8,7 @@ extends Control
 
 
 var countdown_time=1.0
-var recording_time=1
+var recording_time=12
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -78,7 +78,7 @@ func stop_recording():
 	transcription = tunepal.transcribe(audio_data, 3)
 	
 	print("Transcription: " + transcription)
-	transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"
+	# transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"
 	# var results = tunepal.findClosest(transcription, sqlite.tunes)
 	thread = Thread.new()
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
