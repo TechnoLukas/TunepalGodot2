@@ -84,7 +84,7 @@ func stop_recording():
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	
 	var result = thread.wait_to_finish()
-	print(result)
+	#print(result)
 	recording_results_page.visible=true
 	recording_results_page.load_tunelist(result)
 	
