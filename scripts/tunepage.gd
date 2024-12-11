@@ -19,6 +19,8 @@ var add_and_remove_symbols_idx = 0
 
 var this_tune
 
+var tunepal = Tunepal.new()
+
 signal returned
 
 # Called when the node enters the scene tree for the first time.
@@ -48,7 +50,10 @@ func show_tune_page(data: Variant) -> void:
 	tune_label.text = data["accented_title"]
 	abc_field.text=data["notation"]
 	
-	midi_player.file = clientside.prefix + "://assets/midi/Roscommon.mid"
+	
+	tunepal.create_midi_file(data["notation"], "tunepal.abc", "tunepal.mid", 4, 0, 0, 0)
+	
+	midi_player.file = clientside.prefix + "://tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
 	#midi_player.soundfont # "res://assets/Live HQ Natural SoundFont GM.sf2" is good
 	

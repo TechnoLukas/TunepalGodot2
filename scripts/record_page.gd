@@ -8,7 +8,7 @@ extends Control
 
 
 var countdown_time=1.0
-var recording_time=12
+var recording_time=5
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -93,7 +93,7 @@ func stop_recording():
 	var data = recording.get_data()
 	print(data.size())
 	$AudioStreamPlayer.stream = recording
-	$AudioStreamPlayer.play()
+	#$AudioStreamPlayer.play()
 	
 	record_button.disabled=false
 	action = ""
