@@ -9,7 +9,7 @@ extends Control
 
 
 var countdown_time=2.0
-var recording_time=5
+var recording_time=10
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -85,17 +85,16 @@ func stop_recording():
 	
 	print("Transcription: " + transcription)
 	# transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"
-	# var results = tunepal.findClosest(transcription, sqlite.tunes)
-	# thread = Thread.new()
-	# thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
+	thread = Thread.new()
+	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	
-	# var result = thread.wait_to_finish()
-	#print(result)
-	# recording_results_page.visible=true
-	# recording_results_page.load_tunelist(result)
+	var result = thread.wait_to_finish()
+	# print(result)
+	recording_results_page.visible=true
+	recording_results_page.load_tunelist(result)
 	
 	
-	# Testing with output !!
+	# Audio playback
 	var data = recording.get_data()
 	print(data.size())
 	$AudioStreamPlayer.stream = recording
@@ -117,18 +116,13 @@ func tunepal_test():
 	
 func finished_searching(results:Array):
 	
-	# print("Results" + str(results))
-	
 	for i in range(results.size()):
-		# print(results[i])
-		
-		
 		var confidence = 1.0 - (float(results[i]["edit_distance"]) / float(transcription.length()))
-		print(str(results[i]["title"])
-		 + "\t" + str(results[i]["alt_title"])
-# 		 + "\t" + str(results[i]["search_key"])
-		 + "\t" + str(confidence)
-		 )
+		#print(str(results[i]["title"])
+		 #+ "\t" + str(results[i]["alt_title"])
+## 		 + "\t" + str(results[i]["search_key"])
+		 #+ "\t" + str(confidence)
+		 #)
 
 func _on_timer_timeout() -> void:
 	if action == "countdown":
