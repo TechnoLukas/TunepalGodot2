@@ -9,8 +9,8 @@
 
 #pragma once
 
-#define SAMPLE_TIME 5.0f 
-#define SAMPLE_RATE 48000	
+#define SAMPLE_TIME 12.0f 
+#define SAMPLE_RATE 44100	
 #define FRAME_SIZE 4096.0f
 #define OVERLAP 0.75f
 
