@@ -80,7 +80,7 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
         String search_key = tune["search_key"];
         // UtilityFunctions::print(search_key);
         // Calculate edit distance using search_key
-        int distance = edSubstring(needle, search_key, 0);
+        int distance = edSubstringOld(needle, search_key, 0);
         int distanceOld = distance; // edSubstringOld(needle, search_key, 0);
 		//UtilityFunctions::print(needle);
 		
@@ -218,6 +218,7 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
 {
 	//return 666;
 
+    UtilityFunctions::print(text_param);
 	godot::String pattern = pattern_param;
 	if (pattern_param.length() > MAX_QUERY_LENGTH)
 	{
@@ -233,7 +234,7 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
 	}
 	
 
-	int matrix[MAX_QUERY_LENGTH + 1][MAX_KEY_LENGTH + 1];
+	int matrix[MAX_QUERY_LENGTH + 1][MAX_QUERY_LENGTH + 1];
 	int pLength = pattern.length();
 	int tLength = text.length();
 	int difference = 0;
