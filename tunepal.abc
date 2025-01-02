@@ -3,11 +3,13 @@ X:1
 %%MIDI bassprog 0
 %%MIDI transpose 0
 Q:1/4 = 163
-T:Anderson's
-R:reel
-D:Conal O'Grada: The Top of Coom
-Z:id:hn-reel-247
+T:Molly MacAlpin
+C:William Connellan (c. 1645 - c. 1700)
+Z:id:hn-air-5
 M:C|
-K:D
-ABdf efdB|AF~F2 EFDF|ABdf efdf|1 afeg fd~d2:|2 afeg fddf||
-|:a2fa bafa|~a2fd edBd|1 a2fa bafa|afef defg:|2 AF~F2 ABdf|afeg fddB||
+L:1/8
+K:Am
+|: AB | c2 A>A A2 GA | dc A>G G2 cd | e2de dcA>A | A6 de|
+f2 gf e2fe | dcde a3a | gede dc A>A | A6 :|
+|: ef | gega g3a | gede g2eg | agab ageg | a6 ag |
+f2gf e2fe | dcde a3a | gede dc A>A | A6 :|

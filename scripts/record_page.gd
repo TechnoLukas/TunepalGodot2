@@ -1,5 +1,6 @@
 extends Control
 
+
 @onready var record_button = $record_button
 @onready var record_button_lable = $VBoxContainer/bottom_part/label
 @onready var timer = $Timer
@@ -7,7 +8,7 @@ extends Control
 @onready var recording_results_page = $RecordingResultsPage
 
 
-var countdown_time=1.0
+var countdown_time=2.0
 var recording_time=5
 var default_lable_value
 var action = "" # countdown & recording
@@ -71,8 +72,13 @@ func stop_recording():
 	var recording = record.get_recording()
 	
 	var audio_data = recording.get_data()
-	print(sqlite.tunes[0].keys())
-	print(sqlite.tunes[0]["midi_sequence"])
+	
+	print("Format ", recording.format)
+	print("Mix rate ", recording.mix_rate)
+	print("Stereo ", recording.stereo)
+	
+	# print(sqlite.tunes[0].keys())
+	# print(sqlite.tunes[0]["midi_sequence"])
 	# print("Audio buffer as array of floats:", audio_data)
 	
 	transcription = tunepal.transcribe(audio_data, 3)
@@ -80,13 +86,13 @@ func stop_recording():
 	print("Transcription: " + transcription)
 	# transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"
 	# var results = tunepal.findClosest(transcription, sqlite.tunes)
-	thread = Thread.new()
-	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
+	# thread = Thread.new()
+	# thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	
-	var result = thread.wait_to_finish()
+	# var result = thread.wait_to_finish()
 	#print(result)
-	recording_results_page.visible=true
-	recording_results_page.load_tunelist(result)
+	# recording_results_page.visible=true
+	# recording_results_page.load_tunelist(result)
 	
 	
 	# Testing with output !!

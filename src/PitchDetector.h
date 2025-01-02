@@ -17,5 +17,6 @@ using namespace std;
 vector<int> calculatePeaks(float * data, int border, int howFar, float thresholdNormal);
 float mikelsFrequency(float * fftMag, int size, int sampleRate, int frameSize);
 
+float frequencyFromFFT(float* fftMag, int size, int sampleRate, int frameSize);
 
 

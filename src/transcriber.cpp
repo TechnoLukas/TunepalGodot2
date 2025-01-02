@@ -57,8 +57,11 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 		WindowFunc(HANNING, FRAME_SIZE, signal + startAt);
 		PowerSpectrum(FRAME_SIZE, signal + startAt, spectrum);
     
-		float frequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
-		//UtilityFunctions::print("freq: ", frequency);
+		float mikFrequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
+		float frequency = frequencyFromFFT(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
+		
+		UtilityFunctions::print("mikFrequency: ", mikFrequency);
+		UtilityFunctions::print("freq: ", frequency);
 		
         string currentNote;
 		if (midi)
@@ -77,13 +80,17 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
             note.frequency = frequency;					
             note.onset = ((float) startAt) / SAMPLE_RATE;			
             lastNote = currentNote; 
+			if (notes.size() > 0)
+			{
+				note.duration = note.onset - notes[notes.size() - 1].onset;
+			} 
             notes.push_back(note);
         }
 
 	}
 	numHops = i;
 	printTranscription();
-	postProcess(midi);
+	postProcess(midi);		
 	UtilityFunctions::print("transcription: ", transcription.c_str());
 	return transcription;
 }
