@@ -66,6 +66,23 @@ bool compareByEnergy(int d1, int d2)
 	return g_sortableData[d1] > g_sortableData[d2];
 }
 
+float frequencyFromFFT(float* fftMag, int size, int sampleRate, int frameSize) {
+    float maxMagnitude = 0.0f;
+    int maxIndex = 0;
+    
+    // Start from index 1 to skip DC component
+    for (int i = 1; i < size; i++) {
+        if (fftMag[i] > maxMagnitude) {
+            maxMagnitude = fftMag[i];
+            maxIndex = i;
+        }
+    }
+    
+    // Convert bin index to frequency
+    // frequency = (bin * sampleRate) / frameSize
+    return (float)maxIndex * sampleRate / frameSize;
+}
+
 
 float mikelsFrequency(float * fftMag, int size, int sampleRate, int frameSize)
 {

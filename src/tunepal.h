@@ -22,19 +22,19 @@ public:
 
 	void say_hello();
 
-	int Tunepal::edSubstring(const godot::String pattern_param, const godot::String text_param, const int thread_id);
-	int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::String text_param, const int thread_id);
+	int edSubstring(const godot::String pattern_param, const godot::String text_param, const int thread_id);
+	int edSubstringOld(const godot::String pattern_param, const godot::String text_param, const int thread_id);
 
 	godot::String transcribe(const godot::PackedByteArray & signal, const int fundamental);
 
 	godot::Array findClosest(const godot::String needle, const godot::Array haystack);
 
-	bool Tunepal::_sort_by_distance(const Variant &a, const Variant &b) const;
+	bool _sort_by_distance(const Variant &a, const Variant &b) const;
 
-	void Tunepal::finished_searching();
+	void finished_searching();
 
-	void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords);
-	void Tunepal::create_html_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords);
+	void create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords);
+	void create_html_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords);
 
     // int edSubstring(string
 };
