@@ -69,20 +69,21 @@ godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const i
 
 godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array haystack)
 {
+    UtilityFunctions::print("Got here: ", needle);
     godot::Array matches;
-    
+    // return matches;
     // For each dictionary in the haystack
     for (int i = 0; i < haystack.size(); i++)
     {
-		
+        // UtilityFunctions::print("Got here: ", i);
         Dictionary tune = haystack[i];
         String search_key = tune["search_key"];
-        
+        // UtilityFunctions::print(search_key);
         // Calculate edit distance using search_key
-        int distance = edSubstringOld(needle, search_key, 0);
+        int distance = edSubstring(needle, search_key, 0);
         int distanceOld = distance; // edSubstringOld(needle, search_key, 0);
 		//UtilityFunctions::print(needle);
-		//UtilityFunctions::print(search_key);
+		
 		//UtilityFunctions::print("dist: " , distance);
 		//UtilityFunctions::print("distOld: " , distanceOld);
 		if (distance == distanceOld)
@@ -111,7 +112,6 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
 
     // Sort matches by edit distance (lowest to highest)
     matches.sort_custom(Callable(this, "_sort_by_distance"));
-    
     // Create result array with top 10 matches
     result.clear();
     int numToReturn = MIN(10, matches.size());
@@ -124,13 +124,14 @@ godot::Array Tunepal::findClosest(const godot::String needle, const godot::Array
         result.push_back(tune);
     }
 
-
+    
 	call_deferred("finished_searching");
 	// Emit signal with results	
 	// Return the top 10 matches
 	//
 	// 
-    return result;
+    
+    return result;    
 }
 
 void Tunepal::finished_searching()
