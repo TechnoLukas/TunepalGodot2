@@ -57,7 +57,14 @@ func _on_record_button_pressed() -> void:
 	action = "countdown"
 	timer.start(countdown_time)
 	
+	# transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"
+	#	tunepal.findClosest(transcription, sqlite.tunes)
+	# thread = Thread.new()
+	# thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
+	
 func start_recording():
+	
+	
 	#audio_stream_recorder.play()
 	record.set_recording_active(true)
 	
@@ -85,14 +92,16 @@ func stop_recording():
 	
 	print("Transcription: " + transcription)
 	# transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"
+
+	# tunepal.findClosest(transcription, sqlite.tunes)
+
 	thread = Thread.new()
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
-	
-	var result = thread.wait_to_finish()
-	# print(result)
-	recording_results_page.visible=true
-	recording_results_page.load_tunelist(result)
-	
+	#
+	#var result = thread.wait_to_finish()
+	## print(result)
+	#
+	#
 	
 	# Audio playback
 	var data = recording.get_data()
@@ -118,11 +127,13 @@ func finished_searching(results:Array):
 	
 	for i in range(results.size()):
 		var confidence = 1.0 - (float(results[i]["edit_distance"]) / float(transcription.length()))
-		#print(str(results[i]["title"])
-		 #+ "\t" + str(results[i]["alt_title"])
-## 		 + "\t" + str(results[i]["search_key"])
-		 #+ "\t" + str(confidence)
-		 #)
+		print(str(results[i]["title"])
+		 + "\t" + str(results[i]["alt_title"])
+# 		 + "\t" + str(results[i]["search_key"])
+		 + "\t" + str(confidence)
+		 )
+	recording_results_page.visible=true
+	recording_results_page.load_tunelist(results)
 
 func _on_timer_timeout() -> void:
 	if action == "countdown":
