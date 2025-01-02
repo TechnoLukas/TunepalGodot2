@@ -60,8 +60,8 @@ string Transcriber::transcribe(float * progress, bool * interrupted, bool midi)
 		float mikFrequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
 		float frequency = frequencyFromFFT(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
 		
-		UtilityFunctions::print("mikFrequency: ", mikFrequency);
-		UtilityFunctions::print("freq: ", frequency);
+		// UtilityFunctions::print("mikFrequency: ", mikFrequency);
+		// UtilityFunctions::print("freq: ", frequency);
 		
         string currentNote;
 		if (midi)
