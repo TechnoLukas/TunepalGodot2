@@ -3,13 +3,20 @@ X:1
 %%MIDI bassprog 0
 %%MIDI transpose 0
 Q:1/4 = 163
-T:Molly MacAlpin
-C:William Connellan (c. 1645 - c. 1700)
-Z:id:hn-air-5
+T:Love at the Endings
+T:Head of Cabbage, The
+R:reel
+C:Ed Reavy (1898-1988)
+D:De Danann: Star Spangled Molly
+Z:id:hn-reel-365
 M:C|
-L:1/8
-K:Am
-|: AB | c2 A>A A2 GA | dc A>G G2 cd | e2de dcA>A | A6 de|
-f2 gf e2fe | dcde a3a | gede dc A>A | A6 :|
-|: ef | gega g3a | gede g2eg | agab ageg | a6 ag |
-f2gf e2fe | dcde a3a | gede dc A>A | A6 :|
+K:D
+DEFA B2dB|AF~F2 AFEF|DEFA B2AF|GEFD B,EEF|
+DEFA B2dB|AF~F2 ABde|fgfe dfec|1 dBAF D2FE:|2 dBAF D3g||
+|:fgfe defg|afbf afeg|~f3e dfbf|afdf e2de|
+fgfe dcdB|AF~F2 ABde|~f3e dfec|1 dBAF D3g:|2 dBAF D2FE||
+"Variations"
+|:DEFA BAdB|AF~F2 AFEF|DEFA ~B3A|FEED E2FE|
+DEFA BAdB|AF~F2 ABde|f2fe defe|1 dBAF D2FE:|2 dBAF D3g||
+|:f2fe defg|a2bf afed|~f3e defg|~a3f e2de|
+~f3e d2dB|A2AF ABde|~f3e defe|1 dBAF D3g:|2 dBAF D2FE||
