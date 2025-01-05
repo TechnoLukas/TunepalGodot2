@@ -218,7 +218,7 @@ int Tunepal::edSubstringOld(const godot::String pattern_param, const godot::Stri
 {
 	//return 666;
 
-    UtilityFunctions::print(text_param);
+    // UtilityFunctions::print(text_param);
 	godot::String pattern = pattern_param;
 	if (pattern_param.length() > MAX_QUERY_LENGTH)
 	{
