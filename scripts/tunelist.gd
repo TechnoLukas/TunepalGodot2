@@ -16,11 +16,11 @@ func add_item(data, percentage=""):
 	item_list.add_child(new_item)
 	new_item.get_node("h_container").get_node("title_label").text=data["accented_title"]
 	var percent_label = new_item.get_node("h_container").get_node("percent_label")
-	if "edit_distance" in data: # TODO: Somehow detect the percentage and visualize it.
-		percent_label.visible=false
+	if "confidence" in data: # TODO: Somehow detect the percentage and visualize it.
+		percent_label.visible=true
+		percent_label.text = str(data["confidence"]) + "%"
 	else:
 		percent_label.visible=false
-		#percent_label.text = str(data["edit_distance"])
 	new_item.get_node("button").pressed.connect(_button_pressed.bind(new_item.get_node("button"))) #.connect("pressed", self, "_button_pressed",[new_item.get_node("button")])
 	item_data[new_item] = data 
 	new_item.visible=true
