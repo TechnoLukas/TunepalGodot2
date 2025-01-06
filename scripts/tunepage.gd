@@ -50,8 +50,16 @@ func show_tune_page(data: Variant) -> void:
 	tune_label.text = data["accented_title"]
 	abc_field.text=data["notation"]
 	
+	var file = FileAccess.open("user://tunepal.abc", FileAccess.WRITE)
+	var data1 = {
+		"player_health": 100,
+		"score": 500
+	}
+	file.store_string(JSON.stringify(data1))
+	file.close()
 	
-	tunepal.create_midi_file(data["notation"], "tunepal.abc", "tunepal.mid", 4, 0, 0, 0)
+	var data_folder = OS.get_user_data_dir()
+	tunepal.create_midi_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.mid", 4, 0, 0, 0)
 	
 	midi_player.file = clientside.prefix + "://tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
