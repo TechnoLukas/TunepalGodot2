@@ -4,7 +4,16 @@
 #include <stdio.h>
 #include <cstring>
 
+#include <godot_cpp/core/class_db.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/dir_access.hpp>
+#include <godot_cpp/classes/project_settings.hpp>
+#include <godot_cpp/classes/os.hpp>
+
 extern "C" int tunePalEntry(int,char *argv[]);
+
+using namespace std;
+using namespace godot;
 
 void convCRLF(char * newLine, char * dest, char * src) {
     int c = 0, state = 0;
@@ -58,9 +67,21 @@ char * createMidiFile(const char * notation, const char * abcFileName, const cha
 
     pastX = strstr(pastX, "\n");
 
-    FILE * fp = fopen(abcFileName, "wb");
+    
+    String user_path = OS::get_singleton()->get_user_data_dir();
+    String full_path = user_path.path_join(abcFileName);
+
+    // Convert to char* safely
+    CharString cs = full_path.utf8();
+    const char* safe_path = cs.get_data();
+    
+    UtilityFunctions::print(safe_path);
+
+    FILE* fp = fopen(safe_path, "wb");
+    // FILE * fp = fopen(abcFileName, "wb");
     if (fp == NULL)
     {
+        UtilityFunctions::print("ERROR: Could not open file");
         return "ERROR: Could not open file";
     }
     int ret = fprintf(fp, "X:1\n");
