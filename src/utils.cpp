@@ -57,7 +57,6 @@ char * createMidiFile(const char * notation, const char * abcFileName, const cha
 {
     char fixed[2048];
 
-
     convCRLF("\n", fixed, (char *) notation);
 
     const char * pastX = strstr(notation, "X:");
@@ -67,22 +66,12 @@ char * createMidiFile(const char * notation, const char * abcFileName, const cha
 
     pastX = strstr(pastX, "\n");
 
-    
-    String user_path = OS::get_singleton()->get_user_data_dir();
-    String full_path = user_path.path_join(abcFileName);
-
-    // Convert to char* safely
-    CharString cs = full_path.utf8();
-    const char* safe_path = cs.get_data();
-    
-    UtilityFunctions::print(safe_path);
-
-    FILE* fp = fopen(safe_path, "wb");
+    FILE* fp = fopen(abcFileName, "wb");
     // FILE * fp = fopen(abcFileName, "wb");
     if (fp == NULL)
     {
-        UtilityFunctions::print("ERROR: Could not open file");
-        return "ERROR: Could not open file";
+        UtilityFunctions::print("ERROR: Could not open abc file");
+        return "ERROR: Could not open abc file return";
     }
     int ret = fprintf(fp, "X:1\n");
     if (ret < 0)
