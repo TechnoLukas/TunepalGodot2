@@ -1,0 +1,58 @@
+# rules for ninja (ninja-build) or samurai
+
+cc=musl-gcc
+#cc=gcc
+#cc=clang
+
+#cflags = -O2 -Wall -pipe -I. -fpie
+cflags = -g -Wall -pipe -I. -fpie
+ldflags=-static -Wl,--no-dynamic-linker -lm
+
+rule cc
+  command = $cc $cflags -c $in -o $out
+
+rule ld
+  command = $cc $ldflags -o $out $in
+
+build abcm2ps.o: cc abcm2ps.c | config.h abcm2ps.h
+build abcparse.o: cc abcparse.c | config.h abcm2ps.h
+build buffer.o: cc buffer.c | config.h abcm2ps.h
+build deco.o: cc deco.c | config.h abcm2ps.h
+build draw.o: cc draw.c | config.h abcm2ps.h
+build format.o: cc format.c | config.h abcm2ps.h
+build front.o: cc front.c | config.h abcm2ps.h
+build glyph.o: cc glyph.c | config.h abcm2ps.h
+build music.o: cc music.c | config.h abcm2ps.h
+build parse.o: cc parse.c | config.h abcm2ps.h
+build subs.o: cc subs.c | config.h abcm2ps.h
+build svg.o: cc svg.c | config.h abcm2ps.h
+build syms.o: cc syms.c | config.h abcm2ps.h
+
+build abcm2ps: ld abcm2ps.o abcparse.o buffer.o deco.o draw.o format.o front.o $
+  glyph.o music.o parse.o subs.o svg.o syms.o
+
+default abcm2ps
+
+# GitHub releases
+rule version
+  command = tag=`grep VERSION= configure|cut -d'=' -f2`;$
+	if [ $out = minor ]; then$
+		m=$${tag#*.};$
+		m=$${m%%.*};$
+		m=$$((m + 1));$
+		newtag="$${tag%%.*}.$$m.0";$
+	else$
+		p=$${tag##*.};$
+		p=$$((p + 1));$
+		newtag="$${tag%.*}.$$p";$
+	fi;$
+	p=`grep VDATE= configure|cut -d'=' -f2`;$
+	m=`date +%F`;$
+	mv configure configure~;$
+	sed -e "s/$$tag/$$newtag/;s/$$p/$$m/" configure~ > configure;$
+	chmod +x configure;$
+	echo "New release v$$newtag" | git commit -F- configure;$
+	git tag -a v$$newtag;$
+	echo "Don't forget: git push --follow-tags; ./configure"
+build minor: version
+build patch: version

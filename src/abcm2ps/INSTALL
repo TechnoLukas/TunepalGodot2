@@ -1,0 +1,112 @@
+		--- abcm2ps installation ---
+
+Getting the source files
+========================
+
+abcm2ps is now distributed from a GitHub repository.
+
+You may get the source files either as a `tar.gz` or `.zip` file from
+
+	https://github.com/leesavide/abcm2ps.git
+
+or by cloning the repository with 'git'
+
+	https://github.com/leesavide/abcm2ps.git
+
+(you may use `--depth=1` if you don't want the full `git` history)
+
+
+Unix(-like) systems
+===================
+
+After getting the source files, or after updating them by 'git pull',
+you must generate the configuration files using the local script 'configure'.
+
+The configuration variables and their default values are:
+
+CC=gcc
+CFLAGS="-g -O2 -Wall -pipe"
+srcdir=.
+prefix=/usr/local
+INSTALL="/usr/bin/install -c"
+INSTALL_DATA='${INSTALL} -m 644'
+INSTALL_PROGRAM='${INSTALL}'
+exec_prefix='${prefix}'
+bindir='${exec_prefix}/bin'
+libdir='${exec_prefix}/lib'
+datarootdir='${prefix}/share'
+docdir='${prefix}/doc'
+mandir='${datarootdir$/man'
+DEFAULT_FDIR="$prefix/share/abcm2ps"
+
+The script 'configure' first tries to read the file 'custom'
+in which you may set your own values (Bourne shell syntax).
+For example, if you prefer to use 'clang' instead of 'gcc',
+the file 'custom' would contain the single line:
+
+	CC=clang
+
+then, you do:
+
+	./configure
+
+The script 'configure' may also get the values of the variables from
+the command line. These settings must start with '--':
+
+	./configure --CC=clang
+
+If you want to use the 'pango' library, install the development files
+for pango and freetype2, as well as the pkg-config tool prior running
+'configure'.
+
+In addition to the usual C build tools (mainly, gcc and make), you
+will require the rst2man tool from the python-docutils package.
+
+Creating the binary is done by a standard call to 'make'.
+
+An alternate option for this creation is to use 'ninja' (ninja-build) or
+'samurai'. These programs use the file 'build.ninja' which may be custumized.
+
+
+Windows or pre-OS X Mac systems
+===============================
+
+You must create the file 'config.h' from the 'config.h.in' skeleton.
+Then, the abcm2ps binary must be created by compiling all the '.c' files
+and by linking them together.
+The resulting binary file should run immediately from where it has been
+generated. You may then move it at any place you want.
+
+Note: I don't know how to do file mapping (mmap) in ms-windows, so,
+you must comment the line containing 'HAVE_MMAP' in config.h.
+
+
+Testing
+=======
+
+To test the program, run it with one of the .abc files as the command
+line argument:
+
+	abcm2ps sample
+
+The resulting file, 'Out.ps', may be displayed using a PostScript
+previewer such as ghostscript or zathura, or it may be sent directly
+to a PostScript printer, or indirectly to a simple printer using
+a postscript filter.
+OSX/macOS users can view PostScript natively with the system default
+Preview app.
+Windows users can use GSView.
+
+
+About the 'pango' library
+=========================
+
+abcm2ps may use the 'pango' library to render texts with non latin
+characters on PostScript output. If you have no such texts or
+if you do only SVG/(X)HTML output, you don't need this library.
+
+In Unix(-like) systems, at configure time, the pango generation elements
+are searched by pkg-config in the gdk-2.0 library. If this library or
+pkg_config are not found, the rendering of non latin characters with
+pango will be disabled. Note also that, when pango is defined, it may be
+disabled at command line level by '--pango 0'.

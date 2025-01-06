@@ -155,6 +155,7 @@ int lyricsyllables, musicsyllables;
 int wordson, noteson, gchordson, temposon, drumson, droneon;
 int hyphenstate;  /* [Bas Schoutsen] 2010-04-08 */
 
+
 /* Generating accompaniment */
 int gchords, g_started;
 int basepitch, inversion, chordnum;
