@@ -1,0 +1,76 @@
+#! /bin/sh
+set -e -f -u
+
+# (automatic update)
+VERSION=8.14.15
+VDATE=2024-01-08
+
+# Variables may be set, by order of precedence:
+# * in the environment,
+# * in ./custom if it exists,
+# * or on the command line.
+
+if test -f ./custom; then
+	. ./custom
+fi
+
+for c in "$@"; do
+ case "$c" in
+	--*=*)
+		c="${c#--}"
+		eval "${c%%=*}='${c#*=}'"
+		;;
+	*)
+		echo "$0: unknown argument: $c"
+		;;
+ esac
+done
+
+# Most variables are just passed to sed, but the following ones are
+# also expanded by the shell and need a default value.
+: "${PKG_CONFIG=${host+$host-}pkg-config}"
+: "${prefix=/usr/local}"
+: "${srcdir=.}"
+
+case "$srcdir" in
+    *\ *)
+        echo "srcpath cannot contain spaces"
+        exit 1
+esac
+
+if ! $PKG_CONFIG --exists freetype2 ; then
+	echo "pkg-config/freetype2 not found - no pango support"
+elif ! $PKG_CONFIG --exists pangocairo ; then
+	echo "pangocairo not found - no pango support"
+else
+	pango_cflags="-DHAVE_PANGO=1 `$PKG_CONFIG pango cairo freetype2 --cflags`"
+	pango_libs="`$PKG_CONFIG pangocairo pangoft2 freetype2 --libs`"
+fi
+
+sed "
+s+@CC@+${CC-${host+$host-}gcc}+
+# -I.: ./config.h will not be found in srcdir.
+s+@CPPFLAGS@+${CPPFLAGS-} ${pango_cflags-} -I.+
+s+@CFLAGS@+-g -O2 -Wall -pipe ${CFLAGS-}+
+s+@LDFLAGS@+${LDFLAGS-}+
+# -lm: useful on some architectures.
+s+@LDLIBS@+${pango_libs-} ${LDLIBS-} -lm+
+s+@INSTALL@+${INSTALL-/usr/bin/install -c}+
+s+@INSTALL_DATA@+${INSTALL_DATA-\$(INSTALL) -m 644}+
+s+@INSTALL_PROGRAM@+${INSTALL_PROGRAM-\$(INSTALL)}+
+s+@prefix@+$prefix+
+s+@exec_prefix@+${exec_prefix-\$(prefix)}+
+s+@srcdir@+$srcdir+
+s+@bindir@+${bindir-\$(exec_prefix)/bin}+
+s+@datarootdir@+${datarootdir-\$(prefix)/share}+
+s+@mandir@+${mandir-\$(prefix)/share/man}+
+s+@docdir@+${docdir-\$(prefix)/share/doc}+
+" "$srcdir/Makefile.in" > Makefile
+echo "Makefile created"
+
+sed "
+s/@VERSION@/$VERSION/
+s/@VDATE@/$VDATE/
+s+@DEFAULT_FDIR@+${DEFAULT_FDIR-$prefix/share/abcm2ps}+
+" "$srcdir/config.h.in" > config.h
+echo "config.h created"

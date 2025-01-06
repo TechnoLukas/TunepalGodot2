@@ -1,0 +1,81 @@
+# Makefile source for abcm2ps
+
+CC = @CC@
+INSTALL = @INSTALL@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+
+CPPFLAGS = @CPPFLAGS@
+CFLAGS = @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LDLIBS = @LDLIBS@
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+bindir = $(DESTDIR)@bindir@
+datadir = $(DESTDIR)@datarootdir@
+docdir = $(DESTDIR)@docdir@
+mandir = $(DESTDIR)@mandir@
+
+build: abcm2ps abcm2ps.1
+
+# unix
+OBJECTS=abcm2ps.o \
+	abcparse.o buffer.o deco.o draw.o format.o front.o glyph.o music.o parse.o \
+	subs.o svg.o syms.o
+abcm2ps: $(OBJECTS)
+
+$(OBJECTS): abcm2ps.h config.h Makefile
+
+abcm2ps.1: abcm2ps.rst
+	if [ -x "$$(command -v rst2man)" ]; then\
+		rst2man $< $@;\
+	else\
+		cp $< $@;\
+	fi
+
+install: build
+	mkdir -p $(bindir)
+	$(INSTALL_PROGRAM) abcm2ps $(bindir)
+	mkdir -p $(datadir)/abcm2ps
+	$(INSTALL_DATA) $(srcdir)/*.fmt       $(datadir)/abcm2ps
+	mkdir -p $(docdir)/abcm2ps/examples
+	$(INSTALL_DATA) $(srcdir)/README.md $(docdir)/abcm2ps
+	$(INSTALL_DATA) $(srcdir)/*.abc     $(docdir)/abcm2ps/examples
+	$(INSTALL_DATA) $(srcdir)/*.eps     $(docdir)/abcm2ps/examples
+	$(INSTALL_DATA) $(srcdir)/*.html    $(docdir)/abcm2ps/examples
+	mkdir -p $(mandir)/man1
+	$(INSTALL_DATA) abcm2ps.1 $(mandir)/man1
+
+uninstall:
+	echo "uninstalling..."
+	rm -f  $(bindir)/abcm2ps
+	rm -fr $(datadir)/abcm2ps
+	rm -fr $(docdir)/abcm2ps
+	rm -f  $(mandir)/man1/abcm2ps.1
+
+EXAMPLES = accordion.ps \
+	chinese.ps \
+	deco.ps \
+	newfeatures.ps \
+	sample.ps \
+	sample2.ps \
+	sample3.ps \
+	sample4.ps \
+	sample5.ps \
+	voices.ps
+
+test:	$(EXAMPLES)
+%.ps: %.abc
+	./abcm2ps -O $@ $<
+
+mostlyclean:
+	rm -f *.o $(EXAMPLES)
+clean: mostlyclean
+	rm -f abcm2ps abcm2ps.1
+distclean: clean
+	rm -f config.h Makefile
