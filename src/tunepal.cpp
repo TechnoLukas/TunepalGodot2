@@ -10,17 +10,18 @@ using namespace godot;
 using namespace std;
 
 void Tunepal::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("say_hello"), &Tunepal::say_hello);
-	ClassDB::bind_method(D_METHOD("edSubstringOld"), &Tunepal::edSubstringOld);
-	ClassDB::bind_method(D_METHOD("edSubstring"), &Tunepal::edSubstring);
-	ClassDB::bind_method(D_METHOD("transcribe"), &Tunepal::transcribe);
-	ClassDB::bind_method(D_METHOD("findClosest"), &Tunepal::findClosest);
-	ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
-	ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
-	ClassDB::bind_method(D_METHOD("create_midi_file"), &Tunepal::create_midi_file);
-	ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
+    ClassDB::bind_method(D_METHOD("say_hello"), &Tunepal::say_hello);
+    ClassDB::bind_method(D_METHOD("edSubstringOld"), &Tunepal::edSubstringOld);
+    ClassDB::bind_method(D_METHOD("edSubstring"), &Tunepal::edSubstring);
+    ClassDB::bind_method(D_METHOD("transcribe"), &Tunepal::transcribe);
+    ClassDB::bind_method(D_METHOD("findClosest"), &Tunepal::findClosest);
+    ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
+    ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
+    ClassDB::bind_method(D_METHOD("create_midi_file"), &Tunepal::create_midi_file);
+    ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file); // Added this line
+    ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
     
-	
+    
 }
 
 Tunepal::Tunepal() {
@@ -39,6 +40,14 @@ void Tunepal::_process(double delta) {
 }
 
 int g_fundamental = 3;
+
+void create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
+{
+    const char * notation_chars = notation.ascii().get_data();
+    const char * abc_file_chars = abc_file_name.ascii().get_data();
+    const char * svg_file_chars = svg_file_name.ascii().get_data();
+    createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
+}
 
 void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
 {
