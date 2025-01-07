@@ -11,6 +11,7 @@
 #include <godot_cpp/classes/os.hpp>
 
 extern "C" int tunePalEntry(int,char *argv[]);
+extern "C" int abc2psmain(int,char *argv[]);
 
 using namespace std;
 using namespace godot;
@@ -51,6 +52,56 @@ void convCRLF(char * newLine, char * dest, char * src) {
         }
     }
     * dest = '\0';
+}
+
+char * createSvgFile(const char * notation, const char * abcFileName, const char * svgFileName)
+{
+char fixed[2048];
+
+    convCRLF("\n", fixed, (char *) notation);
+
+    const char * pastX = strstr(notation, "X:");
+    if (pastX == NULL) {
+        pastX = strstr(notation, "x:");
+    }
+
+    pastX = strstr(pastX, "\n");
+
+    FILE* fp = fopen(abcFileName, "wb");
+    // FILE * fp = fopen(abcFileName, "wb");
+    if (fp == NULL)
+    {
+        UtilityFunctions::print("ERROR: Could not open abc file");
+        return "ERROR: Could not open abc file return";
+    }
+    int ret = fprintf(fp, "X:1\n");
+    if (ret < 0)
+    {
+        return "ERROR: fprint returned negative value";
+    }
+
+    ret = fprintf(fp, "%s", pastX + 1);
+    if (ret < 0)
+    {
+        return "ERROR: fprint returned negative value";
+    }
+
+    fflush(fp);
+
+    fclose(fp);
+
+    char * argv[5];
+    argv[0] = "abc2ps"; // Dummy value because we dont actually spawn the program
+    argv[1] = (char *) abcFileName;
+    argv[2] = "1";
+    argv[3] = "-o";
+    argv[4] = (char *) svgFileName;
+
+    abc2psmain(5, argv);
+
+    static char retstr[2000];
+    sprintf(retstr, "svgFileName = %s", svgFileName);
+    return retstr;
 }
 
 char * createMidiFile(const char * notation, const char * abcFileName, const char * midiFileName, int speed, int transpose, int melody, int chords)
