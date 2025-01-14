@@ -53,6 +53,9 @@ void convCRLF(char * newLine, char * dest, char * src) {
     }
     * dest = '\0';
 }
+/*
+
+# TO BE USED ONLY WITH ABCM2PS
 
 char * createSvgFile(const char * notation, const char * abcFileName, const char * svgFileName)
 {
@@ -103,6 +106,7 @@ char fixed[2048];
     sprintf(retstr, "svgFileName = %s", svgFileName);
     return retstr;
 }
+*/
 
 char * createMidiFile(const char * notation, const char * abcFileName, const char * midiFileName, int speed, int transpose, int melody, int chords)
 {
