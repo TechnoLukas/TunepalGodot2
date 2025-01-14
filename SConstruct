@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import sys
+from SCons.Script import Glob
 
 env = SConscript("godot-cpp/SConstruct")
 
@@ -13,8 +14,8 @@ env = SConscript("godot-cpp/SConstruct")
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/", "src/abcm2ps/"])
-sources = Glob("src/*.c*") + Glob("src/abcm2ps/*.c*")
+env.Append(CPPPATH=["src/", "model/"]) # , "src/abcm2ps/"])
+sources = Glob("src/*.c*") + Glob("model/*.c*") # + Glob("src/abcm2ps/*.c")
 
 if env["platform"] == "macos":
     library = env.SharedLibrary(

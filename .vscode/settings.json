@@ -5,5 +5,6 @@
         "xstring": "cpp",
         "mutex": "cpp"
     },
-    "godotTools.editorPath.godot4": "c:\\Users\\302275\\Desktop\\Godot_v4.4-dev7_win64.exe\\Godot_v4.4-dev7_win64.exe"
+    "godotTools.editorPath.godot4": "c:\\dev\\Godot_v4.3-stable_win64.exe",
+    "cmake.sourceDirectory": "C:/dev/final-project/tunepal-local-2/TunepalGodot2/godot-cpp"
 }
