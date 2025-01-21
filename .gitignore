@@ -45,4 +45,26 @@
 /bin/
 /lib/
 
+# ThirdParty specific ignores
+/src/ThirdParty/*
+/src/ThirdParty/**/*.build/
+/src/ThirdParty/**/*.build.log
+/src/ThirdParty/**/test_data/
+/src/ThirdParty/**/tests/data/
+/src/ThirdParty/**/*.test.*
+src/ThirdParty/external/RTNeural/**
+src/ThirdParty/external/xsimd/**
 
+# Keep existing ThirdParty rule
+*/ThirdParty/*s
+
+# RTNeural test data and generated files
+src/ThirdParty/external/RTNeural/test_data/
+src/ThirdParty/external/RTNeural/tests/
+src/ThirdParty/external/RTNeural/build/
+src/ThirdParty/external/RTNeural/.pytest_cache/
+src/ThirdParty/external/RTNeural/__pycache__/
+
+# Environment variables
+.env
+env.local
