@@ -2,3 +2,6 @@
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp
 	branch = 4.3
+[submodule "src/ThirdParty/external/RTNeural"]
+	path = src/ThirdParty/external/RTNeural
+	url = https://github.com/jatinchowdhury18/RTNeural.git

@@ -4,7 +4,7 @@
  */
 
 #pragma once
-
+#include <cmath>
 #include <string>
 
 using namespace std;
@@ -20,6 +20,26 @@ public:
     static const int FUNDAMENTALS = 7;	
 	static const char * noteNames[];
     
+    // new  method
+    static string midiToABC(int midiNote) {
+        static const char* notes[] = {"C","^C","D","^D","E","F","^F","G","^G","A","^A","B"};
+        int octave = (midiNote / 12) - 4; // Middle C = C4
+        int noteIndex = midiNote % 12;
+        string note = notes[noteIndex];
+        
+        // Add octave modifiers
+        while (octave > 0) {
+            note[0] = std::tolower(note[0]);
+            octave--;
+        }
+        while (octave < 0) {
+            note[0] = std::toupper(note[0]);
+            octave++;
+        }
+        return note;
+    }
+
+
 	float knownFrequencies[ABC_NOTE_RANGE];
     float midiNotes[MIDI_NOTE_RANGE];    
 	

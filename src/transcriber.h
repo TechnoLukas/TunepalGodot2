@@ -8,42 +8,43 @@
  */
 
 #pragma once
-
+#include <memory>
 #include <string>
 #include <vector>
-
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
-
+#include "transcription_engine.h"
 
 using namespace std;
 
-class TranscribedNote
-{
+class TranscribedNote {
 public:
-	string spelling;
-	float frequency;
-	float duration;
-	float onset;
-	float qq;
-};	
-
-class Transcriber  {
-private:
-	float * signal;
-	int numSamples;
-	vector<TranscribedNote> notes;
-	string transcription;
-public:
-	void setSignal(float * signal);
-	string transcribe(float * progress, bool * interrupted, bool midi);
-	void postProcess(bool);
-	void printTranscription();
-	//Transcriber(char * audioData, int numSamples);
-    Transcriber(const godot::PackedByteArray & audioData);
-    Transcriber();
-	~Transcriber();
+    string spelling;
+    float frequency;
+    float duration;
+    float onset;
+    float qq;
 };
 
+class Transcriber {
+private:
+    float* signal;
+    int numSamples;
+    vector<TranscribedNote> notes;
+    string transcription;
+    std::unique_ptr<TranscriptionEngine> transcriptionEngine;
 
+public:
+    // Constructors
+    Transcriber();
+    explicit Transcriber(const godot::PackedByteArray& audioData);
+    ~Transcriber();
+
+    // Member functions
+    void setSignal(float* signal);
+    string transcribe(float* progress, bool* interrupted, bool midi);
+    string transcribeWithAI();
+    void postProcess(bool midi);
+    void printTranscription();
+};
 
