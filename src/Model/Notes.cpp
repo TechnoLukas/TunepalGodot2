@@ -3,6 +3,8 @@
 //
 
 #include "Notes.h"
+#include "NoteUtils.h"
+#include "BasicPitchConstants.h"
 
 bool Notes::Event::operator==(const Notes::Event& other) const
 {
@@ -281,3 +283,29 @@ void Notes::_addPitchBends(std::vector<Event>& inOutEvents,
         }
     }
 }
+
+// void Notes::computeNotesPitchRange() {
+//     if (events.empty()) {
+//         return;
+//     }
+
+//     // Initialize with first note's values
+//     const int first_note_idx = NoteUtils::hzToMidi(events[0].frequency);
+//     int max_note_idx = first_note_idx;
+//     int min_note_idx = first_note_idx;
+
+//     // Find min/max through the rest of the notes
+//     for (const auto& event : events) {
+//         const int note_idx = NoteUtils::hzToMidi(event.frequency);
+//         max_note_idx = std::max(max_note_idx, note_idx);
+//         min_note_idx = std::min(min_note_idx, note_idx);
+//     }
+
+//     // Use the results
+//     if (max_note_idx > MAX_NOTE_IDX) {
+//         max_note_idx = MAX_NOTE_IDX;
+//     }
+//     if (min_note_idx < MIDI_OFFSET) {
+//         min_note_idx = MIDI_OFFSET;
+//     }
+// }

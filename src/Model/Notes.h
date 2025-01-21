@@ -8,7 +8,7 @@
 #include <cassert>
 #include <cmath>
 #include <vector>
-
+#include <algorithm>
 #include "BasicPitchConstants.h"
 #include "NoteUtils.h"
 
@@ -138,6 +138,8 @@ private:
     static void _addPitchBends(std::vector<Notes::Event>& inOutEvents,
                                const std::vector<std::vector<float>>& inContoursPG,
                                int inNumBinsTolerance = 25);
+
+void computeNotesPitchRange();
 
     /**
      * Get time in seconds given frame index.

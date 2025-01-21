@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "abc2midi/tunePalEntry.h" 
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
