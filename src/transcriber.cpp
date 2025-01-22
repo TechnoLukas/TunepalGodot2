@@ -1,3 +1,8 @@
+/*
+ * Developer : Bryan Duggan (bryan.duggan@dit.ie)
+ * All code (c)2010 Dublin Institute of Technology. All rights reserved
+ */
+
 #include "transcriber.h"
 #include "tunepalconstants.h"
 #include "pitchspeller.h"
