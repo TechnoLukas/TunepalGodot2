@@ -26,7 +26,7 @@ Transcriber::Transcriber() : signal(nullptr), numSamples(0) {
         transcriptionEngine = std::make_unique<TranscriptionEngine>();
         UtilityFunctions::print("TranscriptionEngine created");
     } catch (const std::exception& e) {
-        UtilityFunctions::print("Failed to create TranscriptionEngine: ", e.what());
+        UtilityFunctions::print("Failed to create TranscriptionEngine: ");
     }
 }
 
@@ -118,7 +118,7 @@ string Transcriber::transcribeWithAI() {
         return transcribe(nullptr, nullptr, false);
 
     } catch (const std::exception& e) {
-        UtilityFunctions::print("Transcription error: ", e.what());
+        // UtilityFunctions::print("Transcription error: ", e);
         return "";
     }
 }

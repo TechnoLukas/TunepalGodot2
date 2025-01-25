@@ -5,6 +5,11 @@ from SCons.Script import Glob
 
 env = SConscript("godot-cpp/SConstruct")
 
+#env = Environment()
+
+# Enable exceptions
+env.Append(CXXFLAGS=['-fexceptions'])
+
 # For reference:
 # - CCFLAGS are compilation flags shared between C and C++
 # - CFLAGS are for C-specific compilation flags
@@ -29,7 +34,7 @@ for dir in src_dirs:
     sources.extend(Glob(dir))
 
 # ONNX Runtime setup
-onnx_default_path = os.getenv('ONNX_ROOT', 'C:\\onnxruntime\\onnxruntime-win-x64-gpu-1.20.1') # replace hard coded path
+onnx_default_path = os.getenv('ONNX_ROOT', '/home/skooter500/onnxruntime-linux-x64-1.20.1') # replace hard coded path
 onnx_include = os.path.join(onnx_default_path, 'include')
 onnx_lib = os.path.join(onnx_default_path, 'lib')
 
@@ -64,7 +69,7 @@ env.Append(CPPDEFINES=[
 
 # Define compiler flags and definitions
 if env["platform"] == "windows":
-    env.Append(CCFLAGS=["/EHsc"])  # Enable exception handling
+    env.Append(CCFLAGS=["-fexceptions"])  # Enable exception handling
     env.Append(CPPDEFINES=[
         "RTNEURAL_DEFAULT_ALIGNMENT=16",
         # "RTNEURAL_EIGEN_SUPPORTED=1",
