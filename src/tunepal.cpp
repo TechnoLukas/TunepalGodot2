@@ -19,7 +19,7 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
 	ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
 	ClassDB::bind_method(D_METHOD("create_midi_file"), &Tunepal::create_midi_file);
-	//     ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
+	ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
     ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
     
 	
@@ -42,7 +42,6 @@ void Tunepal::_process(double delta) {
 
 int g_fundamental = 3;
 
-/*
 
 void create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
 {
@@ -51,7 +50,6 @@ void create_svg_file(godot::String notation, godot::String abc_file_name, godot:
     const char * svg_file_chars = svg_file_name.ascii().get_data();
     createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
 }
-*/
 
 void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
 {
