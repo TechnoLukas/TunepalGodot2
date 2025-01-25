@@ -33,7 +33,7 @@ void process_recording(const PackedByteArray& audioData) {
         }
     }
     catch (const std::exception& e) {
-        UtilityFunctions::print("Error processing recording: ", e.what());
+        // UtilityFunctions::print("Error processing recording: ", e.what());
     }
 }
 

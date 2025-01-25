@@ -42,7 +42,7 @@
 #include <math.h>
 #include <assert.h>
 
-#include "FFT.h"
+#include "fft.h"
 
 int **gFFTBitTable = NULL;
 const int MaxFastBits = 16;
