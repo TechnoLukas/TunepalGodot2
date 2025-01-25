@@ -30,57 +30,38 @@ Transcriber::Transcriber() : signal(nullptr), numSamples(0) {
     }
 }
 
-Transcriber::Transcriber(const godot::PackedByteArray& audioData) : Transcriber() {
-    UtilityFunctions::print("Processing audio data of size: ", audioData.size());
-    
-    // Calculate original sample rate (assuming 48000Hz input from Godot)
-    const int originalSampleRate = 48000;
-    const int targetSampleRate = 22050;
-    const float resampleRatio = static_cast<float>(targetSampleRate) / originalSampleRate;
-    
-    // Calculate number of samples after resampling
-    int originalNumSamples = audioData.size() / 4; // 4 bytes per stereo sample
-    numSamples = static_cast<int>(originalNumSamples * resampleRatio);
+Transcriber::Transcriber(const godot::PackedByteArray& audioData)
+{
+    // Since we're getting stereo data (4 bytes per sample - 2 bytes per channel),
+    // the number of mono samples will be size/4
+    int numSamples = audioData.size() / 4;
     signal = new float[numSamples];
     
-    UtilityFunctions::print("Resampling from ", originalSampleRate, "Hz to ", targetSampleRate, "Hz");
-    UtilityFunctions::print("Original samples: ", originalNumSamples, " Resampled: ", numSamples);
-    
-    // Temporary buffer for full-rate mono samples
-    std::vector<float> tempBuffer(originalNumSamples);
-    
-    // Convert stereo to mono and normalize
-    float maxAmp = 0.0f;
-    for (int i = 0; i < originalNumSamples; i++) {
-        // Convert stereo to mono
-        int16_t leftSample = (audioData[i * 4 + 1] << 8) | audioData[i * 4];
-        int16_t rightSample = (audioData[i * 4 + 3] << 8) | audioData[i * 4 + 2];
-        tempBuffer[i] = (leftSample + rightSample) / (2.0f * 32768.0f); // Normalize to [-1,1]
-        maxAmp = std::max(maxAmp, std::abs(tempBuffer[i]));
-    }
-    
-    // Normalize audio
-    if (maxAmp > 0.0f) {
-        for (int i = 0; i < originalNumSamples; i++) {
-            tempBuffer[i] /= maxAmp;
-        }
-    }
-    
-    // Resample to 22050Hz using linear interpolation
-    for (int i = 0; i < numSamples; i++) {
-        float exactPos = i / resampleRatio;
-        int pos1 = static_cast<int>(exactPos);
-        int pos2 = pos1 + 1;
-        float frac = exactPos - pos1;
+    for (int signalIndex = 0; signalIndex < numSamples; signalIndex++)
+    {
+        // Get bytes for left channel
+        uint8_t leftLow = audioData[signalIndex * 4];        // Low byte left
+        uint8_t leftHigh = audioData[signalIndex * 4 + 1];   // High byte left
         
-        if (pos2 >= originalNumSamples) {
-            signal[i] = tempBuffer[pos1];
-        } else {
-            signal[i] = tempBuffer[pos1] * (1.0f - frac) + tempBuffer[pos2] * frac;
+        // Get bytes for right channel
+        uint8_t rightLow = audioData[signalIndex * 4 + 2];   // Low byte right
+        uint8_t rightHigh = audioData[signalIndex * 4 + 3];  // High byte right
+        
+        // Combine bytes into 16-bit signed integers for each channel
+        int16_t leftSample = (leftHigh << 8) | leftLow;
+        int16_t rightSample = (rightHigh << 8) | rightLow;
+        
+        // Convert to float and average the channels
+        // Divide by 32768.0f to normalize to [-1.0, 1.0] range
+        signal[signalIndex] = (leftSample + rightSample) / (2.0f * 32768.0f);
+        
+        if (signalIndex < 5000)
+        {
+             // UtilityFunctions::print(signal[signalIndex]);
         }
     }
     
-    UtilityFunctions::print("Audio preprocessing complete");
+    this->numSamples = numSamples;
 }
 
 void Transcriber::setSignal(float* signal) {
