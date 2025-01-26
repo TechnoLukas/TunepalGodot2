@@ -19,6 +19,8 @@
 
 #include "abcm2ps.h" 
 
+#define VERSION "2.56 December 07 2010"
+
 #define PPI_96_72 0.75		// convert page format to 72 PPI
 #define BUFFLN	80		/* max number of lines in output buffer */
 

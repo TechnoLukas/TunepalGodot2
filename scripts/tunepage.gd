@@ -25,6 +25,7 @@ signal returned
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	
 	pass
 
 
@@ -43,6 +44,8 @@ func string_to_packed_byte_array(input_string: String) -> PackedByteArray:
 func show_tune_page(data: Variant) -> void:
 	this_tune = data
 	add_and_remove_symbols_idx = 0
+	
+	# tunepal.create_s
 	
 	self.visible=true
 	#print(data.keys())
