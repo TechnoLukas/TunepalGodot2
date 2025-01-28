@@ -64,7 +64,7 @@ func show_tune_page(data: Variant) -> void:
 	var data_folder = OS.get_user_data_dir()
 	tunepal.create_midi_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.mid", 4, 0, 0, 0)
 	
-	midi_player.file = clientside.prefix + "://tunepal.mid"
+	midi_player.file = data_folder + "/tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
 	#midi_player.soundfont # "res://assets/Live HQ Natural SoundFont GM.sf2" is good
 	
@@ -96,6 +96,7 @@ func _on_play_and_pause_button_pressed():
 
 func play():
 	print("to play")
+	
 	midi_player.play(midi_player_stoped_position)
 
 func pause():
