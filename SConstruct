@@ -10,6 +10,8 @@ env = SConscript("godot-cpp/SConstruct")
 # Enable exceptions
 env.Append(CXXFLAGS=['-fexceptions'])
 
+# Supress warnings
+env.Append(CCFLAGS=['-w'])
 # For reference:
 # - CCFLAGS are compilation flags shared between C and C++
 # - CFLAGS are for C-specific compilation flags
@@ -19,7 +21,7 @@ env.Append(CXXFLAGS=['-fexceptions'])
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/", "model/", "src/ModelData" , "src/abcm2ps/]) 
+env.Append(CPPPATH=["src/", "model/", "src/ModelData" , "src/abcm2ps/"]) 
 # sources = Glob("src/*.c*") + Glob("model/*.c*") + Glob("ThirdParty/RTNeural*") # + Glob("src/abcm2ps/*.c")
 
 # Define source directories more specifically
