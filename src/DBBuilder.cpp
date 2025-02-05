@@ -3,16 +3,20 @@
 #include <fstream>
 #include <iostream>
 
+using namespace godot;
+using namespace std;
+
 static size_t WriteCallback(void* contents, size_t size, size_t nmemb, std::string* userp) {
     userp->append((char*)contents, size * nmemb);
     return size * nmemb;
 }
 
 void DBBuilder::_bind_methods() {
-    godot::ClassDB::bind_method(godot::D_METHOD("initialize_database"), &DBBuilder::initialize_database);
-    godot::ClassDB::bind_method(godot::D_METHOD("load_from_file", "filename"), &DBBuilder::load_from_file);
-    godot::ClassDB::bind_method(godot::D_METHOD("load_from_url"), &DBBuilder::load_from_url);
+    ClassDB::bind_method(D_METHOD("initialize_database"), &DBBuilder::initialize_database);
+    ClassDB::bind_method(D_METHOD("load_from_file", "filename"), &DBBuilder::load_from_file);
+    ClassDB::bind_method(D_METHOD("load_from_url"), &DBBuilder::load_from_url);
 }
+
 
 DBBuilder::DBBuilder() : db_connection(nullptr) {}
 

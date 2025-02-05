@@ -15,8 +15,6 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	}
 
 	ClassDB::register_class<Tunepal>();
-	ClassDB::register_class<DBBuilder>();
-	std::cout << "DBBuilder registered successfully" << std::endl; 
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {

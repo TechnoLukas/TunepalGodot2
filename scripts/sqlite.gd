@@ -47,18 +47,25 @@ var accented_characters = {
 	r"{\\ss}": "ß",
 }
 
-var db_builder
+const THESESSION_URL = "https://raw.githubusercontent.com/adactio/TheSession-data/refs/heads/main/json/tunes.json"
+
+# func initialize_database():
+# 	var builder = DBBuilder.new()
+# 	add_child(builder)
+# 	var success = builder.initialize_database()
+# 	if success:
+# 		success = builder.load_from_url()  # or load_from_file()
+# 	builder.queue_free()  # Clean up after initialization
+# 	return success
 
 func _ready():
-	# Initialize the builder
-	db_builder = DBBuilder.new()
-	add_child(db_builder)
-	
-	# First build/update the database if needed
-	if db_builder.initialize_database():
-		db_builder.load_from_url()  # This will update the database
-	
-	# Then continue with existing loading code
+
+	var success = await build_session_database()
+	if success:
+		print("Database build successful")
+	else:
+		print("Database build failed")
+
 	var path = clientside.prefix + "://assets/data/tunepal"
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
@@ -70,7 +77,26 @@ func load_db(path):
 	db.path = path
 	db.open_db()
 	db.read_only = true
-	db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;")
+	db.query("""
+				select tuneindex.id as id, 
+				midi_sequence, 
+				tune_type, 
+				time_sig, 
+				notation, 
+				source.id as sourceid, 
+				shortName, 
+				url, 
+				source.source as sourcename, 
+				title, 
+				alt_title, 
+				tunepalid, 
+				x, 
+				midi_file_name, 
+				key_sig, 
+				search_key from tuneindex, 
+				tunekeys, 
+				source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;
+				""")
 	return_tune = db.query_result
 	db.close_db()
 	
@@ -111,4 +137,86 @@ func open_json(path: String) -> void:
 		print("Failed to open file for reading: ", file)
 
 	file.close()
+
+func build_session_database():
+	return await build_database_from_url(THESESSION_URL)
+	
+func build_database_from_url(url: String) -> bool:
+	print("Starting database build from URL: ", url)
+	var http_request = HTTPRequest.new()
+	add_child(http_request)
+	var error = http_request.request(url)
+	if error != OK:
+		print("Failed to make HTTP request: ", error)
+		return false
+		
+	var result = await http_request.request_completed
+	http_request.queue_free()
+
+	if result[0] != OK:
+		print("HTTP request failed with code: ", result[0])
+		return false
+		
+	var json_string = result[3].get_string_from_utf8()
+	var json = JSON.parse_string(json_string)
+	if not json:
+		print("Failed to parse JSON response")
+		return false
+		
+	return populate_database(json)
+	
+func populate_database(data):
+	var db = SQLite.new()
+	db.path = clientside.prefix + "://assets/data/tunepal"
+	db.open_db()
+	
+# Begin transaction for better performance
+	db.query("BEGIN TRANSACTION;")
+	
+# Create table if it doesn't exist
+	var create_table = """
+	CREATE TABLE IF NOT EXISTS Tunes (
+		ID INT NOT NULL,
+		SETTING INT NOT NULL,
+		NAME TEXT,
+		TYPE CHAR(50),
+		MODE CHAR(10),
+		METER CHAR(10),
+		ABC TEXT,
+		KEY TEXT,
+		PARSED TINYINT,
+		PCHIST TEXT,
+		PARSED2 TINYINT,
+		PRIMARY KEY (ID, SETTING)
+	);
+	"""
+	db.query(create_table)
+	
+	for tune in data:
+		var query = """
+		INSERT OR REPLACE INTO Tunes 
+		(ID, SETTING, NAME, TYPE, MODE, METER, ABC, KEY, PARSED, PCHIST, PARSED2)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+		"""
+		var params = [
+			tune.get("tune", 0),
+			tune.get("setting", 0),
+			tune.get("name", ""),
+			tune.get("type", ""),
+			tune.get("mode", ""),
+			tune.get("meter", ""),
+			tune.get("abc", "").replace("\\\\", "\\"),
+			tune.get("abc", ""),  # KEY field
+			0,  # PARSED
+			"",  # PCHIST
+			0   # PARSED2
+		]
+		
+		if !db.query_with_bindings(query, params):
+			print("Failed to insert tune: ", tune.get("name", "unknown"))
+			
+			# Commit transaction
+	db.query("COMMIT;")
+	db.close_db()
+	return true
 	
