@@ -57,7 +57,9 @@ void convCRLF(char * newLine, char * dest, char * src) {
 
 char * createSvgFile(const char * notation, const char * abcFileName, const char * svgFileName)
 {
-char fixed[2048];
+
+    
+    char fixed[2048];
 
     convCRLF("\n", fixed, (char *) notation);
 
@@ -100,6 +102,11 @@ char fixed[2048];
 
     static char retstr[2000];
     sprintf(retstr, "svgFileName = %s", svgFileName);
+
+    UtilityFunctions::print(abcFileName);
+    UtilityFunctions::print(svgFileName);
+
+
     return retstr;
 }
 
