@@ -98,7 +98,7 @@ char * createSvgFile(const char * notation, const char * abcFileName, const char
     argv[1] = "-g";
     argv[2] = (char *) abcFileName;
 
-    // abc2psmain(5, argv);
+    abc2psmain(5, argv);
 
     static char retstr[2000];
     sprintf(retstr, "svgFileName = %s", svgFileName);
