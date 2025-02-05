@@ -1,5 +1,5 @@
 extends Node
-
+# const DBBuilder = preload("res://addons/tunepal/bin/tunepal.gdextension")
 var tunes = []
 var user_tunes = []
 var default_user_tunes_path = "://assets/data_persistent/user_tunes.json"
@@ -47,7 +47,18 @@ var accented_characters = {
 	r"{\\ss}": "ß",
 }
 
+var db_builder
+
 func _ready():
+	# Initialize the builder
+	db_builder = DBBuilder.new()
+	add_child(db_builder)
+	
+	# First build/update the database if needed
+	if db_builder.initialize_database():
+		db_builder.load_from_url()  # This will update the database
+	
+	# Then continue with existing loading code
 	var path = clientside.prefix + "://assets/data/tunepal"
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
