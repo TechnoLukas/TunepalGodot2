@@ -7,4 +7,9 @@
 
 // Add other necessary configuration macros here
 
+
+#define VERSION "8.14.15"
+#define VDATE "2024-01-08"
+#define DEFAULT_FDIR "/usr/local/share/abcm2ps"
+
 #endif // CONFIG_H
