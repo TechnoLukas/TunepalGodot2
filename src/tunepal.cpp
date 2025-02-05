@@ -46,7 +46,8 @@ int g_fundamental = 3;
 
 void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
 {
-    const char * notation_chars = notation.ascii().get_data();
+    char notation_chars[2048];    
+    strcpy(notation_chars, notation.ascii().get_data());
     char abc_file_chars[2048];
     strcpy(abc_file_chars, abc_file_name.ascii().get_data());
     

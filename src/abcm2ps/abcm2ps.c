@@ -574,6 +574,8 @@ static void set_opt(char *w, char *v)
 			"cmd_line", 0);
 }
 
+
+
 /* -- main program -- */
 int abc2psmain(int argc, char **argv)
 {
@@ -583,6 +585,8 @@ int abc2psmain(int argc, char **argv)
 	if (argc <= 1)
 		usage();
 
+	// UtilityFunctions::print("hello from abcm2ps");
+	printf("hello from abcm2ps");
 	outfn[0] = '\0';
 	init_outbuf(64);
 
