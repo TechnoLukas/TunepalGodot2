@@ -19,7 +19,7 @@ env.Append(CXXFLAGS=['-fexceptions'])
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/", "model/", "src/ModelData"])
+env.Append(CPPPATH=["src/", "model/", "src/ModelData" , "src/abcm2ps/]) 
 # sources = Glob("src/*.c*") + Glob("model/*.c*") + Glob("ThirdParty/RTNeural*") # + Glob("src/abcm2ps/*.c")
 
 # Define source directories more specifically
@@ -27,6 +27,7 @@ src_dirs = [
     "src/*.cpp",
     "src/Model/*.cpp",
     "src/abc2midi/*.c",
+    "src/abcm2ps/*.c",
 ]
 
 sources = []
