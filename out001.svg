@@ -13,7 +13,7 @@ text{white-space:pre; fill:currentColor}
 <title>0.abc (1) tune 1</title>
 <!-- Creator: abcm2ps-8.14.14 -->
 <!-- CreationDate: Jan 25, 2025 23:28 -->
-<!-- CommandLine: -g -O out.svg 0.abc -->
+<!-- CommandLine: -g 0.abc -->
 <g stroke-width="0.70">
 <!-- title: Cooley's -->
 </g>

@@ -22,6 +22,18 @@ env.Append(CXXFLAGS=['-fexceptions'])
 env.Append(CPPPATH=["src/", "model/", "src/ModelData"])
 # sources = Glob("src/*.c*") + Glob("model/*.c*") + Glob("ThirdParty/RTNeural*") # + Glob("src/abcm2ps/*.c")
 
+if env["platform"] == "windows":
+    env.Append(LIBPATH=["C:/dev/vcpkg/installed/x64-windows/lib"])
+    env.Append(CPPPATH=["C:/dev/vcpkg/installed/x64-windows/include"])
+    env.Append(CCFLAGS=["/EHsc"])  # Enable exception handling
+# adjust this for linux and macos is needed
+
+
+env.Append(LIBS=["sqlite3"])
+env.Append(LIBS=["libcurl"])
+
+# env.Append(LIBS=["sqlite3"])
+
 # Define source directories more specifically
 src_dirs = [
     "src/*.cpp",
