@@ -47,9 +47,12 @@ int g_fundamental = 3;
 void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
 {
     const char * notation_chars = notation.ascii().get_data();
-    const char * abc_file_chars = abc_file_name.ascii().get_data();
-    const char * svg_file_chars = svg_file_name.ascii().get_data();
-    // createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
+    char abc_file_chars[2048];
+    strcpy(abc_file_chars, abc_file_name.ascii().get_data());
+    
+    char svg_file_chars[2048];
+    strcpy(svg_file_chars, svg_file_name.ascii().get_data());
+    createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
 }
 
 void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
