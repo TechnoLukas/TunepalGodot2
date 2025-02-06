@@ -22,18 +22,6 @@ env.Append(CXXFLAGS=['-fexceptions'])
 env.Append(CPPPATH=["src/", "model/", "src/ModelData"])
 # sources = Glob("src/*.c*") + Glob("model/*.c*") + Glob("ThirdParty/RTNeural*") # + Glob("src/abcm2ps/*.c")
 
-if env["platform"] == "windows":
-    env.Append(LIBPATH=["C:/dev/vcpkg/installed/x64-windows/lib"])
-    env.Append(CPPPATH=["C:/dev/vcpkg/installed/x64-windows/include"])
-    env.Append(CCFLAGS=["/EHsc"])  # Enable exception handling
-elif env["platform"] == "linux":
-    env.Append(LIBS=["sqlite3", "curl"])  # Note: on Linux it's "curl" not "libcurl"
-    env.Append(CCFLAGS=["-fexceptions"]) 
-
-# if dbbuilder binary isn't required the libcurl and sqite3 libraries can be removed!!
-env.Append(LIBS=["sqlite3"])
-env.Append(LIBS=["libcurl"])
-
 # env.Append(LIBS=["sqlite3"])
 
 # Define source directories more specifically
