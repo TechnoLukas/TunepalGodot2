@@ -26,9 +26,11 @@ if env["platform"] == "windows":
     env.Append(LIBPATH=["C:/dev/vcpkg/installed/x64-windows/lib"])
     env.Append(CPPPATH=["C:/dev/vcpkg/installed/x64-windows/include"])
     env.Append(CCFLAGS=["/EHsc"])  # Enable exception handling
-# adjust this for linux and macos is needed
+elif env["platform"] == "linux":
+    env.Append(LIBS=["sqlite3", "curl"])  # Note: on Linux it's "curl" not "libcurl"
+    env.Append(CCFLAGS=["-fexceptions"]) 
 
-
+# if dbbuilder binary isn't required the libcurl and sqite3 libraries can be removed!!
 env.Append(LIBS=["sqlite3"])
 env.Append(LIBS=["libcurl"])
 

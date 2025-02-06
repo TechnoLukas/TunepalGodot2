@@ -142,8 +142,8 @@ func build_session_database():
 	return await build_database_from_url(THESESSION_URL)
 	
 func build_database_from_url(url: String) -> bool:
-	print("Starting database build from URL: ", url)
-	var http_request = HTTPRequest.new()
+	print("Starting database build from URL: ", url) 
+	var http_request = HTTPRequest.new() # HTTP request
 	add_child(http_request)
 	var error = http_request.request(url)
 	if error != OK:
@@ -158,65 +158,90 @@ func build_database_from_url(url: String) -> bool:
 		return false
 		
 	var json_string = result[3].get_string_from_utf8()
-	var json = JSON.parse_string(json_string)
-	if not json:
+	var data = JSON.parse_string(json_string)
+	# if not json:
+	# 	print("Failed to parse JSON response")
+	# 	return false
+	# print(json, "JSON parsed successfully")	
+	# return populate_database(json)
+	# if json.error == OK:
+	# 	var data = json.result
+
+	if data == null:
 		print("Failed to parse JSON response")
 		return false
+
+	if not data is Array:
+		print("Unexpected JSON response, expected array")
+		return false
+
+	var success = ABCTools.populate_database(data)
+	if success:
+		print("Database populated successfully")
+		return true
+	else:
+		print("Failed to populate database")
+		return false
 		
-	return populate_database(json)
-	
-func populate_database(data):
-	var db = SQLite.new()
-	db.path = clientside.prefix + "://assets/data/tunepal"
-	db.open_db()
-	
-# Begin transaction for better performance
-	db.query("BEGIN TRANSACTION;")
-	
-# Create table if it doesn't exist
-	var create_table = """
-	CREATE TABLE IF NOT EXISTS Tunes (
-		ID INT NOT NULL,
-		SETTING INT NOT NULL,
-		NAME TEXT,
-		TYPE CHAR(50),
-		MODE CHAR(10),
-		METER CHAR(10),
-		ABC TEXT,
-		KEY TEXT,
-		PARSED TINYINT,
-		PCHIST TEXT,
-		PARSED2 TINYINT,
-		PRIMARY KEY (ID, SETTING)
-	);
-	"""
-	db.query(create_table)
-	
-	for tune in data:
-		var query = """
-		INSERT OR REPLACE INTO Tunes 
-		(ID, SETTING, NAME, TYPE, MODE, METER, ABC, KEY, PARSED, PCHIST, PARSED2)
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-		"""
-		var params = [
-			tune.get("tune", 0),
-			tune.get("setting", 0),
-			tune.get("name", ""),
-			tune.get("type", ""),
-			tune.get("mode", ""),
-			tune.get("meter", ""),
-			tune.get("abc", "").replace("\\\\", "\\"),
-			tune.get("abc", ""),  # KEY field
-			0,  # PARSED
-			"",  # PCHIST
-			0   # PARSED2
-		]
 		
-		if !db.query_with_bindings(query, params):
-			print("Failed to insert tune: ", tune.get("name", "unknown"))
+		# print("Failed to parse JSON response")
+		# return false
+
+	
+# func populate_database(data):
+# 	var db = SQLite.new()
+# 	db.path = clientside.prefix + "://assets/data/tunepal"
+# 	db.open_db()
+	
+# # Begin transaction for better performance
+# 	db.query("BEGIN TRANSACTION;")
+	
+# # Create table if it doesn't exist
+# 	var create_table = """
+# 	CREATE TABLE IF NOT EXISTS Tunes (
+# 		ID INT NOT NULL,
+# 		SETTING INT NOT NULL,
+# 		NAME TEXT,
+# 		TYPE CHAR(50),
+# 		MODE CHAR(10),
+# 		METER CHAR(10),
+# 		ABC TEXT,
+# 		KEY TEXT,
+# 		PARSED TINYINT,
+# 		PCHIST TEXT,
+# 		PARSED2 TINYINT,
+# 		PRIMARY KEY (ID, SETTING)
+# 	);
+# 	"""
+# 	db.query(create_table)
+	
+# 	# We need to parse the JSON data and insert it into the database
+
+# 	for tune in data:
+# 		var query = """
+# 		INSERT OR REPLACE INTO Tunes 
+# 		(ID, SETTING, NAME, TYPE, MODE, METER, ABC, KEY, PARSED, PCHIST, PARSED2)
+# 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+# 		"""
+# 		var params = [
+# 			tune.get("tune", 0),
+# 			tune.get("setting", 0),
+# 			tune.get("name", ""),
+# 			tune.get("type", ""),
+# 			tune.get("mode", ""),
+# 			tune.get("meter", ""),
+# 			tune.get("abc", "").replace("\\\\", "\\"), ### WE NEED TO STRIP THIS PROPERLY
+# 			tune.get("abc", ""),  # KEY field
+# 			0,  # PARSED
+# 			"",  # PCHIST
+# 			0   # PARSED2
+# 		]
+		
+# 		if !db.query_with_bindings(query, params):
+# 			print("Failed to insert tune: ", tune.get("name", "unknown"))
 			
 			# Commit transaction
-	db.query("COMMIT;")
-	db.close_db()
-	return true
+	# db.query("COMMIT;")
+	# db.close_db()
+
 	
