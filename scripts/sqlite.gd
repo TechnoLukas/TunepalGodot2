@@ -1,5 +1,5 @@
 extends Node
-# const DBBuilder = preload("res://addons/tunepal/bin/tunepal.gdextension")
+
 var tunes = []
 var user_tunes = []
 var default_user_tunes_path = "://assets/data_persistent/user_tunes.json"
@@ -48,15 +48,6 @@ var accented_characters = {
 }
 
 const THESESSION_URL = "https://raw.githubusercontent.com/adactio/TheSession-data/refs/heads/main/json/tunes.json"
-
-# func initialize_database():
-# 	var builder = DBBuilder.new()
-# 	add_child(builder)
-# 	var success = builder.initialize_database()
-# 	if success:
-# 		success = builder.load_from_url()  # or load_from_file()
-# 	builder.queue_free()  # Clean up after initialization
-# 	return success
 
 func _ready():
 
@@ -159,13 +150,6 @@ func build_database_from_url(url: String) -> bool:
 		
 	var json_string = result[3].get_string_from_utf8()
 	var data = JSON.parse_string(json_string)
-	# if not json:
-	# 	print("Failed to parse JSON response")
-	# 	return false
-	# print(json, "JSON parsed successfully")	
-	# return populate_database(json)
-	# if json.error == OK:
-	# 	var data = json.result
 
 	if data == null:
 		print("Failed to parse JSON response")
@@ -184,64 +168,6 @@ func build_database_from_url(url: String) -> bool:
 		return false
 		
 		
-		# print("Failed to parse JSON response")
-		# return false
 
-	
-# func populate_database(data):
-# 	var db = SQLite.new()
-# 	db.path = clientside.prefix + "://assets/data/tunepal"
-# 	db.open_db()
-	
-# # Begin transaction for better performance
-# 	db.query("BEGIN TRANSACTION;")
-	
-# # Create table if it doesn't exist
-# 	var create_table = """
-# 	CREATE TABLE IF NOT EXISTS Tunes (
-# 		ID INT NOT NULL,
-# 		SETTING INT NOT NULL,
-# 		NAME TEXT,
-# 		TYPE CHAR(50),
-# 		MODE CHAR(10),
-# 		METER CHAR(10),
-# 		ABC TEXT,
-# 		KEY TEXT,
-# 		PARSED TINYINT,
-# 		PCHIST TEXT,
-# 		PARSED2 TINYINT,
-# 		PRIMARY KEY (ID, SETTING)
-# 	);
-# 	"""
-# 	db.query(create_table)
-	
-# 	# We need to parse the JSON data and insert it into the database
-
-# 	for tune in data:
-# 		var query = """
-# 		INSERT OR REPLACE INTO Tunes 
-# 		(ID, SETTING, NAME, TYPE, MODE, METER, ABC, KEY, PARSED, PCHIST, PARSED2)
-# 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-# 		"""
-# 		var params = [
-# 			tune.get("tune", 0),
-# 			tune.get("setting", 0),
-# 			tune.get("name", ""),
-# 			tune.get("type", ""),
-# 			tune.get("mode", ""),
-# 			tune.get("meter", ""),
-# 			tune.get("abc", "").replace("\\\\", "\\"), ### WE NEED TO STRIP THIS PROPERLY
-# 			tune.get("abc", ""),  # KEY field
-# 			0,  # PARSED
-# 			"",  # PCHIST
-# 			0   # PARSED2
-# 		]
-		
-# 		if !db.query_with_bindings(query, params):
-# 			print("Failed to insert tune: ", tune.get("name", "unknown"))
-			
-			# Commit transaction
-	# db.query("COMMIT;")
-	# db.close_db()
 
 	
