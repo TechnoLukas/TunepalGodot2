@@ -98,9 +98,9 @@ char * createSvgFile(const char * notation, const char * abcFileName, const char
     char * argv[5];
     argv[0] = "abcm2ps"; // Dummy value because we dont actually spawn the program
     argv[1] = "-g";
-    argv[2] = "tunepal.abc";
+    argv[2] = (char *) abcFileName;    
     argv[3] = "-O";
-    argv[4] = "tunepal.svg";
+    argv[4] = (char *) svgFileName;    
 
 
 
@@ -113,6 +113,8 @@ char * createSvgFile(const char * notation, const char * abcFileName, const char
     
     UtilityFunctions::print(abcFileName);
     UtilityFunctions::print(svgFileName);
+
+    printf("print f printf\n");
 
 
     return retstr;
