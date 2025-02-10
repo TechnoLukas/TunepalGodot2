@@ -4,6 +4,7 @@ extends Control
 
 @onready var tune_label = $Container/container/label
 @onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/abc_field
+@onready var abc_score:Sprite2D = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect/abc_score
 
 @onready var add_and_remove_button = $BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button
 @onready var play_and_pause_button = $BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button
@@ -40,6 +41,17 @@ func string_to_packed_byte_array(input_string: String) -> PackedByteArray:
 		byte_array.push_back(int(value.strip_edges()))  # Convert each item to integer and add to array
 	return byte_array
 	
+func load_texture_from_path(path: String) -> Texture2D:
+	var image = Image.new()
+	var error = image.load(path)  # Load the image from disk
+	
+	if error != OK:
+		print("Failed to load image:", path)
+		return null
+	
+	var texture = ImageTexture.create_from_image(image)
+	return texture
+	
 
 func show_tune_page(data: Variant) -> void:
 	this_tune = data
@@ -54,10 +66,12 @@ func show_tune_page(data: Variant) -> void:
 	abc_field.text=data["notation"]
 	
 	var data_folder = OS.get_user_data_dir()
-	# tunepal.create_midi_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.mid", 4, 0, 0, 0)
+	tunepal.create_midi_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.mid", 4, 0, 0, 0)
 	
 	tunepal.create_svg_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.svg")
 	
+	var texture = load_texture_from_path(data_folder + "/tunepal001.svg")
+	abc_score.texture = texture
 	midi_player.file = data_folder + "/tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
 	#midi_player.soundfont # "res://assets/Live HQ Natural SoundFont GM.sf2" is good
