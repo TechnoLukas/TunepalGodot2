@@ -277,6 +277,7 @@ void close_output_file(void)
 {
 	if (!fout)
 		return;
+	
 	if (multicol_start != 0) {	/* if no '%%multicol end' */
 		error(1, NULL, "No \"%%%%multicol end\"");
 		multicol_start = 0;
@@ -284,7 +285,9 @@ void close_output_file(void)
 	}
 	if (tunenum == 0)
 		error(0, NULL, "No tunes written to output file");
+	
 	close_page();
+	
 	switch (svg) {
 	case 0:				/* PS */
 		if (epsf == 0)
