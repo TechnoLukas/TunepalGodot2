@@ -586,7 +586,8 @@ int abc2psmain(int argc, char **argv)
 		usage();
 
 	// UtilityFunctions::print("hello from abcm2ps");
-	printf("hello from abcm2ps");
+	
+	return;
 	outfn[0] = '\0';
 	init_outbuf(64);
 
@@ -594,9 +595,14 @@ int abc2psmain(int argc, char **argv)
 	s_argc = argc;
 	s_argv = argv;
 	aaa = NULL;
+	printf("hello from abcssm2ps %d", argc);
+
 	while (--argc > 0) {
 		argv++;
 		p = *argv;
+
+		printf("p: %s", p);
+
 		if (*p != '-' || p[1] == '-') {
 			if (*p == '+' && p[1] == 'F')	/* +F : no default format */
 				def_fmt_done = 1;
