@@ -54,6 +54,7 @@ void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_nam
     char svg_file_chars[2048];
     strcpy(svg_file_chars, svg_file_name.ascii().get_data());
     createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
+    UtilityFunctions::print("I got past the end!!");
 }
 
 void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
