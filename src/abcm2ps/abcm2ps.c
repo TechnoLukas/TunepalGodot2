@@ -708,6 +708,7 @@ int abc2psmain(int argc, char **argv)
 	notitle.text = "T:";
 
 
+	// Only call this once if u call it more than once it will seg fault - bd"
 	if (! format_set) {
 		set_format();
 		format_set = 1;
@@ -738,7 +739,7 @@ int abc2psmain(int argc, char **argv)
 	argc = s_argc;
 	argv = s_argv;
 	
-	while (--argc > 0) {
+	while (--argc > 0) {actually have teaching buyout this semetesr
 		argv++;
 		p = *argv;
 		if ((c = *p) == '\0')
