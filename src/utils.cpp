@@ -55,10 +55,8 @@ void convCRLF(char * newLine, char * dest, char * src) {
     * dest = '\0';
 }
 
-char * createSvgFile(const char * notation, const char * abcFileName, const char * svgFileName)
+void createSvgFile(const char * notation, const char * abcFileName, const char * svgFileName)
 {
-
-    
     char fixed[2048];
 
     convCRLF("\n", fixed, (char *) notation);
@@ -75,18 +73,18 @@ char * createSvgFile(const char * notation, const char * abcFileName, const char
     if (fp == NULL)
     {
         UtilityFunctions::print("ERROR: Could not open abc file");
-        return "ERROR: Could not open abc file return";
+        return;
     }
     int ret = fprintf(fp, "X:1\n");
     if (ret < 0)
     {
-        return "ERROR: fprint returned negative value";
+        return;
     }
 
     ret = fprintf(fp, "%s", pastX + 1);
     if (ret < 0)
     {
-        return "ERROR: fprint returned negative value";
+        return;
     }
 
     fflush(fp);
@@ -103,21 +101,13 @@ char * createSvgFile(const char * notation, const char * abcFileName, const char
     argv[4] = (char *) svgFileName;    
 
 
-
-    abc2psmain(5, argv);
-
-    static char retstr[2000];
-    sprintf(retstr, "svgFileName = %s", svgFileName);
-
-    UtilityFunctions::print("after");
-    
     UtilityFunctions::print(abcFileName);
     UtilityFunctions::print(svgFileName);
 
-    printf("print f printf\n");
 
+    abc2psmain(5, argv);
 
-    return retstr;
+    return;
 }
 
 char * createMidiFile(const char * notation, const char * abcFileName, const char * midiFileName, int speed, int transpose, int melody, int chords)
