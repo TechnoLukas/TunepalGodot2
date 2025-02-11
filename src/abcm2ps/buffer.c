@@ -774,19 +774,30 @@ void bskip(float h)
 /* -- initialize the output buffer -- */
 void init_outbuf(int kbsz)
 {
+	printf("0");
 	if (outbuf)
 		free(outbuf);
 	outbufsz = kbsz * 1024;
 //	if (outbufsz < 0x10000)
 //		outbufsz = 0x10000;
+	printf("1");
 	outbuf = malloc(outbufsz);
+	printf("2");
+	
 	if (!outbuf) {
+			printf("3");
+
 		error(1, NULL, "Out of memory for outbuf - abort");
 		exit(EXIT_FAILURE);
 	}
+	printf("4");
+
 	bposy = 0;
 	ln_num = 0;
 	mbf = outbuf;
+		printf("5");
+
+	
 }
 
 /* -- write buffer contents, break at full pages -- */

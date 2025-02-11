@@ -574,7 +574,7 @@ static void set_opt(char *w, char *v)
 			"cmd_line", 0);
 }
 
-
+int format_set = 0;
 
 /* -- main program -- */
 int abc2psmain(int argc, char **argv)
@@ -582,20 +582,21 @@ int abc2psmain(int argc, char **argv)
 	unsigned j;
 	char *p, c, *aaa;
 
+	printf("hello from abcssm2ps %d", argc);
 	if (argc <= 1)
 		usage();
 
 	// UtilityFunctions::print("hello from abcm2ps");
-	
-	return;
+
 	outfn[0] = '\0';
 	init_outbuf(64);
-
+	
 	/* set the global flags */
 	s_argc = argc;
 	s_argv = argv;
 	aaa = NULL;
-	printf("hello from abcssm2ps %d", argc);
+	
+	
 
 	while (--argc > 0) {
 		argv++;
@@ -623,7 +624,7 @@ int abc2psmain(int argc, char **argv)
 				break;
 			case 'h':
 				usage();	/* no return */
-			case 'p':
+			case 'p':return
 				pipeformat = 1;	/* format for bagpipe regardless of key */
 				break;
 			case 'q':
@@ -691,16 +692,32 @@ int abc2psmain(int argc, char **argv)
 	}
 	if (!quiet)
 		display_version(0);
+	
+
+	
 
 	/* initialize */
 	clrarena(0);				/* global */
 	clrarena(1);				/* tunes */
 	clrarena(2);				/* generation */
+
+
+
 //	memset(&info, 0, sizeof info);
 	info['T' - 'A'] = &notitle;
 	notitle.text = "T:";
-	set_format();
+
+
+	if (! format_set) {
+		set_format();
+		format_set = 1;
+	}
+	
 	init_deco();
+
+	
+
+	
 
 #ifdef linux
 	/* if not set, try to find where is the default format directory */
@@ -720,6 +737,7 @@ int abc2psmain(int argc, char **argv)
 	/* parse the arguments - finding a new file, treat the previous one */
 	argc = s_argc;
 	argv = s_argv;
+	
 	while (--argc > 0) {
 		argv++;
 		p = *argv;
@@ -1046,6 +1064,8 @@ int abc2psmain(int argc, char **argv)
 		}
 		in_fname = p;
 	}
+
+	
 
 	if (in_fname)
 		treat_abc_file(in_fname);
