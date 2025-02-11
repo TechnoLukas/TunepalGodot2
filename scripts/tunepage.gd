@@ -89,6 +89,8 @@ func get_highest_tunepal_file(folder_path: String) -> String:
 	return highest_file_path
 
 func show_tune_page(data: Variant) -> void:
+	
+	delete_svg_files()
 	this_tune = data
 	add_and_remove_symbols_idx = 0
 	
