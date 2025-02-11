@@ -95,10 +95,10 @@ void createSvgFile(const char * notation, const char * abcFileName, const char *
 
     char * argv[5];
     argv[0] = "abcm2ps"; // Dummy value because we dont actually spawn the program
-    argv[1] = "-g";
-    argv[2] = (char *) "/home/skooter500/.local/share/godot/app_userdata/TunepalGodot2/tunepal.abc";    
+    argv[1] = "-v"; // Dummy value because we dont actually spawn the program
+    argv[2] = (char *) abcFileName;    
     argv[3] = "-O";
-    argv[4] = (char *) "/home/skooter500/.local/share/godot/app_userdata/TunepalGodot2/tunepal.svg";    
+    argv[4] = (char *) svgFileName;    
 
 
     UtilityFunctions::print(abcFileName);

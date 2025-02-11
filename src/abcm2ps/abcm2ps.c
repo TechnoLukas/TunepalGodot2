@@ -708,8 +708,9 @@ int abc2psmain(int argc, char **argv)
 	notitle.text = "T:";
 
 
-	// Only call this once if u call it more than once it will seg fault - bd"
+	
 	if (! format_set) {
+		fprintf(stderr, "\n\n\n\n\nset format\n\n\n\n");
 		set_format();
 		format_set = 1;
 	}
@@ -739,7 +740,7 @@ int abc2psmain(int argc, char **argv)
 	argc = s_argc;
 	argv = s_argv;
 	
-	while (--argc > 0) {actually have teaching buyout this semetesr
+	while (--argc > 0) {
 		argv++;
 		p = *argv;
 		if ((c = *p) == '\0')
@@ -1067,9 +1068,11 @@ int abc2psmain(int argc, char **argv)
 	}
 
 	
-
 	if (in_fname)
 		treat_abc_file(in_fname);
+	
+	
+	
 	if (multicol_start != 0) {		/* lack of %%multicol end */
 		error(1, NULL, "Lack of %%%%multicol end");
 		multicol_start = 0;
@@ -1078,11 +1081,19 @@ int abc2psmain(int argc, char **argv)
 		 && !epsf)
 			write_buffer();
 	}
+
+	
+
 	if (!epsf && !fout) {
 		error(1, NULL, "Nothing to generate!");
 		return EXIT_FAILURE;
 	}
+
 	close_output_file();
+
+	
+
+
 	return severity == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
