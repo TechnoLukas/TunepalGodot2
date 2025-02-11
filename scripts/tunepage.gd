@@ -51,7 +51,42 @@ func load_texture_from_path(path: String) -> Texture2D:
 	
 	var texture = ImageTexture.create_from_image(image)
 	return texture
+
+func delete_svg_files():
+	var data_folder = OS.get_user_data_dir()
+	var dir = DirAccess.open(data_folder)
 	
+	if dir:
+		for file_name in dir.get_files():
+			if file_name.ends_with(".svg"):
+				var file_path = data_folder.path_join(file_name)
+				var err = dir.remove(file_path)
+				if err == OK:
+					print("Deleted: ", file_path)
+				else:
+					print("Failed to delete: ", file_path)
+	else:
+		print("Failed to open directory")
+
+func get_highest_tunepal_file(folder_path: String) -> String:
+	var dir = DirAccess.open(folder_path)
+	if not dir:
+		print("Failed to open directory")
+		return ""
+	
+	var highest_number = -1
+	var highest_file_path = ""
+	
+	for file_name in dir.get_files():
+		if file_name.begins_with("tunepal") and file_name.ends_with(".svg"):
+			var number_part = file_name.lstrip("tunepal").rstrip(".svg")
+			var file_number = number_part.to_int()
+			
+			if file_number > highest_number:
+				highest_number = file_number
+				highest_file_path = folder_path.path_join(file_name)
+	
+	return highest_file_path
 
 func show_tune_page(data: Variant) -> void:
 	this_tune = data
@@ -64,13 +99,14 @@ func show_tune_page(data: Variant) -> void:
 	var midi_sequence = string_to_packed_byte_array(data["midi_sequence"])
 	tune_label.text = data["accented_title"]
 	abc_field.text=data["notation"]
+	# delete_svg_files()
 	
 	var data_folder = OS.get_user_data_dir()
 	tunepal.create_midi_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.mid", 4, 0, 0, 0)
-	
-	tunepal.create_svg_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.svg")
-	
-	var texture = load_texture_from_path(data_folder + "/tunepal001.svg")
+
+	tunepal.create_svg_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.svg")	
+	var latest_file = get_highest_tunepal_file(data_folder)
+	var texture = load_texture_from_path(latest_file)
 	abc_score.texture = texture
 	midi_player.file = data_folder + "/tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
