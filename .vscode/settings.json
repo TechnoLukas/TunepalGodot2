@@ -4,7 +4,8 @@
         "vector": "cpp",
         "xstring": "cpp",
         "mutex": "cpp",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "memory": "cpp"
     },
     "godotTools.editorPath.godot4": "c:\\dev\\Godot_v4.3-stable_win64.exe",
     "cmake.sourceDirectory": "C:/dev/final-project/tunepal-local-2/TunepalGodot2/godot-cpp"

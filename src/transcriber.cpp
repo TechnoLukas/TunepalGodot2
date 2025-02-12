@@ -14,7 +14,7 @@
 using namespace godot;
 
 Transcriber::Transcriber() : signal(nullptr), numSamples(0) {
-    UtilityFunctions::print("Initializing Transcriber...");
+    /*UtilityFunctions::print("Initializing Transcriber...");
     
     if (!BinaryData::loadModels()) {
         UtilityFunctions::print("Failed to load model files!");
@@ -28,6 +28,7 @@ Transcriber::Transcriber() : signal(nullptr), numSamples(0) {
     } catch (const std::exception& e) {
         UtilityFunctions::print("Failed to create TranscriptionEngine: ");
     }
+    */
 }
 
 Transcriber::Transcriber(const godot::PackedByteArray& audioData)
@@ -68,10 +69,10 @@ void Transcriber::setSignal(float* signal) {
     this->signal = signal;
 }
 
-string Transcriber::transcribeWithAI() {
-    UtilityFunctions::print("Starting AI transcription...");
+/*string Transcriber::transcribeWithAI() {
+    /*UtilityFunctions::print("Starting AI transcription...");
     
-    if (!signal || numSamples == 0) {
+    if (!signal || numSamples == 0) {transcriptionEngine
         UtilityFunctions::print("Error: No audio data");
         return "";
     }
@@ -103,6 +104,7 @@ string Transcriber::transcribeWithAI() {
         return "";
     }
 }
+    */
 
 string Transcriber::transcribe(float* progress, bool* interrupted, bool midi) {
     UtilityFunctions::print("Starting traditional transcription...");
