@@ -21,6 +21,7 @@ var pagenames = {
 				"keyword":{"node":"KeywordPage","title":"Search Tune"},
 				"randomtune":{"node":"RandomtunePage","title":"Random Tune"},
 				"usertunes":{"node":"UsertunesPage","title":"My Tunes"}, 
+				"importdb":{"node":"ImportDBPage","title":"Import Database"},
 				}
 
 func _ready() -> void:
@@ -125,3 +126,8 @@ func _on_help_scene_button_pressed() -> void:
 
 func _on_about_scene_button_pressed() -> void:
 	close_menu()
+
+func _on_build_db_scene_button_pressed() -> void:
+	close_menu()
+	# sqlite is an auto loaded script
+	sqlite._on_build_db_button_pressed()

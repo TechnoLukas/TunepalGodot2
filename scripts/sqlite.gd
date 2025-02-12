@@ -51,15 +51,30 @@ const THESESSION_URL = "https://raw.githubusercontent.com/adactio/TheSession-dat
 
 func _ready():
 
-	var success = await build_session_database()
-	if success:
-		print("Database build successful")
-	else:
-		print("Database build failed")
+	# var success = await build_session_database() ##
+	# if success:
+	# 	print("Database build successful")
+	# else:
+	# 	print("Database build failed")
 
 	var path = clientside.prefix + "://assets/data/tunepal"
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
+
+
+# func check_db(path):
+# 	var db = SQLite.new()
+# 	db.path = path
+# 	db.open_db()
+# 	db.read_only = true
+# 	db.query("select count(*) from tuneindex;")
+# 	var result = db.query_result
+# 	db.close_db()
+
+# 	if result.size() == 0:
+# 		return 0
+# 	else:
+# 		return result[0]["count(*)"]
 
 	
 func load_db(path):
@@ -98,7 +113,9 @@ func load_db(path):
 				if character in title:
 					title=title.replace(character, accented_characters[character])
 			return_tune[i]["accented_title"] = title
-	
+	else:
+		print("No tunes detected in database")
+
 	return return_tune
 
 func save_json(path: String) -> void:
@@ -167,7 +184,12 @@ func build_database_from_url(url: String) -> bool:
 		print("Failed to populate database")
 		return false
 		
-		
+func _on_build_db_button_pressed():
+	var success = await build_session_database()
+	if success:
+		print("Database build successful")
+	else:
+		print("Database build failed")
 
 
 	
