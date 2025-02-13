@@ -183,13 +183,16 @@ func build_database_from_url(url: String) -> bool:
 	else:
 		print("Failed to populate database")
 		return false
-		
+
+# signal build_progress(progress_text: String)
+
 func _on_build_db_button_pressed():
+	# emit_signal("build_progress", "Starting database build...")
 	var success = await build_session_database()
 	if success:
-		print("Database build successful")
+		print("build_progress", "Database build successful")
 	else:
-		print("Database build failed")
+		print("build_progress", "Database build failed")
 
 
 	

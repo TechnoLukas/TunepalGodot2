@@ -14,6 +14,7 @@ var current_menu_position = Vector2()
 var action = "" # swipe_right & swipe_left
 var transparency = 0.5 # transparency 1.0 to 0.5
 var t = 0.0
+# @onready var loading_dialog = $LoadingDialog
 
 # Page selection Variables
 var pagenames = {
@@ -27,6 +28,7 @@ var pagenames = {
 func _ready() -> void:
 	open_page("record")
 	OS.request_permissions()
+	# sqlite.connect("build_progress", _on_build_progress)
 	
 func update_title():
 	lable.text = title
@@ -89,7 +91,13 @@ func open_page(string):
 		else:
 			#page.visible = false
 			page.hidepage()
-	
+
+# func _on_build_progress(text: String):
+# 	if text == "Starting database build...":
+# 		# loading_dialog.show()
+# 	elif text in ["Database build successful", "Database build failed"]:
+# 		# loading_dialog.hide()
+# 	loading_dialog.get_node("Label").text = text	
 	
 func _process(delta: float) -> void:
 	swipe_actions(delta)
@@ -130,4 +138,5 @@ func _on_about_scene_button_pressed() -> void:
 func _on_build_db_scene_button_pressed() -> void:
 	close_menu()
 	# sqlite is an auto loaded script
+	# loading_dialog.show()
 	sqlite._on_build_db_button_pressed()
