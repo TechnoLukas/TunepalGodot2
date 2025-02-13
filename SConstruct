@@ -24,6 +24,8 @@ env.Append(CCFLAGS=['-w'])
 env.Append(CPPPATH=["src/", "model/", "src/ModelData" , "src/abcm2ps/"]) 
 # sources = Glob("src/*.c*") + Glob("model/*.c*") + Glob("ThirdParty/RTNeural*") # + Glob("src/abcm2ps/*.c")
 
+# env.Append(LIBS=["sqlite3"])
+
 # Define source directories more specifically
 src_dirs = [
     "src/*.cpp",
@@ -37,7 +39,7 @@ for dir in src_dirs:
     sources.extend(Glob(dir))
 
 # ONNX Runtime setup
-onnx_default_path = os.getenv('ONNX_ROOT', '/home/skooter500/onnxruntime-linux-x64-1.20.1') # replace hard coded path
+onnx_default_path = os.getenv('ONNX_ROOT', 'C:\\onnxruntime\\onnxruntime-win-x64-gpu-1.20.1') # replace hard coded path
 onnx_include = os.path.join(onnx_default_path, 'include')
 onnx_lib = os.path.join(onnx_default_path, 'lib')
 

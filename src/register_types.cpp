@@ -34,3 +34,11 @@ GDExtensionBool GDE_EXPORT example_library_init(GDExtensionInterfaceGetProcAddre
 	return init_obj.init();
 }
 }
+
+// void register_tunepal_types() {
+//     godot::ClassDB::register_class<tunepal::DBBuilder>();
+// }
+
+// void unregister_tunepal_types() {
+//     // Nothing to do here
+// }

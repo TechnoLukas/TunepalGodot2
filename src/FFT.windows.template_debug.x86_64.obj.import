@@ -8,7 +8,7 @@ valid=false
 
 [deps]
 
-source_file="res://src/FFT.windows.template_debug.x86_64.obj"
+source_file="res://src/fft.windows.template_debug.x86_64.obj"
 
 [params]
 
