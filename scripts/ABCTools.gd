@@ -228,6 +228,19 @@ static func strip_advanced_abc(text: String) -> String:
 	return result
 
 
+# Function to create an ABC file from a JSON dump
+
+# static func create_abc_file(data: Array, filepath: String) -> bool:
+# 	var file = FileAccess.open(filepath, FileAccess.WRITE)
+# 	if file == null:
+# 		return false
+		
+# 	for tune in data:
+# 		file.store_string(tune["abc"] + "\n\n")
+		
+# 	file.close()
+# 	return true
+
 static func populate_database(data: Array) -> bool:
 	var db = SQLite.new()
 	db.path = clientside.prefix + "://assets/data/tunepal"

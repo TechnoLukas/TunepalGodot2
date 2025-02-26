@@ -19,7 +19,8 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
 	ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
 	ClassDB::bind_method(D_METHOD("create_midi_file"), &Tunepal::create_midi_file);
-	ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
+    ClassDB::bind_method(D_METHOD("create_midi_in_memory"), &Tunepal::create_midi_in_memory);
+	// ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
     ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
     
 	
@@ -44,17 +45,17 @@ int g_fundamental = 3;
 
 
 
-void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
-{
-    char notation_chars[2048];    
-    strcpy(notation_chars, notation.ascii().get_data());
-    char abc_file_chars[2048];
-    strcpy(abc_file_chars, abc_file_name.ascii().get_data());
+// void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
+// {
+//     char notation_chars[2048];    
+//     strcpy(notation_chars, notation.ascii().get_data());
+//     char abc_file_chars[2048];
+//     strcpy(abc_file_chars, abc_file_name.ascii().get_data());
     
-    char svg_file_chars[2048];
-    strcpy(svg_file_chars, svg_file_name.ascii().get_data());
-    createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
-}
+//     char svg_file_chars[2048];
+//     strcpy(svg_file_chars, svg_file_name.ascii().get_data());
+//    // createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
+// }
 
 void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
 {
@@ -64,6 +65,17 @@ void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_na
 	const char * midi_file_chars = midi_file_name.ascii().get_data();
 	createMidiFile(notation_chars, abc_file_chars, midi_file_chars, speed, transpose, melody, chords);
 	UtilityFunctions::print(midi_file_name);
+}
+// NEW CLAUDE
+godot::PackedByteArray Tunepal::create_midi_in_memory(const godot::String &abc_notation, int speed, int transpose, int melody, int chords) {
+    PackedByteArray midi_data;
+    
+    // 1) Set up in-memory buffer for abc2midi:
+    //    Instead of opening a file, you'll have abc2midi write into a buffer.
+    // 2) Call your abc2midi routines in memory mode.
+    // 3) Fill midi_data with the resulting MIDI bytes.
+
+    return midi_data;
 }
 
 

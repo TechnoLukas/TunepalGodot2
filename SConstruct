@@ -21,7 +21,7 @@ env.Append(CCFLAGS=['-w'])
 # - LINKFLAGS are for linking flags
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
-env.Append(CPPPATH=["src/", "model/", "src/ModelData" , "src/abcm2ps/"]) 
+env.Append(CPPPATH=["src/", "model/", "src/ModelData" ]) # , "src/abcm2ps/"]) 
 # sources = Glob("src/*.c*") + Glob("model/*.c*") + Glob("ThirdParty/RTNeural*") # + Glob("src/abcm2ps/*.c")
 
 # env.Append(LIBS=["sqlite3"])
@@ -31,7 +31,7 @@ src_dirs = [
     "src/*.cpp",
     "src/Model/*.cpp",
     "src/abc2midi/*.c",
-    "src/abcm2ps/*.c",
+    # "src/abcm2ps/*.c",
 ]
 
 sources = []
