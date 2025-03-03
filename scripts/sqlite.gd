@@ -47,7 +47,8 @@ var accented_characters = {
 	r"{\\ss}": "ß",
 }
 
-const THESESSION_URL = "https://raw.githubusercontent.com/adactio/TheSession-data/refs/heads/main/json/tunes.json"
+# const THESESSION_URL = "https://thesession.org/tunes/" # "https://raw.githubusercontent.com/adactio/TheSession-data/refs/heads/main/json/tunes.json"
+const session_base_url = "https://thesession.org/tunes/" # x/abc"
 
 func _ready():
 
@@ -179,59 +180,107 @@ func open_json(path: String) -> void:
 
 	file.close()
 
+func import_all_files():
+	var directory_path = "res://assets/abc/"
+	# iterate trhough all files in the directory
+	var dir = DirAccess.open(directory_path)
+	dir.list_dir_begin()
+
+	var file = dir.get_next()
+	while file != "":
+		if file.ends_with(".abc"):
+			print(file)
+			var file_path = directory_path + file
+			var abc_file = FileAccess.open(file_path, FileAccess.READ)
+			if not abc_file:
+				push_error("Could not open file: " + file_path)
+				return null
+			
+			var content = abc_file.get_as_text()
+			print(content)
+
+			abc_file.close()
+			file = dir.get_next()
+
 func build_session_database():
-	return await build_database_from_url(THESESSION_URL)
+	# return await build_database_from_url(THESESSION_URL)
+	# var importer = ABCImporter.new()
+	# return await ABCImporter.import_all_files()
+
+	import_all_files()
+	return true
+
+# func fetch_from_api():
+# 	var http_request = HTTPRequest.new()
+# 	add_child(http_request)
+
+# 	for i in range(1, 30000):
+# 		var error = http_request.request(session_base_url + str(i) + "/abc")
+# 		if error != OK:
+# 			print("Failed to make HTTP request: ", error)
+# 			return false
+# 		var result = await http_request.request_completed
+# 		if result[0] != OK:
+# 			print("HTTP request failed with code: ", result[0])
+# 			return false
+
+
+
 	
-func build_database_from_url(url: String) -> bool:
-	print("Starting database build from URL: ", url) 
-	var http_request = HTTPRequest.new() # HTTP request
-	add_child(http_request)
-	var error = http_request.request(url)
-	if error != OK:
-		print("Failed to make HTTP request: ", error)
-		return false
+# func build_database_from_url(url: String) -> bool:
+# 	print("Starting database build from URL: ", url) 
+# 	var http_request = HTTPRequest.new() # HTTP request
+# 	add_child(http_request)
+# 	var error = http_request.request(url)
+
+# 	if error != OK:
+# 		print("Failed to make HTTP request: ", error)
+# 		return false
 		
-	var result = await http_request.request_completed
-	http_request.queue_free()
+	# var result = await http_request.request_completed
+	# http_request.queue_free()
 
-	if result[0] != OK:
-		print("HTTP request failed with code: ", result[0])
-		return false
+	# if result[0] != OK:
+	# 	print("HTTP request failed with code: ", result[0])
+	# 	return false
 		
-	var json_string = result[3].get_string_from_utf8()
-	var data = JSON.parse_string(json_string)
+	# var json_string = result[3].get_string_from_utf8()
+	# var data = JSON.parse_string(json_string)
 
-	if data == null:
-		print("Failed to parse JSON response")
-		return false
+	# if data == null:
+	# 	print("Failed to parse JSON response")
+	# 	return false
 
-	if not data is Array:
-		print("Unexpected JSON response, expected array")
-		return false
+	# if not data is Array:
+	# 	print("Unexpected JSON response, expected array")
+	# 	return false
 
 
 	## var success = ABCTools.populate_database(data)
 	
 	# Create the ABC file directly here instead of using ABCTools
 	var file = FileAccess.open(clientside.prefix + "://assets/abc/tunes.abc", FileAccess.WRITE)
-	var success = false
-	if file:
-		for tune in data:
-			file.store_string(tune.abc + "\n\n")
-		file.close()
-		success = true
-	if success:
-		print("abc file created successfully")
-		return true
-	else:
-		print("Failed to create abc file")
-		return false
+
+
+	# var success = false
+	# if file:
+	# 	for tune in data:
+	# 		file.store_string(tune.abc + "\n\n")
+	# 	file.close()
+	# 	success = true
+	# if success:
+	# 	print("abc file created successfully")
+	# 	return true
+	# else:
+	# 	print("Failed to create abc file")
+	# 	return false
 
 # signal build_progress(progress_text: String)
 
 func _on_build_db_button_pressed():
 	# emit_signal("build_progress", "Starting database build...")
-	var success = await build_session_database()
+	# var success = await build_session_database()
+	var success = build_session_database()
 	if success:
 		print("build_progress", "Database build successful")
 	else:
@@ -360,7 +409,7 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	#Process the ABC notation for TUNE KEY search keys
 
-	var stripped_abc = ABCTools.strip_all(abc_notation)
+	# var stripped_abc = ABCTools.strip_all(abc_notation)
 
 	var midi_sequence = get_midi_sequence(abc_notation, 100, 0, 1, 1)
 	
@@ -372,11 +421,11 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	VALUES (?, ?, ?);
 	"""
 
-	params = [
-		next_id,
-		stripped_abc,
-		midi_sequence
-	]
+	#params = [
+		#next_id,
+		#stripped_abc,
+		#midi_sequence
+	#]
 
 	if not db.query_with_bindings(query, params):
 		push_error("Failed to insert tune keys into database: " + tune.get("title", "No Title"))

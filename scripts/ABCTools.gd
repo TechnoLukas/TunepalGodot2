@@ -1,5 +1,5 @@
 # ABCTools class to replicate MattABCTools functionality
-class_name ABCTools
+class_name TunepalABCTools
 extends Object
 
 # Static flag to track successful parsing
