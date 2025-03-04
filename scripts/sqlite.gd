@@ -1,4 +1,5 @@
 extends Node
+const ABCTools = preload("res://scripts/ABCTools.gd")
 
 var tunes = []
 var user_tunes = []
@@ -366,9 +367,18 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	var tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
 
-	# create the midi sequence or use placeholder
+	var abc_notation = tune["abc"]
+	
+	var processed_abc = ABCTools.strip_all(abc_notation)
 
-	var midi_sequence = "0000" #place holder
+	
+	# create the midi sequence or use placeholder
+	
+	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
+	var midi_sequence = get_midi_sequence(abc_notation, 1, 0, 0, 0)
+
+	var parsons_code = generate_parsons_code(midi_sequence)
+	# var midi_sequence = "0000" #place holder
 
 	var query = """
 	INSERT INTO tuneindex (
@@ -416,10 +426,10 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	var keys_params = [
 		next_id,                   # id (primary key)
-		tune["title"].to_lower(),  # search_key
+		processed_abc,	# tune["title"].to_lower(),  # search_key
 		next_id,                   # tuneid (references tuneindex.id)
 		tune["source_file"],       # midi_file_name
-		"",                        # parsons (empty placeholder)
+		parsons_code,                        # parsons (empty placeholder)
 		midi_sequence              # midi_sequence
 	]
 	
@@ -466,3 +476,35 @@ func get_midi_sequence(abc: String, s: int, t: int, m: int, c: int) -> String:
 	return midi_bytes.to_base64()
 
 	
+#########
+
+func generate_parsons_code(midi_sequence: String) -> String:
+	if midi_sequence.is_empty():
+		return ""
+		
+	# If it's a Base64-encoded MIDI, we need to extract the note data
+	# This is a simplified approach - you may need to parse the MIDI properly
+	var notes = []
+	
+	# If the MIDI sequence is already a comma-separated list of note numbers
+	if midi_sequence.contains(","):
+		var note_strings = midi_sequence.split(",")
+		for note in note_strings:
+			if note.strip_edges().is_valid_int():
+				notes.append(int(note.strip_edges()))
+	else:
+		# This is a placeholder - in a real implementation you would
+		# parse the MIDI data to extract the note pitch information
+		return ""
+	
+	# Generate Parsons code from note pitch relationships
+	var parsons = ""
+	for i in range(1, notes.size()):
+		if notes[i] > notes[i-1]:
+			parsons += "U"
+		elif notes[i] < notes[i-1]:
+			parsons += "D"
+		else:
+			parsons += "S"
+			
+	return parsons
