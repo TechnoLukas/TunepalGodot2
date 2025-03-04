@@ -110,7 +110,54 @@ func read_from_file(path: String, source_id: int) -> bool: # READ an individual 
 			# push_error("Failed to add tune to database: " + tune_data)
 			print("no luck :()")
 	return success
-	
+
+func import_all_files():
+	var directory_path = "res://assets/abc/"
+	# iterate trhough all files in the directory
+	var dir = DirAccess.open(directory_path)
+	dir.list_dir_begin()
+
+	var source_id = 1
+
+	var file = dir.get_next()
+	var tune_count = 0
+
+
+	while file != "":
+		if file.ends_with(".abc"):
+			print("proncessing" + file)
+			var file_path = directory_path + file
+			var abc_file = FileAccess.open(file_path, FileAccess.READ)
+
+			if abc_file != null:
+				var content = abc_file.get_as_text()
+				abc_file.close()
+
+				var tunes_data = parse_abc_content(content)
+				for tune in tunes_data:
+					tune["source_file"] = file
+					add_tune_to_db(tune, source_id)
+					tune_count += 1
+			else:
+				push_error("Failed to open file: " + file_path)
+
+		file = dir.get_next()
+		
+	dir.list_dir_end()
+	print("Added " + str(tune_count) + " tunes to the database")
+	return true
+
+
+			# read_from_file(directory_path + file, 2)
+			# if not read_from_file(directory_path + file, 2):
+			# 	print("Failed to read file: ", file)
+			# else: 
+			# 	print("success")
+
+			# # abc_file.close()
+			# file = dir.get_next()
+
+
 func load_db(path):
 	var return_tune
 	var db = SQLite.new()
@@ -180,27 +227,6 @@ func open_json(path: String) -> void:
 
 	file.close()
 
-func import_all_files():
-	var directory_path = "res://assets/abc/"
-	# iterate trhough all files in the directory
-	var dir = DirAccess.open(directory_path)
-	dir.list_dir_begin()
-
-	var file = dir.get_next()
-	while file != "":
-		if file.ends_with(".abc"):
-			print(file)
-			var file_path = directory_path + file
-			var abc_file = FileAccess.open(file_path, FileAccess.READ)
-			if not abc_file:
-				push_error("Could not open file: " + file_path)
-				return null
-			
-			var content = abc_file.get_as_text()
-			print(content)
-
-			abc_file.close()
-			file = dir.get_next()
 
 func build_session_database():
 	# return await build_database_from_url(THESESSION_URL)
@@ -295,72 +321,50 @@ func parse_abc_content(content: String) -> Array:
 	var current_tune = {}
 	var in_tune = false
 	var tune_body = ""
+	var tune_number = 0
 
-	var lines = content.split("\n")
+	var tune_blocks = content.split("\n\n")
 
-	for line in lines:
-		line = line.strip_edges()
-
-		if line.is_empty() or line.begins_with("%"):
+	for i in range(tune_blocks.size()):
+		var block = tune_blocks[i].strip_edges()
+		if block.is_empty():
 			continue
-# CHECK for the beginning of a tune
-		if line.begins_with("X:"):
-			# if we are on a tune, save the current tune
-			if in_tune:
-				current_tune["abc"] = tune_body
-				tunes_data.append(current_tune)
-				
-			current_tune = {"x": line.substr(2).strip_edges()}
-			tune_body = line + "\n"
-			in_tune = true
 
-			# parse the other header fields if we are within a tune
-		elif in_tune:
-			tune_body += line + "\n" # thanks claude
-			if line.begins_with("T:"):
-				current_tune["title"] = line.substr(2).strip_edges()
+		if block.begins_with("X:"):
+			tune_number += 1
+			current_tune = {
+				"title": "",
+				"alt_title": "",
+				"type": "",
+				"meter": "",
+				"key_sig": "",
+				"x": "",
+				"abc": block
+			}
+
+		# extract key metadata values
+		var lines = block.split("\n")
+		for line in lines:
+			line = line.strip_edges()
+
+			if line.begins_with("X:"):
+				current_tune["x"] = line.split(":")[1].strip_edges()
+			elif line.begins_with("T:"):
+				current_tune["title"] = line.split(":")[1].strip_edges()
+			elif line.begins_with("T2:"):
+				current_tune["alt_title"] = line.split(":")[1].strip_edges()
 			elif line.begins_with("M:"):
-				current_tune["meter"] = line.substr(2).strip_edges()
+				current_tune["meter"] = line.split(":")[1].strip_edges()
 			elif line.begins_with("K:"):
-				current_tune["key"] = line.substr(2).strip_edges()
+				current_tune["key_sig"] = line.split(":")[1].strip_edges()
 			elif line.begins_with("R:"):
-				current_tune["rhythm"] = line.substr(2).strip_edges()
-			elif line.begins_with("L:"):
-				current_tune["unit_note_length"] = line.substr(2).strip_edges()
-			elif line.begins_with("Q:"):
-				current_tune["tempo"] = line.substr(2).strip_edges()
-			elif line.begins_with("C:"):
-				current_tune["composer"] = line.substr(2).strip_edges()
-			elif line.begins_with("Z:"):
-				current_tune["transcriber"] = line.substr(2).strip_edges()
-			elif line.begins_with("P:"):
-				current_tune["part_of"] = line.substr(2).strip_edges()
-			elif line.begins_with("S:"):
-				current_tune["source"] = line.substr(2).strip_edges()
-			elif line.begins_with("D:"):
-				current_tune["discography"] = line.substr(2).strip_edges()
-			elif line.begins_with("N:"):
-				current_tune["notes"] = line.substr(2).strip_edges()
-			elif line.begins_with("O:"):
-				current_tune["origin"] = line.substr(2).strip_edges()
-			elif line.begins_with("H:"):
-				current_tune["history"] = line.substr(2).strip_edges()
-			elif line.begins_with("I:"):
-				current_tune["instruction"] = line.substr(2).strip_edges()
-			elif line.begins_with("K:"):
-				current_tune["key"] = line.substr(2).strip_edges()
-			elif line.begins_with("V:"):
-				current_tune["voice"] = line.substr(2).strip_edges()
-			elif line.begins_with("W:"):
-				current_tune["words"] = line.substr(2).strip_edges()
+				current_tune["type"] = line.split(":")[1].strip_edges()
 
-	# last tune....
-	if in_tune:
-		current_tune["abc"] = tune_body
 		tunes_data.append(current_tune)
 
 	return tunes_data
 
+	
 	
 ##### ADD A TUNE TO THE DATABASE: INDEXING ABC FILES ####
 
@@ -368,77 +372,82 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var db = SQLite.new()
 	db.path = clientside.prefix + "://assets/data/tunepal"
 	var result = db.open_db()
-	if result == null:
-		push_error("Failed to open database: " + db.get_error())
+
+	if result == false:
+		push_error("Failed to open database: " + db.get_error_message())
 		return false
-	db.query("begin transaction;")
 	
-	var next_id = get_next_tune_id(db)
-	var abc_notation = tune.get("abc", "")
+	# FIND THE next tune id
+	db.query("SELECT MAX(id) as max_id FROM tuneindex;")
+	var next_id = 1
+	if db.query_result.size() > 0 and db.query_result[0]["max_id"] != null:
+		next_id = db.query_result[0]["max_id"] + 1
 
-# create unique tunepalId
-	var tune_title = tune.get("title", "No Title").replace("'", "''") # escape single quotes
-	var tunepalid = str(next_id) + "-" + tune.get("x", "0") + ".abc-1-" + tune_title
+	# format the tune identifier
 
+	var tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
 
-	## insert into tuneindex
+	# create the midi sequence or use placeholder
+
+	var midi_sequence = "0000" #place holder
+
 	var query = """
-	INSERT into tuneindex 
-	(id, tune_type, time_sig, notation, source, title, alt_title, tunepalid, x, key_sig)
-	VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-	"""
-
-	var params = [
-		next_id,
-		tune.get("type", ""),
-		tune.get("meter", ""),
-		abc_notation,
-		source_id,
-		tune.get("title", ""),
-		tune.get("alt_title", ""),
+	INSERT INTO tuneindex (
+		id,
 		tunepalid,
-		tune.get("x", ""),
-		tune.get("key_sig", "")
+		file_name,
+		x,
+		notation,
+		title,
+		alt_title,
+		source,
+		tune_type,
+		key_sig,
+		downloaded,
+		time_sig
+	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+	"""
+	var params = [
+		next_id,                   # id
+		tune_identifier,           # tunepalid
+		tune["source_file"],       # file_name
+		tune["x"],                 # x
+		tune["abc"],               # notation
+		tune["title"],             # title
+		"",                        # alt_title
+		source_id,                 # source
+		tune["type"],              # tune_type
+		tune["key_sig"],           # key_sig
+		0,                         # downloaded (default 0)
+		tune["meter"]              # time_sig
 	]
 
-	if not db.query_with_bindings(query, params):
-		push_error("Failed to insert tune into database: " + tune.get("title", "No Title"))
-		db.query("rollback;")
-		db.close_db()
-		return false
+	db.query_with_bindings(query, params)
 
-	#Process the ABC notation for TUNE KEY search keys
-
-	# var stripped_abc = ABCTools.strip_all(abc_notation)
-
-	var midi_sequence = get_midi_sequence(abc_notation, 100, 0, 1, 1)
-	
-
-	# insert into tunekeys table
-	query = """
-	INSERT into tunekeys
-	(tuneid, search_key, midi_sequence)
-	VALUES (?, ?, ?);
+	var keys_query = """
+	INSERT INTO tunekeys (
+		id,
+		search_key,
+		tuneid,
+		midi_file_name,
+		parsons,
+		midi_sequence
+	) VALUES (?, ?, ?, ?, ?, ?);
 	"""
 
-	#params = [
-		#next_id,
-		#stripped_abc,
-		#midi_sequence
-	#]
-
-	if not db.query_with_bindings(query, params):
-		push_error("Failed to insert tune keys into database: " + tune.get("title", "No Title"))
-		db.query("ROLLBACK;")
-		db.close_db()
-		return false
-
-	# commit the transaction
-	db.query("COMMIT;")
+	var keys_params = [
+		next_id,                   # id (primary key)
+		tune["title"].to_lower(),  # search_key
+		next_id,                   # tuneid (references tuneindex.id)
+		tune["source_file"],       # midi_file_name
+		"",                        # parsons (empty placeholder)
+		midi_sequence              # midi_sequence
+	]
+	
+	db.query_with_bindings(keys_query, keys_params)
 	db.close_db()
 	return true
 
-	# Get the next available tune ID
 func get_next_tune_id(db) -> int:
 	db.query("select max(id) from tuneindex;")
 	var result = db.query_result
