@@ -90,27 +90,6 @@ func _ready():
 # 	else:
 # 		return result[0]["count(*)"]
 
-func read_from_file(path: String, source_id: int) -> bool: # READ an individual ABC File!!
-	print("Indexing ABC FILE: ", path)
-	var file = FileAccess.open(path, FileAccess.READ)
-	if file == null:
-		push_error("Failed to open file: " + path)
-		return false
-
-	var content = file.get_as_text()
-	file.close()
-
-	var tune_data = parse_abc_content(content)
-	var success = true
-
-	# add each of the tunes to the database
-	for tune in tune_data:
-		if not add_tune_to_db(tune, source_id):
-			success = false
-			# push_error("Failed to add tune to database: " + tune_data)
-			print("no luck :()")
-	return success
-
 func import_all_files():
 	var directory_path = "res://assets/abc/"
 	# iterate trhough all files in the directory
