@@ -368,6 +368,8 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
 
 	var abc_notation = tune["abc"]
+	var abc_file_name = tune["source_file"]
+
 	
 	var processed_abc = ABCTools.strip_all(abc_notation)
 
@@ -375,7 +377,7 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	# create the midi sequence or use placeholder
 	
 	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
-	var midi_sequence = get_midi_sequence(abc_notation, 1, 0, 0, 0)
+	var midi_sequence = get_midi_sequence(abc_notation, abc_file_name, 1, 0, 0, 0)
 
 	var parsons_code = generate_parsons_code(midi_sequence)
 	# var midi_sequence = "0000" #place holder
@@ -466,16 +468,27 @@ func get_next_tune_id(db) -> int:
 # 			return ""
 # 		return midi_file.get_as_text()
 
-# Function to just get it from memory
-func get_midi_sequence(abc: String, s: int, t: int, m: int, c: int) -> String:
+func get_midi_sequence(abc: String, filename: String, s: int, t: int, m: int, c: int) -> String:
 	var tunepal = Tunepal.new()
-	var midi_bytes = tunepal.create_midi_in_memory(abc, s, t, m, c)
-	if midi_bytes.size() == 0:
-		push_error("Failed to convert ABC to MIDI in memory")
-		return ""
-	return midi_bytes.to_base64()
-
+	var midifile = "temp.mid"
 	
+	# Create MIDI file
+	tunepal.create_midi_file(abc, filename, midifile, s, t, m, c)
+	
+	# Read MIDI file into memory
+	if not FileAccess.file_exists(midifile):
+		push_error("Failed to convert ABC to MIDI: " + abc)
+		return ""
+		
+	var midi_file = FileAccess.open(midifile, FileAccess.READ)
+	if midi_file == null:
+		push_error("Failed to open MIDI file: " + midifile)
+		return ""
+		
+	# Extract notes directly
+	var midi_data = midi_file.get_buffer(midi_file.get_length())
+	midi_file.close()
+	return tunepal.extract_notes_from_midi(midi_data)
 #########
 
 func generate_parsons_code(midi_sequence: String) -> String:
