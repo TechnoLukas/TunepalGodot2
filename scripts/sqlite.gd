@@ -58,7 +58,7 @@ func _ready():
 	open_json(clientside.prefix + default_user_tunes_path)
 
 func import_all_files():
-	var directory_path = "res://assets/abc/"
+	var directory_path = "res://assets/abc/" ## we ought to not hardcode this
 	# iterate trhough all files in the directory
 	var dir = DirAccess.open(directory_path)
 	dir.list_dir_begin()
@@ -71,7 +71,7 @@ func import_all_files():
 
 	while file != "":
 		if file.ends_with(".abc"):
-			print("proncessing" + file)
+			print("processing " + file)
 			var file_path = directory_path + file
 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
 
