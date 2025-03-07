@@ -19,9 +19,10 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_sort_by_distance"), &Tunepal::_sort_by_distance);
 	ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
 	ClassDB::bind_method(D_METHOD("create_midi_file"), &Tunepal::create_midi_file);
-	ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
+    // ClassDB::bind_method(D_METHOD("create_midi_in_memory"), &Tunepal::create_midi_in_memory);
+	// ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
     ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
-    
+    ClassDB::bind_method(D_METHOD("extract_notes_from_midi"), &Tunepal::extract_notes_from_midi);
 	
 }
 
@@ -44,17 +45,17 @@ int g_fundamental = 3;
 
 
 
-void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
-{
-    char notation_chars[2048];    
-    strcpy(notation_chars, notation.ascii().get_data());
-    char abc_file_chars[2048];
-    strcpy(abc_file_chars, abc_file_name.ascii().get_data());
+// void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
+// {
+//     char notation_chars[2048];    
+//     strcpy(notation_chars, notation.ascii().get_data());
+//     char abc_file_chars[2048];
+//     strcpy(abc_file_chars, abc_file_name.ascii().get_data());
     
-    char svg_file_chars[2048];
-    strcpy(svg_file_chars, svg_file_name.ascii().get_data());
-    createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
-}
+//     char svg_file_chars[2048];
+//     strcpy(svg_file_chars, svg_file_name.ascii().get_data());
+//    // createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
+// }
 
 void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
 {
@@ -65,7 +66,6 @@ void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_na
 	createMidiFile(notation_chars, abc_file_chars, midi_file_chars, speed, transpose, melody, chords);
 	UtilityFunctions::print(midi_file_name);
 }
-
 
 godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)
 {
@@ -512,4 +512,61 @@ return min_dist;
 void Tunepal::say_hello()
 {
     UtilityFunctions::print("Hello World");
+}
+
+godot::String Tunepal::extract_notes_from_midi(const PackedByteArray &midi_data) {
+    std::vector<int> notes;
+    size_t i = 0;
+    
+    // Find the first track chunk
+    while (i < midi_data.size() - 4) {
+        if (midi_data[i] == 'M' && midi_data[i+1] == 'T' && 
+            midi_data[i+2] == 'r' && midi_data[i+3] == 'k') {
+            i += 8; // Skip MTrk header and size
+            break;
+        }
+        i++;
+    }
+    
+    // Parse MIDI events
+    while (i < midi_data.size()) {
+        // Skip delta time (variable length)
+        while (i < midi_data.size() && (midi_data[i] & 0x80)) i++;
+        if (i < midi_data.size()) i++;
+        
+        if (i >= midi_data.size()) break;
+        
+        // Check for note-on events
+        uint8_t status = midi_data[i++];
+        if ((status & 0xF0) == 0x90 && i + 1 < midi_data.size()) {
+            uint8_t note = midi_data[i++];
+            uint8_t velocity = midi_data[i++];
+            
+            if (velocity > 0) {
+                notes.push_back(note);
+            }
+        }
+        else if ((status & 0xF0) >= 0x80 && (status & 0xF0) <= 0xE0) {
+            // Skip other channel messages
+            i += ((status & 0xF0) == 0xC0 || (status & 0xF0) == 0xD0) ? 1 : 2;
+        }
+        else if (status == 0xFF && i < midi_data.size()) {
+            // Skip meta events
+            i++;
+            if (i < midi_data.size()) {
+                uint8_t len = midi_data[i++];
+                if (i + len <= midi_data.size())
+                    i += len;
+            }
+        }
+    }
+    
+    // Convert to comma-separated string
+    String result;
+    for (size_t j = 0; j < notes.size(); j++) {
+        result += String::num_int64(notes[j]);
+        if (j < notes.size() - 1) result += ",";
+    }
+    
+    return result;
 }

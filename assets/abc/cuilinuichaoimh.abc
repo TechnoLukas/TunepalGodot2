@@ -1,0 +1,45 @@
+X: 1
+T: Cuilin Ui Chaoimh
+Z: CreadurMawnOrganig
+S: https://thesession.org/tunes/469#setting469
+R: jig
+M: 6/8
+L: 1/8
+K: Dmaj
+B/c/dB BAF|Add dFA|B/c/dB BAF|AFE EFA|
+B/c/dB BAF|Add dAF|~G3 FAF|1 EFE DFA:|2 EFE D2z||
+DFA d2e|fdf ecA|geg fdB|AFA B3|
+Adf ~a3|baf a2f|gfe fdB|AFA B2g|
+fdd d2e|fdf ecA|~g3 fdB|AFA B3|
+Adf ~a3|baf a2f|gfe fdB|AFA B2z||
+
+X: 2
+T: Cuilin Ui Chaoimh
+Z: SebastianM
+S: https://thesession.org/tunes/469#setting23431
+R: jig
+M: 6/8
+L: 1/8
+K: Dmaj
+B3 BAF|Add d2c|B3 BAF|AFE EFA|
+B3 BAF|Add dAF|GBG FAF|1 EFE DFA:|2 EFE D3||
+DFA d2e|fdf ecA|g2e fdB|AFA B2d|
+Adf ~a3|baf a2f|g2e fdB|AFA B2g|
+fdd d2e|fdf ecA|g2e fdB|AFA B2d|
+Adf a z a|baf a2f|g2e fdB|AFA B/c/dc||
+
+X: 3
+T: Cuilin Ui Chaoimh
+Z: bernhard
+S: https://thesession.org/tunes/469#setting43352
+R: jig
+M: 6/8
+L: 1/8
+K: Dmaj
+|:B3 BAF|Adc dF A|B/c/dB BAF|AFE EFA|
+B3 BAF|Adc dAF|GBG FAF|1 EFE DFA:|2 EFE D3||
+DFA d2 e|fdf ecA|gf e fdB|AFA ~B3|
+Adf ~a3|baf a2 f|gf e fdB|AFA B2 g|
+fdd d2 e|fdf ecA|gf e fdB|AFA ~B3|
+Adf ~a3|baf a2 f|gf e fdB|AFA B3||
+

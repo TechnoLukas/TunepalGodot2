@@ -1,0 +1,53 @@
+X: 1
+T: Stick Across The Hob, The
+Z: Bregolas
+S: https://thesession.org/tunes/25000#setting50045
+R: jig
+M: 6/8
+L: 1/8
+K: Emin
+|:~E3 ~B3|ABB AFD|{F}EDE ~B3|eBB AFD|
+(D~E2) ~B3|ABB AFA|{c}BAF ABd|1 edB AFD:|2 edB ABd||
+e3 efa|baf {g}fed|Bee e3|a/b/af dfa|
+b2b a2f|e{g}fe def|g2f {g}fed|BAB dBA|
+Bee fee|bee {g}fed|Bee ede|fa{ba}f dfa|
+b2b a2f|e{g}fe def|g2f {g}fed|BAB dBA||
+|:g2g f2f|e{g}fe d2e|~f3 def|edB dBA|
+gfe {g}fed|edB d2e|~f3 def|edB AFD:||
+
+X: 2
+T: Stick Across The Hob, The
+Z: Bregolas
+S: https://thesession.org/tunes/25000#setting52442
+R: jig
+M: 6/8
+L: 1/8
+K: Emin
+|:EDE BAB|EBB AFD|EDE BAB|edB AFD|
+~E3 BAB|EBB AFA|BAF ABd|1 edB AFD:|2 edB ABd||
+e2e fee|bee fed|Bee fee|e/f/af dfa|
+abb a/b/af|efe def|g2e fdB|BAB dBA|
+Bee fee|bee fed|Bee fee|faf dfa|
+abb a/b/af|(3efge def|g2e fdB|BAB dBA||
+|:g3 faf|(3efge d2e|fef d2f|edB AFA|
+gbg faf|(3efge d2e|fef d2f|edB AFD:||E6||
+
+X: 3
+T: Stick Across The Hob, The
+Z: Bregolas
+S: https://thesession.org/tunes/25000#setting52443
+R: jig
+M: 6/8
+L: 1/8
+K: Edor
+D|:E/F/EE BAB|EBE AFD|E/F/EE BAB|d/e/dB AFD|
+E/F/EE BAB|EBE AFA|BAF ABd|d/e/dB AF/G/A:||
+e2e fee|bee fed|Bee ede|faf dfa|
+b3 a/b/af|e/f/ge def|gfe fed|BAB dBA|
+Bee fee|bee fed|B/c/ee ede|faf dfa|
+b3 a/b/af|e/f/ge def|gfe fed|BAB dBA||
+g2g f/g/af|efe d2e|fef def|edB dBA|
+g3 f/g/af|efe d2e|{g}fef def|edB dBA|
+g2g faf|efe d3|fef def|edB dBA|
+gAA eAA|e/f/ge d2e|fef def|edB AFD||
+
