@@ -53,43 +53,9 @@ const session_base_url = "https://thesession.org/tunes/" # x/abc"
 
 func _ready():
 
-	# var success = await build_session_database() ##
-	# if success:
-	# 	print("Database build successful")
-	# else:
-	# 	print("Database build failed")
-
 	var path = clientside.prefix + "://assets/data/tunepal"
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
-
-	# FOR TESTING PURPOSES: BUILD FROM A FILE
-	# var abc_file_path = clientside.prefix + "://assets/abc/reelsa-c.abc"
-	# Numeric ID of the source (based on DB’s 'source' table)
-	# var source_id = 2
-
-	# do the test thing
-	# var success = read_from_file(abc_file_path, source_id)
-	# if success:
-	# 	print("File read successful", abc_file_path)
-	# else:
-	# 	print("File read failed", abc_file_path)
-
-
-
-# func check_db(path):
-# 	var db = SQLite.new()
-# 	db.path = path
-# 	db.open_db()
-# 	db.read_only = true
-# 	db.query("select count(*) from tuneindex;")
-# 	var result = db.query_result
-# 	db.close_db()
-
-# 	if result.size() == 0:
-# 		return 0
-# 	else:
-# 		return result[0]["count(*)"]
 
 func import_all_files():
 	var directory_path = "res://assets/abc/"
@@ -126,17 +92,6 @@ func import_all_files():
 	dir.list_dir_end()
 	print("Added " + str(tune_count) + " tunes to the database")
 	return true
-
-
-			# read_from_file(directory_path + file, 2)
-			# if not read_from_file(directory_path + file, 2):
-			# 	print("Failed to read file: ", file)
-			# else: 
-			# 	print("success")
-
-			# # abc_file.close()
-			# file = dir.get_next()
-
 
 func load_db(path):
 	var return_tune
@@ -210,77 +165,12 @@ func open_json(path: String) -> void:
 
 
 func build_session_database():
-	# return await build_database_from_url(THESESSION_URL)
-	# var importer = ABCImporter.new()
-	# return await ABCImporter.import_all_files()
 
 	import_all_files()
 	return true
 
-# func fetch_from_api():
-# 	var http_request = HTTPRequest.new()
-# 	add_child(http_request)
-
-# 	for i in range(1, 30000):
-# 		var error = http_request.request(session_base_url + str(i) + "/abc")
-# 		if error != OK:
-# 			print("Failed to make HTTP request: ", error)
-# 			return false
-# 		var result = await http_request.request_completed
-# 		if result[0] != OK:
-# 			print("HTTP request failed with code: ", result[0])
-# 			return false
-
-
-
-	
-# func build_database_from_url(url: String) -> bool:
-# 	print("Starting database build from URL: ", url) 
-# 	var http_request = HTTPRequest.new() # HTTP request
-# 	add_child(http_request)
-# 	var error = http_request.request(url)
-
-# 	if error != OK:
-# 		print("Failed to make HTTP request: ", error)
-# 		return false
-		
-	# var result = await http_request.request_completed
-	# http_request.queue_free()
-
-	# if result[0] != OK:
-	# 	print("HTTP request failed with code: ", result[0])
-	# 	return false
-		
-	# var json_string = result[3].get_string_from_utf8()
-	# var data = JSON.parse_string(json_string)
-
-	# if data == null:
-	# 	print("Failed to parse JSON response")
-	# 	return false
-
-	# if not data is Array:
-	# 	print("Unexpected JSON response, expected array")
-	# 	return false
-
-
-	## var success = ABCTools.populate_database(data)
-	
-	# Create the ABC file directly here instead of using ABCTools
 	var file = FileAccess.open(clientside.prefix + "://assets/abc/tunes.abc", FileAccess.WRITE)
 
-
-	# var success = false
-	# if file:
-	# 	for tune in data:
-	# 		file.store_string(tune.abc + "\n\n")
-	# 	file.close()
-	# 	success = true
-	# if success:
-	# 	print("abc file created successfully")
-	# 	return true
-	# else:
-	# 	print("Failed to create abc file")
-	# 	return false
 
 # signal build_progress(progress_text: String)
 
@@ -342,7 +232,7 @@ func parse_abc_content(content: String) -> Array: # Creates a big array of the t
 				current_tune["type"] = line.split(":")[1].strip_edges()
 
 		tunes_data.append(current_tune)
-	print("tune data parsed: ", tunes_data)
+
 	return tunes_data
 	
 ##### ADD A TUNE TO THE DATABASE: INDEXING ABC FILES ####
@@ -448,27 +338,6 @@ func get_next_tune_id(db) -> int:
 		return 1
 	else:
 		return result[0]["max(id)"] + 1
-
-# Function to  andle the ABC to midi conversion - using the ABC2MIDI library
-	# Here we'll call the Tunepal GDExtension function
-
-# func get_midi_sequence(abc: String, abc_path: String, midi_path: String, s: int, t: int, m: int, c: int) -> String:
-
-# 	var tunepal = Tunepal.new()
-	 
-# 	tunepal.create_midi_file(abc, abc_path, midi_path, s, t, m, c)	
-# 	if not FileAccess.file_exists(midi_path):
-# 		push_error("Failed to convert ABC to MIDI: " + abc)
-# 		return ""
-
-# 	if midi_path == "":
-# 		return ""
-# 	else: 
-# 		var midi_file = FileAccess.open(midi_path, FileAccess.READ)
-# 		if midi_file == null:
-# 			push_error("Failed to open MIDI file: " + midi_path)
-# 			return ""
-# 		return midi_file.get_as_text()
 
 func get_midi_sequence(abc: String, filename: String, s: int, t: int, m: int, c: int) -> String:
 	var tunepal = Tunepal.new()
