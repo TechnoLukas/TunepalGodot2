@@ -66,31 +66,6 @@ void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_na
 	createMidiFile(notation_chars, abc_file_chars, midi_file_chars, speed, transpose, melody, chords);
 	UtilityFunctions::print(midi_file_name);
 }
-// NEW CLAUDE
-// godot::PackedByteArray Tunepal::create_midi_in_memory(const godot::String &abc_notation, int speed, int transpose, int melody, int chords) {
-//     PackedByteArray midi_data;
-    
-//     // Set up memory buffer for output
-//     std::vector<unsigned char> buffer;
-    
-//     // Get ABC notation as C string
-//     const char* notation_chars = abc_notation.ascii().get_data();
-    
-//     // Call your abc2midi library to write to memory
-//     // This depends on how your abc2midi implementation works
-//     // You might need to modify abc2midi to write to a memory buffer instead of a file
-//     bool success = createMidiInMemory(notation_chars, buffer, speed, transpose, melody, chords);
-    
-//     if (success) {
-//         // Convert the std::vector to PackedByteArray
-//         midi_data.resize(buffer.size());
-//         for (size_t i = 0; i < buffer.size(); i++) {
-//             midi_data[i] = buffer[i];
-//         }
-//     }
-    
-//     return midi_data;
-// }
 
 godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)
 {

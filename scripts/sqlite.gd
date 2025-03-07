@@ -161,8 +161,9 @@ func load_db(path):
 				midi_file_name, 
 				key_sig, 
 				search_key from tuneindex, 
-				tunekeys, 
-				source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;
+				tunekeys,
+				source 
+				where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id;
 				""")
 	return_tune = db.query_result
 	db.close_db()
