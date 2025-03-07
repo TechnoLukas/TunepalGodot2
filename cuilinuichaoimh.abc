@@ -1,0 +1,18 @@
+X:1
+%%MIDI program 0
+%%MIDI bassprog 0
+%%MIDI transpose 0
+Q:1/4 = 63
+T: Cuilin Ui Chaoimh
+Z: bernhard
+S: https://thesession.org/tunes/469#setting43352
+R: jig
+M: 6/8
+L: 1/8
+K: Dmaj
+|:B3 BAF|Adc dF A|B/c/dB BAF|AFE EFA|
+B3 BAF|Adc dAF|GBG FAF|1 EFE DFA:|2 EFE D3||
+DFA d2 e|fdf ecA|gf e fdB|AFA ~B3|
+Adf ~a3|baf a2 f|gf e fdB|AFA B2 g|
+fdd d2 e|fdf ecA|gf e fdB|AFA ~B3|
+Adf ~a3|baf a2 f|gf e fdB|AFA B3||

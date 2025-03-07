@@ -296,7 +296,7 @@ func _on_build_db_button_pressed():
 # PARSING  the ABC FILE
 ###########
 
-func parse_abc_content(content: String) -> Array:
+func parse_abc_content(content: String) -> Array: # Creates a big array of the tunes
 	var tunes_data = []
 	var current_tune = {}
 	var in_tune = false
@@ -341,10 +341,8 @@ func parse_abc_content(content: String) -> Array:
 				current_tune["type"] = line.split(":")[1].strip_edges()
 
 		tunes_data.append(current_tune)
-
+	print("tune data parsed: ", tunes_data)
 	return tunes_data
-
-	
 	
 ##### ADD A TUNE TO THE DATABASE: INDEXING ABC FILES ####
 
@@ -370,10 +368,13 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var abc_notation = tune["abc"]
 	var abc_file_name = tune["source_file"]
 
-	
-	var processed_abc = ABCTools.strip_all(abc_notation)
 
+	var tune_start = ABCTools.skip_headers(abc_notation)
+	var just_tune = abc_notation.substr(tune_start)
 	
+	var stripped_abc = ABCTools.strip_all(just_tune) ### this isn't stripping correctly ???
+	var processed_abc = ABCTools.fix_notation_for_tunepal(stripped_abc) # ????
+	print("THE pRocessed ABC IS: ",  processed_abc)	
 	# create the midi sequence or use placeholder
 	
 	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
