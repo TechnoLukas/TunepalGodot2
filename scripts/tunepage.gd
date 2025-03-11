@@ -126,3 +126,7 @@ func remove():
 	if this_tune in sqlite.user_tunes:
 		sqlite.user_tunes.pop_at(sqlite.user_tunes.find(this_tune))
 	sqlite.save_json(clientside.prefix + sqlite.default_user_tunes_path)
+
+func show_empty_database_message():
+	tune_label.text = "No tunes in the database"
+	abc_field.text = ""

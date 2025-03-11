@@ -41,6 +41,23 @@ visible = false
 layout_mode = 1
 offset_top = 0.0
 
+[node name="RefreshButton" type="Button" parent="pages/RandomtunePage"]
+visible = false
+custom_minimum_size = Vector2(50, 50)
+layout_direction = 2
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.764
+anchor_top = 0.907
+anchor_right = 0.953
+anchor_bottom = 0.992
+offset_left = -0.0400085
+offset_top = -0.130066
+offset_right = -0.0800171
+offset_bottom = -0.280029
+button_mask = 0
+text = "Refresh"
+
 [node name="UsertunesPage" parent="pages" instance=ExtResource("4_00loi")]
 visible = false
 layout_mode = 1
