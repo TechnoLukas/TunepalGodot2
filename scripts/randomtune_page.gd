@@ -8,7 +8,7 @@ func _ready() -> void:
 
 	var refresh_button = Button.new()
 	refresh_button.text = "Refresh"
-	refresh_button.position = Vector2(275, 535)  # Adjust position as needed
+	refresh_button.position = Vector2(275, 535) 
 	refresh_button.size = Vector2(68, 50)
 
 	refresh_button.pressed.connect(_on_refresh_button_pressed)
