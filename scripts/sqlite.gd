@@ -206,13 +206,69 @@ func build_session_database():
 # signal build_progress(progress_text: String)
 
 func _on_build_db_button_pressed():
-	# emit_signal("build_progress", "Starting database build...")
-	# var success = await build_session_database()
-	var success = build_session_database()
-	if success:
-		print("build_progress", "Database build successful")
-	else:
-		print("build_progress", "Database build failed")
+
+	# var success = build_session_database()
+	# if success:
+	# 	print("build_progress", "Database build successful")
+	# else:
+	# 	print("build_progress", "Database build failed")
+
+	show_directory_select_dialog()
+
+func show_directory_select_dialog():
+	var dialog = FileDialog.new()
+	dialog.access = FileDialog.ACCESS_FILESYSTEM
+	dialog.file_mode = FileDialog.FILE_MODE_OPEN_DIR
+	dialog.title = "Select ABC Source Directory"
+
+	# connect directory selected signal
+	dialog.dir_selected.connect(_on_directory_selected)
+	dialog.canceled.connect(func(): ("Directory selection canceled"))
+
+	add_child(dialog)
+	dialog.popup_centered(Vector2(100, 600))
+
+# callback when directory is selected
+
+func _on_directory_selected(path: String):
+	print("Selected Directory: ", path)
+	import_files_from_directory(path)
+
+func import_files_from_directory(base_directory: String):
+	# ensure proper separator at the end of the path
+	if not base_directory.ends_with("/") and not base_directory.ends_with("\\"):
+		base_directory += "/"
+	#
+	var dir = DirAccess.open(base_directory)
+	if !dir:
+		push_error("Failed to open base directory: " + base_directory)
+		return false
+
+	var total_tune_count = 0
+	var has_numbered_folders = false
+
+	dir.list_dir_begin()
+	var folder = dir.get_next()
+
+	while folder != "":
+		if dir.current_is_dir() and folder.is_valid_int():
+			has_numbered_folders = true
+			var source_id = folder.to_int()
+			var source_path = base_directory + folder + "/"
+			print("Importing from source ID " + str(source_id) + " at path " + source_path)
+			var count = import_source_directory(source_path, source_id)
+			total_tune_count += count
+			
+		folder = dir.get_next()
+	dir.list_dir_end()
+
+	# if no numbered folders found, import directly from the base directory with default source ID 1
+	if not has_numbered_folders:
+		var default_count = import_source_directory(base_directory, 1)
+		total_tune_count += default_count
+	
+	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
+	return true
 
 ###########
 # PARSING  the ABC FILE
