@@ -32,6 +32,7 @@ func _on_refresh_button_pressed():
 	sqlite.tunes = sqlite.load_db(clientside.prefix + "://assets/data/tunepal.db")
 	stuff = sqlite.tunes
 	tunelist.clear_list()
+	update_list(search_line.text)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
