@@ -1,0 +1,22 @@
+X:1
+%%MIDI program 0
+%%MIDI bassprog 0
+%%MIDI transpose 0
+Q:1/4 = 63
+T: Stick Across The Hob, The
+Z: Bregolas
+S: https://thesession.org/tunes/25000#setting52443
+R: jig
+M: 6/8
+L: 1/8
+K: Edor
+D|:E/F/EE BAB|EBE AFD|E/F/EE BAB|d/e/dB AFD|
+E/F/EE BAB|EBE AFA|BAF ABd|d/e/dB AF/G/A:||
+e2e fee|bee fed|Bee ede|faf dfa|
+b3 a/b/af|e/f/ge def|gfe fed|BAB dBA|
+Bee fee|bee fed|B/c/ee ede|faf dfa|
+b3 a/b/af|e/f/ge def|gfe fed|BAB dBA||
+g2g f/g/af|efe d2e|fef def|edB dBA|
+g3 f/g/af|efe d2e|{g}fef def|edB dBA|
+g2g faf|efe d3|fef def|edB dBA|
+gAA eAA|e/f/ge d2e|fef def|edB AFD||

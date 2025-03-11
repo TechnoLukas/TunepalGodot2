@@ -58,27 +58,58 @@ func _ready():
 	open_json(clientside.prefix + default_user_tunes_path)
 
 func import_all_files():
-	var directory_path = "res://assets/abc/" ## we ought to not hardcode this
-	# iterate trhough all files in the directory
-	var dir = DirAccess.open(directory_path)
+	var base_directory = "res://assets/abc/" # Base directory for all sources
+	var dir = DirAccess.open(base_directory)
+	if !dir:
+		push_error("Failed to open base directory: " + base_directory)
+		return false
+		
+	var total_tune_count = 0
+	
+	# Look for numbered folders (like "1", "2", "3", etc) in the base directory
 	dir.list_dir_begin()
+	var folder = dir.get_next()
+	
+	while folder != "":
+		if dir.current_is_dir() and folder.is_valid_int():
+			var source_id = folder.to_int()
+			var source_path = base_directory + folder + "/"
+			print("Importing from source ID " + str(source_id) + " at path " + source_path)
+			var count = import_source_directory(source_path, source_id)
+			total_tune_count += count
+			
+		folder = dir.get_next()
+	dir.list_dir_end()
+	
+	# Also import directly from the base directory with default source ID 1
+	# (keeping this for backward compatibility)
+	var default_count = import_source_directory(base_directory, 1)
+	total_tune_count += default_count
+	
+	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
+	return true
 
-	var source_id = 1
-
+func import_source_directory(directory_path: String, source_id: int) -> int:
+	print("Processing source directory: " + directory_path + " with source ID: " + str(source_id))
+	var dir = DirAccess.open(directory_path)
+	if !dir:
+		push_error("Failed to open directory: " + directory_path)
+		return 0
+		
+	dir.list_dir_begin()
 	var file = dir.get_next()
 	var tune_count = 0
-
-
+	
 	while file != "":
 		if file.ends_with(".abc"):
-			print("processing " + file)
+			print("Processing " + file + " (source ID: " + str(source_id) + ")")
 			var file_path = directory_path + file
 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
-
+			
 			if abc_file != null:
 				var content = abc_file.get_as_text()
 				abc_file.close()
-
+				
 				var tunes_data = parse_abc_content(content)
 				for tune in tunes_data:
 					tune["source_file"] = file
@@ -86,12 +117,12 @@ func import_all_files():
 					tune_count += 1
 			else:
 				push_error("Failed to open file: " + file_path)
-
+				
 		file = dir.get_next()
-		
+	
 	dir.list_dir_end()
-	print("Added " + str(tune_count) + " tunes to the database")
-	return true
+	print("Added " + str(tune_count) + " tunes from source ID " + str(source_id))
+	return tune_count
 
 func load_db(path):
 	var return_tune
