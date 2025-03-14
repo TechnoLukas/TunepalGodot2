@@ -40,6 +40,10 @@ window/handheld/orientation=6
 
 enabled=PackedStringArray("res://addons/godot-sqlite/plugin.cfg", "res://addons/midi/plugin.cfg")
 
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
 [rendering]
 
 renderer/rendering_method="mobile"

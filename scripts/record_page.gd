@@ -9,7 +9,7 @@ extends Control
 @onready var record_indicator = $VBoxContainer/center_part/CenterContainer/record_indicator
 
 var countdown_time=2.0
-var recording_time=10
+var recording_time=2
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
@@ -138,7 +138,11 @@ func tunepal_test():
 func finished_searching(results:Array):
 	
 	for i in range(results.size()):
+		print(results[i])
 		var confidence = 1.0 - (float(results[i]["edit_distance"]) / float(transcription.length()))
+		if is_nan(confidence):
+			confidence = 0
+
 		results[i]["confidence"] = int(confidence * 100)
 		print(str(results[i]["title"])
 		 + "\t" + str(results[i]["alt_title"])

@@ -19,8 +19,8 @@ func _draw() -> void:
 	var radius = 120
 	if ! recording:
 		lerped_volume = 0 
-	draw_circle(Vector2.ZERO, radius + 10 + (border * lerped_volume), color, true, 10)
-	draw_circle(Vector2.ZERO, radius,background.color , true, 10)
+	draw_circle(Vector2.ZERO, radius + 10 + (border * lerped_volume), color, true)
+	draw_circle(Vector2.ZERO, radius,background.color , true)
 
 
 func _process(delta: float) -> void:
