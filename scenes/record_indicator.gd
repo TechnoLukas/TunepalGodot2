@@ -1,3 +1,4 @@
+class_name TuneList 
 extends Control
 
 var volume:float=0
@@ -5,7 +6,7 @@ var lerped_volume:float=0
 
 var spectrum
 
-var color:Color = Color(176 / 255.0, 210 / 255.0, 13 / 255.0);
+static var tunepal_color:Color = Color(176 / 255.0, 210 / 255.0, 13 / 255.0);
 
 var recording  = false
 
@@ -19,7 +20,7 @@ func _draw() -> void:
 	var radius = 120
 	if ! recording:
 		lerped_volume = 0 
-	draw_circle(Vector2.ZERO, radius + 10 + (border * lerped_volume), color, true)
+	draw_circle(Vector2.ZERO, radius + 10 + (border * lerped_volume), tunepal_color, true)
 	draw_circle(Vector2.ZERO, radius,background.color , true)
 
 
