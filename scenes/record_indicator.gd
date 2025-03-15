@@ -1,4 +1,4 @@
-class_name TuneList 
+class_name RecordIndicator 
 extends Control
 
 var volume:float=0
