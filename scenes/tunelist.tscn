@@ -61,20 +61,29 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 0
 
-[node name="list_item" type="VBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer"]
-visible = false
+[node name="list_item" type="Control" parent="SectionWithMargin/ScrollContainer/ListContainer"]
 layout_mode = 2
 
 [node name="Button" type="Button" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 3
 flat = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+[node name="v_container" type="VBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+layout_mode = 2
+offset_right = 137.0
+offset_bottom = 93.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="title_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/HBoxContainer"]
+[node name="title_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_font_sizes/font_size = 24
@@ -82,33 +91,33 @@ text = "Title"
 vertical_alignment = 1
 text_overrun_behavior = 4
 
-[node name="percent_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/HBoxContainer"]
+[node name="percent_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/HBoxContainer"]
 visible = false
 layout_mode = 2
 text = "0%"
 horizontal_alignment = 2
 
-[node name="alt_title" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+[node name="alt_title" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
 layout_mode = 2
 text = "Alt Title"
 
-[node name="h_container" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+[node name="h_container" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="source" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/h_container"]
+[node name="source" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/h_container"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Source"
 
-[node name="tune_type" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/h_container"]
+[node name="tune_type" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/h_container"]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 text = "Tune Type"
 horizontal_alignment = 2
 
-[node name="HSeparator" type="HSeparator" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+[node name="HSeparator" type="HSeparator" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
 clip_contents = true
 layout_mode = 2
