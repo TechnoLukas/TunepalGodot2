@@ -41,7 +41,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.34902, 0.34902, 0.34902, 1)
+color = Color(0.196078, 0.196078, 0.196078, 1)
 
 [node name="ScrollContainer" type="ScrollContainer" parent="SectionWithMargin"]
 layout_mode = 1
@@ -64,6 +64,11 @@ theme_override_constants/separation = 0
 [node name="list_item" type="VBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer"]
 visible = false
 layout_mode = 2
+
+[node name="Button" type="Button" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+layout_mode = 2
+size_flags_vertical = 3
+flat = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 layout_mode = 2
