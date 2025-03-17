@@ -15,18 +15,18 @@ var item_data = []
 
 
 func add_item(data, percentage=""):
-	var new_item:Container = item.duplicate()
+	var new_item:Control = item.duplicate()
 	item_list.add_child(new_item)
 	
-	var title_label = new_item.get_node("HBoxContainer/title_label")
-	var alt_title = new_item.get_node("alt_title")
-	var percent_label = new_item.get_node("HBoxContainer/percent_label")
-	var source = new_item.get_node("h_container/source")
-	var tune_type:Label = new_item.get_node("h_container/tune_type")
+	var title_label = new_item.get_node("v_container/HBoxContainer/title_label")
+	var alt_title = new_item.get_node("v_container/alt_title")
+	var percent_label = new_item.get_node("v_container/HBoxContainer/percent_label")
+	var source = new_item.get_node("v_container/h_container/source")
+	var tune_type:Label = new_item.get_node("v_container/h_container/tune_type")
 	
 	tune_type.add_theme_color_override("font_color", RecordIndicator.tunepal_color)
 	
-	var button:Button = new_item.get_node("Button")
+	var button:Button = new_item.get_node("button")
 	button.pressed.connect(select_row.bind((item_data.size())))
 	
 	title_label.text=data["accented_title"]
@@ -67,4 +67,9 @@ func select_row(item_id) -> void:
 		
 		# handle_item_click(item_id, item)
 	
+	pass # Replace with function body.
+
+
+func _on_button_pressed() -> void:
+	print("Pressed")
 	pass # Replace with function body.
