@@ -3,7 +3,7 @@ extends Control
 @onready var return_button = $Container/container/return_button
 
 @onready var tune_label = $Container/container/label
-@onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/abc_field
+@onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect/abc_field
 @onready var abc_score:Sprite2D = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect/abc_score
 
 @onready var add_and_remove_button = $BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button

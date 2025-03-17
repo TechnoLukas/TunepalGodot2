@@ -171,20 +171,24 @@ script = ExtResource("5_3xx33")
 
 [node name="ColorRect" type="ColorRect" parent="MiddleSection/SectionWithMargin/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="abc_field" type="Label" parent="MiddleSection/SectionWithMargin/ScrollContainer/ColorRect"]
+visible = false
+layout_mode = 0
+offset_right = 332.0
+offset_bottom = 953.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxEmpty_2kgbk")
+text = "ABCDEFGHIG"
+autowrap_mode = 3
 
 [node name="abc_score" type="Sprite2D" parent="MiddleSection/SectionWithMargin/ScrollContainer/ColorRect"]
 texture = ExtResource("5_ormb2")
 centered = false
-
-[node name="abc_field" type="Label" parent="MiddleSection/SectionWithMargin/ScrollContainer"]
-visible = false
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_styles/normal = SubResource("StyleBoxEmpty_2kgbk")
-text = "ABCf"
-autowrap_mode = 3
 
 [node name="BottomSection" type="Control" parent="."]
 custom_minimum_size = Vector2(0, 60)
