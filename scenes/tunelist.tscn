@@ -63,18 +63,21 @@ size_flags_vertical = 3
 theme_override_constants/separation = 0
 
 [node name="list_item" type="Control" parent="SectionWithMargin/ScrollContainer/ListContainer"]
+visible = false
 custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
+mouse_filter = 1
 
 [node name="button" type="Button" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = -9.0
+offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
+mouse_filter = 1
 theme = ExtResource("3_u0vrs")
 
 [node name="v_container" type="VBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
@@ -84,6 +87,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 5.0
 offset_right = -5.0
+mouse_filter = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
 layout_mode = 2
@@ -139,5 +143,3 @@ offset_top = -4.0
 offset_right = -5.0
 grow_horizontal = 2
 grow_vertical = 0
-
-[connection signal="pressed" from="SectionWithMargin/ScrollContainer/ListContainer/list_item/button" to="." method="_on_button_pressed"]
