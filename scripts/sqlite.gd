@@ -47,31 +47,34 @@ var accented_characters = {
 	r"{\\ss}": "ß",
 }
 
+var loader_thread:Thread
+
 func _ready():
 	var path = clientside.prefix + "://assets/data/tunepal"
-	tunes = load_db(path)
+	loader_thread = Thread.new()
+	loader_thread.start(load_db.bind(path))
+	#tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
 
 	
 func load_db(path):
-	var return_tune
+	print("Started loading")
 	var db = SQLite.new()
 	db.path = path
 	db.open_db()
 	db.read_only = true
 	db.query("select tuneindex.id as id, midi_sequence, tune_type, time_sig, notation, source.id as sourceid, shortName, url, source.source as sourcename, title, alt_title, tunepalid, x, midi_file_name, key_sig, search_key from tuneindex, tunekeys, source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;")
-	return_tune = db.query_result
+	tunes = db.query_result
 	db.close_db()
 	
-	if return_tune.size()!=0 and (not ("accented_title" in return_tune[0])):
-		for i in range(0, return_tune.size()):
-			var title = return_tune[i]["title"]
+	if tunes.size()!=0 and (not ("accented_title" in tunes[0])):
+		for i in range(0, tunes.size()):
+			var title = tunes[i]["title"]
 			for character in accented_characters:
 				if character in title:
 					title=title.replace(character, accented_characters[character])
-			return_tune[i]["accented_title"] = title
-	
-	return return_tune
+			tunes[i]["accented_title"] = title
+	print("Finished loading")	
 
 func save_json(path: String) -> void:
 	var json_string = JSON.stringify(user_tunes)  # Convert array to JSON string
