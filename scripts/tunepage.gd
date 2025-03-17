@@ -9,6 +9,8 @@ extends Control
 @onready var add_and_remove_button = $BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button
 @onready var play_and_pause_button = $BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button
 
+@onready var color_rect = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect
+
 @onready var midi_player = $MidiPlayer
 var midi_player_stoped_position = 0.0
 
@@ -110,6 +112,7 @@ func show_tune_page(data: Variant) -> void:
 	var latest_file = get_highest_tunepal_file(data_folder)
 	var texture = load_texture_from_path(latest_file)
 	abc_score.texture = texture
+	color_rect.custom_minimum_size = texture.get_size()
 	midi_player.file = data_folder + "/tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
 	#midi_player.soundfont # "res://assets/Live HQ Natural SoundFont GM.sf2" is good
