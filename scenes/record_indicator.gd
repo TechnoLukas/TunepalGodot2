@@ -20,7 +20,7 @@ func _draw() -> void:
 	var radius = 120
 	if ! recording:
 		lerped_volume = 0 
-	draw_circle(Vector2.ZERO, radius + 10 + (border * lerped_volume), tunepal_color, true)
+	draw_circle(Vector2.ZERO, radius + 10 + (border * lerped_volume * 2.0), tunepal_color, true)
 	draw_circle(Vector2.ZERO, radius,background.color , true)
 
 

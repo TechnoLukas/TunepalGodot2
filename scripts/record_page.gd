@@ -9,7 +9,7 @@ extends Control
 @onready var record_indicator = $VBoxContainer/center_part/CenterContainer/record_indicator
 
 var countdown_time=2.0
-var recording_time=2
+var recording_time=12
 var default_lable_value
 var action = "" # countdown & recording
 var record : AudioEffectRecord
