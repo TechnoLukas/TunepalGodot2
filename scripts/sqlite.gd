@@ -1,5 +1,5 @@
 extends Node
-const ABCTools = preload("res://scripts/ABCTools.gd")
+# const ABCTools = preload("res://scripts/ABCTools.gd")
 
 var tunes = []
 var user_tunes = []
@@ -53,41 +53,41 @@ const session_base_url = "https://thesession.org/tunes/" # x/abc"
 
 func _ready():
 
-	var path = clientside.prefix + "://assets/data/tunepal"
+	var path = clientside.prefix + "://assets/data/tunepal.db"
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
 
-func import_all_files():
-	var base_directory = "res://assets/abc/" # Base directory for all sources
-	var dir = DirAccess.open(base_directory)
-	if !dir:
-		push_error("Failed to open base directory: " + base_directory)
-		return false
+# func import_all_files():
+# 	var base_directory = "res://assets/abc/" # Base directory for all sources
+# 	var dir = DirAccess.open(base_directory)
+# 	if !dir:
+# 		push_error("Failed to open base directory: " + base_directory)
+# 		return false
 		
-	var total_tune_count = 0
+# 	var total_tune_count = 0
 	
-	# Look for numbered folders (like "1", "2", "3", etc) in the base directory
-	dir.list_dir_begin()
-	var folder = dir.get_next()
+# 	# Look for numbered folders (like "1", "2", "3", etc) in the base directory
+# 	dir.list_dir_begin()
+# 	var folder = dir.get_next()
 	
-	while folder != "":
-		if dir.current_is_dir() and folder.is_valid_int():
-			var source_id = folder.to_int()
-			var source_path = base_directory + folder + "/"
-			print("Importing from source ID " + str(source_id) + " at path " + source_path)
-			var count = import_source_directory(source_path, source_id)
-			total_tune_count += count
+# 	while folder != "":
+# 		if dir.current_is_dir() and folder.is_valid_int():
+# 			var source_id = folder.to_int()
+# 			var source_path = base_directory + folder + "/"
+# 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
+# 			var count = import_source_directory(source_path, source_id)
+# 			total_tune_count += count
 			
-		folder = dir.get_next()
-	dir.list_dir_end()
+# 		folder = dir.get_next()
+# 	dir.list_dir_end()
 	
-	# Also import directly from the base directory with default source ID 1
-	# (keeping this for backward compatibility)
-	var default_count = import_source_directory(base_directory, 1)
-	total_tune_count += default_count
+# 	# Also import directly from the base directory with default source ID 1
+# 	# (keeping this for backward compatibility)
+# 	var default_count = import_source_directory(base_directory, 1)
+# 	total_tune_count += default_count
 	
-	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
-	return true
+# 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
+# 	return true
 
 func import_source_directory(directory_path: String, source_id: int) -> int:
 	print("Processing source directory: " + directory_path + " with source ID: " + str(source_id))
@@ -195,12 +195,12 @@ func open_json(path: String) -> void:
 	file.close()
 
 
-func build_session_database():
+# func build_session_database():
 
-	import_all_files()
-	return true
+# 	import_all_files()
+# 	return true
 
-	var file = FileAccess.open(clientside.prefix + "://assets/abc/tunes.abc", FileAccess.WRITE)
+# 	var file = FileAccess.open(clientside.prefix + "://assets/abc/tunes.abc", FileAccess.WRITE)
 
 
 # signal build_progress(progress_text: String)
@@ -326,7 +326,8 @@ func parse_abc_content(content: String) -> Array: # Creates a big array of the t
 
 func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var db = SQLite.new()
-	db.path = clientside.prefix + "://assets/data/tunepal"
+	var ABCTools = ABCTools.new()
+	db.path = clientside.prefix + "://assets/data/tunepal.db"
 	var result = db.open_db()
 
 	if result == false:
@@ -338,23 +339,27 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var next_id = 1
 	if db.query_result.size() > 0 and db.query_result[0]["max_id"] != null:
 		next_id = db.query_result[0]["max_id"] + 1
-
+	print("HERE")
 	# format the tune identifier
 
 	var tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
 
 	var abc_notation = tune["abc"]
 	var abc_file_name = tune["source_file"]
+	print("NOW HERE")
 
-
-	var tune_start = ABCTools.skip_headers(abc_notation)
-	var just_tune = abc_notation.substr(tune_start)
-	
-	var stripped_abc = ABCTools.strip_all(just_tune) ### this isn't stripping correctly ???
-	var processed_abc = ABCTools.fix_notation_for_tunepal(stripped_abc) # ????
-	print("THE pRocessed ABC IS: ",  processed_abc)	
+	# var tune_start = ABCTools.skip_headers(abc_notation)
+	# print("NOW HERE MOTHAFUCKA")
+	# var just_tune = abc_notation.substr(tune_start)
+	# print("JUST TUNE: NOw herererere")
+	var just_tune = ABCTools.fix_notation_for_tunepal(abc_notation)
+	print("what about here?")
+	var stripped_abc = ABCTools.strip_all(just_tune) 
+	print("did u make it this far you hoor??")
+	# var processed_abc = ABCTools.fix_notation_for_tunepal(stripped_abc) # ????
+	# print("THE pRocessed ABC IS: ",  processed_abc)	
 	# create the midi sequence or use placeholder
-	
+	print("THE stripped ABC IS: ",  stripped_abc)
 	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
 	var midi_sequence = get_midi_sequence(abc_notation, abc_file_name, 1, 0, 0, 0)
 
@@ -407,7 +412,7 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	var keys_params = [
 		next_id,                   # id (primary key)
-		processed_abc,	# tune["title"].to_lower(),  # search_key
+		stripped_abc,	# tune["title"].to_lower(),  # search_key
 		next_id,                   # tuneid (references tuneindex.id)
 		tune["source_file"],       # midi_file_name
 		parsons_code,                        # parsons (empty placeholder)
@@ -428,19 +433,25 @@ func get_next_tune_id(db) -> int:
 
 func get_midi_sequence(abc: String, filename: String, s: int, t: int, m: int, c: int) -> String:
 	var tunepal = Tunepal.new()
-	var midifile = "temp.mid"
-	
+	var user_dir = ProjectSettings.globalize_path("user://")
+	print("User directory: " + user_dir)
+
+	var abc_file_path = user_dir + "temp.abc"
+	var midi_file_path = user_dir + "temp.mid"
+
+	print("Using ABC path: " + abc_file_path)
+	print("Using MIDI path: " + midi_file_path)
 	# Create MIDI file
-	tunepal.create_midi_file(abc, filename, midifile, s, t, m, c)
+	tunepal.create_midi_file(abc, abc_file_path, midi_file_path, s, t, m, c)
 	
 	# Read MIDI file into memory
-	if not FileAccess.file_exists(midifile):
-		push_error("Failed to convert ABC to MIDI: " + abc)
+	if not FileAccess.file_exists(midi_file_path):
+		print("MIDI file not found, returning placeholder")
 		return ""
 		
-	var midi_file = FileAccess.open(midifile, FileAccess.READ)
+	var midi_file = FileAccess.open(midi_file_path, FileAccess.READ)
 	if midi_file == null:
-		push_error("Failed to open MIDI file: " + midifile)
+		push_error("Failed to open MIDI file: " + midi_file_path)
 		return ""
 		
 	# Extract notes directly

@@ -29,7 +29,7 @@ func hidepage():
 	self.visible = false
 
 func _on_refresh_button_pressed():
-	sqlite.tunes = sqlite.load_db(clientside.prefix + "://assets/data/tunepal.db")
+	sqlite.tunes = sqlite.load_db(clientside.prefix + "://assets/data/tunepal.db") #tunepal.db
 	stuff = sqlite.tunes
 	tunelist.clear_list()
 	update_list(search_line.text)

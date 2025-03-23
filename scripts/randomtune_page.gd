@@ -29,7 +29,7 @@ func refresh_page():
 	tunepage.show_tune_page(data)
 
 func _on_refresh_button_pressed():
-	sqlite.tunes = sqlite.load_db(clientside.prefix + "://assets/data/tunepal.db")
+	sqlite.tunes = sqlite.load_db(clientside.prefix + "://assets/data/tunepal.db") #tunepal.db
 	refresh_page()
 	
 func hidepage():
