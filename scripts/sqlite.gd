@@ -52,7 +52,6 @@ var accented_characters = {
 const session_base_url = "https://thesession.org/tunes/" # x/abc"
 
 func _ready():
-
 	var path = clientside.prefix + "://assets/data/tunepal.db"
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
@@ -105,13 +104,15 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 			print("Processing " + file + " (source ID: " + str(source_id) + ")")
 			var file_path = directory_path + file
 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
-			
+			print("here")
 			if abc_file != null:
 				var content = abc_file.get_as_text()
 				abc_file.close()
-				
+				print("here now")
 				var tunes_data = parse_abc_content(content)
+				print("the tunes data", tunes_data)
 				for tune in tunes_data:
+					print("here I am: ", tune)
 					tune["source_file"] = file
 					add_tune_to_db(tune, source_id)
 					tune_count += 1
@@ -154,12 +155,12 @@ func load_db(path):
 	return_tune = db.query_result
 	db.close_db()
 	
-	if return_tune.size()!=0 and (not ("accented_title" in return_tune[0])):
+	if return_tune.size() != 0 and (not ("accented_title" in return_tune[0])):
 		for i in range(0, return_tune.size()):
 			var title = return_tune[i]["title"]
 			for character in accented_characters:
 				if character in title:
-					title=title.replace(character, accented_characters[character])
+					title = title.replace(character, accented_characters[character])
 			return_tune[i]["accented_title"] = title
 	else:
 		print("No tunes detected in database")
@@ -167,7 +168,7 @@ func load_db(path):
 	return return_tune
 ### for USER TUNES ###
 func save_json(path: String) -> void:
-	var json_string = JSON.stringify(user_tunes)  # Convert array to JSON string
+	var json_string = JSON.stringify(user_tunes) # Convert array to JSON string
 	
 	var file = FileAccess.open(path, FileAccess.WRITE)
 	if file.is_open():
@@ -206,13 +207,11 @@ func open_json(path: String) -> void:
 # signal build_progress(progress_text: String)
 
 func _on_build_db_button_pressed():
-
 	# var success = build_session_database()
 	# if success:
 	# 	print("build_progress", "Database build successful")
 	# else:
 	# 	print("build_progress", "Database build failed")
-
 	show_directory_select_dialog()
 
 func show_directory_select_dialog():
@@ -274,52 +273,168 @@ func import_files_from_directory(base_directory: String):
 # PARSING  the ABC FILE
 ###########
 
-func parse_abc_content(content: String) -> Array: # Creates a big array of the tunes
+# func parse_abc_content(content: String) -> Array: # Creates a big array of the tunes
+# 	var tunes_data = []
+# 	var current_tune = {}
+# 	var in_tune = false
+# 	var tune_body = ""
+# 	var tune_number = 0
+
+# 	var tune_blocks = content.split("\n\n")
+# 	print("TUNE BLOCKS: ", tune_blocks)
+# 	for i in range(tune_blocks.size()):
+# 		var block = tune_blocks[i].strip_edges()
+# 		if block.is_empty():
+# 			continue
+
+# 		if block.begins_with("X:"):
+# 			tune_number += 1
+# 			current_tune = {
+# 				"title": "",
+# 				"alt_title": "",
+# 				"type": "",
+# 				"meter": "",
+# 				"key_sig": "",
+# 				"x": "",
+# 				"abc": block
+# 			}
+
+# 		# extract key metadata values
+# 		var lines = block.split("\n")
+# 		for line in lines:
+# 			line = line.strip_edges()
+
+# 			if line.begins_with("X:"):
+# 				current_tune["x"] = line.split(":")[1].strip_edges()
+# 			elif line.begins_with("T:"):
+# 				current_tune["title"] = line.split(":")[1].strip_edges()
+# 			elif line.begins_with("T2:"):
+# 				current_tune["alt_title"] = line.split(":")[1].strip_edges()
+# 			elif line.begins_with("M:"):
+# 				current_tune["meter"] = line.split(":")[1].strip_edges()
+# 			elif line.begins_with("K:"):
+# 				current_tune["key_sig"] = line.split(":")[1].strip_edges()
+# 			elif line.begins_with("R:"):
+# 				current_tune["type"] = line.split(":")[1].strip_edges()
+
+# 		tunes_data.append(current_tune)
+
+# 	return tunes_data
+
+func parse_abc_content(content):
+	print("Processing ABC content...")
 	var tunes_data = []
-	var current_tune = {}
-	var in_tune = false
-	var tune_body = ""
-	var tune_number = 0
 
-	var tune_blocks = content.split("\n\n")
+	# Normalise line endings
+	content = content.replace("\r\n", "\n")
+	# First try to split by double newline and X:
+	var tune_blocks = content.split("\n\nX:")
+	
+	# If that didn't work, try other common patterns
+	if tune_blocks.size() <= 1:
+		tune_blocks = content.split("\nX:")
+		
+	# Ensure the first block has the X: prefix if needed
+	if tune_blocks.size() > 0:
+		if tune_blocks[0].begins_with("X:"):
+			# First block already has X: prefix
+			pass
+		else:
+			# Need to handle the first block which may or may not contain a tune
+			if tune_blocks[0].strip_edges() == "":
+				# If first block is empty, remove it
+				tune_blocks.remove_at(0)
+			else:
+				# Add X: prefix to first block
+				tune_blocks[0] = "X:" + tune_blocks[0]
+				
+	print("Found %d potential tune blocks" % tune_blocks.size())
 
-	for i in range(tune_blocks.size()):
-		var block = tune_blocks[i].strip_edges()
-		if block.is_empty():
+	for block in tune_blocks:
+		if block.strip_edges() == "":
 			continue
-
-		if block.begins_with("X:"):
-			tune_number += 1
-			current_tune = {
-				"title": "",
-				"alt_title": "",
-				"type": "",
-				"meter": "",
-				"key_sig": "",
-				"x": "",
-				"abc": block
-			}
-
-		# extract key metadata values
+			
+		var tune = {}
 		var lines = block.split("\n")
+		if lines.size() == 0:
+			continue
+		
 		for line in lines:
 			line = line.strip_edges()
-
-			if line.begins_with("X:"):
-				current_tune["x"] = line.split(":")[1].strip_edges()
-			elif line.begins_with("T:"):
-				current_tune["title"] = line.split(":")[1].strip_edges()
-			elif line.begins_with("T2:"):
-				current_tune["alt_title"] = line.split(":")[1].strip_edges()
-			elif line.begins_with("M:"):
-				current_tune["meter"] = line.split(":")[1].strip_edges()
-			elif line.begins_with("K:"):
-				current_tune["key_sig"] = line.split(":")[1].strip_edges()
-			elif line.begins_with("R:"):
-				current_tune["type"] = line.split(":")[1].strip_edges()
-
-		tunes_data.append(current_tune)
-
+			if line == "":
+				continue
+				
+			if line.length() >= 2 and line[1] == ":":
+				var field_type = line[0]
+				var field_content = line.substr(2).strip_edges()
+				
+				match field_type:
+					"X": # Index number
+						tune["index"] = field_content
+						tune["x"] = field_content  # Ensure x is always set
+					"T": # Title
+						if "title" in tune:
+							if not "alt_title" in tune:
+								tune["alt_title"] = field_content
+							elif tune["alt_title"] is String:
+								tune["alt_title"] = [tune["alt_title"], field_content]
+							else:
+								tune["alt_title"].append(field_content)
+						else:
+							tune["title"] = field_content
+					"R": # Rhythm
+						tune["tune_type"] = field_content
+						tune["type"] = field_content  # Add this field directly
+					"M": # Meter/Time signature
+						tune["time_sig"] = field_content
+						tune["meter"] = field_content  # Add this field directly
+					"K": # Key
+						tune["key_sig"] = field_content
+					"L": # Default note length
+						tune["L"] = field_content
+					"Z": # Transcriber
+						tune["transcriber"] = field_content
+					"S": # Source
+						tune["source"] = field_content
+					"N": # Notes/Annotations
+						if "annotations" in tune:
+							tune["annotations"] += " " + field_content
+						else:
+							tune["annotations"] = field_content
+							
+							# Only add tunes with at least a title and key signature
+		if "title" in tune and "key_sig" in tune:
+			var notation_start = false
+			var notation_lines = []
+			var header_lines = []
+			
+			# First collect all header lines to reconstruct full ABC
+			for line in lines:
+				line = line.strip_edges()
+				if line == "":
+					continue
+					
+				if line.length() >= 2 and line[1] == ":":
+					header_lines.append(line)
+				
+				if notation_start:
+					notation_lines.append(line)
+				elif line.begins_with("K:"):
+					notation_start = true
+					notation_lines.append(line)  # Include the K: line in notation
+					
+			tune["notation"] = "\n".join(notation_lines)
+			tune["abc"] = "\n".join(header_lines + notation_lines)
+			
+			# Make sure required fields exis
+			if not "source_file" in tune:
+				tune["source_file"] = "unknown.abc"
+			if not "alt_title" in tune:
+				tune["alt_title"] = ""
+				
+			tunes_data.append(tune)
+			
+	print("Successfully parsed %d tunes" % tunes_data.size())
 	return tunes_data
 	
 ##### ADD A TUNE TO THE DATABASE: INDEXING ABC FILES ####
@@ -354,12 +469,12 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	# print("JUST TUNE: NOw herererere")
 	var just_tune = ABCTools.fix_notation_for_tunepal(abc_notation)
 	print("what about here?")
-	var stripped_abc = ABCTools.strip_all(just_tune) 
+	var stripped_abc = ABCTools.strip_all(just_tune)
 	print("did u make it this far you hoor??")
 	# var processed_abc = ABCTools.fix_notation_for_tunepal(stripped_abc) # ????
 	# print("THE pRocessed ABC IS: ",  processed_abc)	
 	# create the midi sequence or use placeholder
-	print("THE stripped ABC IS: ",  stripped_abc)
+	print("THE stripped ABC IS: ", stripped_abc)
 	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
 	var midi_sequence = get_midi_sequence(abc_notation, abc_file_name, 1, 0, 0, 0)
 
@@ -383,18 +498,18 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 	"""
 	var params = [
-		next_id,                   # id
-		tune_identifier,           # tunepalid
-		tune["source_file"],       # file_name
-		tune["x"],                 # x
-		tune["abc"],               # notation
-		tune["title"],             # title
-		"",                        # alt_title
-		source_id,                 # source
-		tune["type"],              # tune_type
-		tune["key_sig"],           # key_sig
-		0,                         # downloaded (default 0)
-		tune["meter"]              # time_sig
+		next_id, # id
+		tune_identifier, # tunepalid
+		tune["source_file"], # file_name
+		tune["x"], # x
+		tune["abc"], # notation
+		tune["title"], # title
+		"", # alt_title
+		source_id, # source
+		tune["type"], # tune_type
+		tune["key_sig"], # key_sig
+		0, # downloaded (default 0)
+		tune["meter"] # time_sig
 	]
 
 	db.query_with_bindings(query, params)
@@ -411,12 +526,12 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	"""
 
 	var keys_params = [
-		next_id,                   # id (primary key)
-		stripped_abc,	# tune["title"].to_lower(),  # search_key
-		next_id,                   # tuneid (references tuneindex.id)
-		tune["source_file"],       # midi_file_name
-		parsons_code,                        # parsons (empty placeholder)
-		midi_sequence              # midi_sequence
+		next_id, # id (primary key)
+		stripped_abc, # tune["title"].to_lower(),  # search_key
+		next_id, # tuneid (references tuneindex.id)
+		tune["source_file"], # midi_file_name
+		parsons_code, # parsons (empty placeholder)
+		midi_sequence # midi_sequence
 	]
 	
 	db.query_with_bindings(keys_query, keys_params)
@@ -482,9 +597,9 @@ func generate_parsons_code(midi_sequence: String) -> String:
 	# Generate Parsons code from note pitch relationships
 	var parsons = ""
 	for i in range(1, notes.size()):
-		if notes[i] > notes[i-1]:
+		if notes[i] > notes[i - 1]:
 			parsons += "U"
-		elif notes[i] < notes[i-1]:
+		elif notes[i] < notes[i - 1]:
 			parsons += "D"
 		else:
 			parsons += "S"
