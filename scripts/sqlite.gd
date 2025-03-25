@@ -459,6 +459,12 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	# print("what about here?")
 	var stripped_abc = tools.strip_all(just_tune)
 
+
+## Skips tunes that are ridiculously long to prevent crashing
+	if abc_notation.length() > 2000:
+		print("ABC notation too long, skipping tune: " + tune["title"])
+		return false
+
 	var midi_sequence = get_midi_sequence(abc_notation, abc_file_name, 1, 0, 0, 0)
 	print("got midi sequence")
 	
@@ -649,4 +655,3 @@ func verify_db_schema():
 	print("tunekeys foreign keys:", db.query_result)
 	
 	db.close_db()
-

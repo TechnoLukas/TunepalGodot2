@@ -62,7 +62,7 @@ godot::String ABCTools::remove_extra_notation(const godot::String &key) {
     godot::String ret = key;
     
     // Remove basic notation marks
-    const char* to_remove[] = {">", "<", "/", "\\", "(", ")", "-", "!", "_"};
+    const char* to_remove[] = {">", "<", "/", "\\", "(", ")", "-", "!", "_", "=", "^", "'", "[", "]", "{", "}", ",", "="};
     for (const char* mark : to_remove) {
         ret = ret.replace(mark, "");
     }
