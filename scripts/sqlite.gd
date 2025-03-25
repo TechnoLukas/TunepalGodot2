@@ -330,8 +330,8 @@ func import_files_from_directory(base_directory: String):
 			var source_id = folder.to_int()
 			var source_path = base_directory + folder + "/"
 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
-			# var count = import_source_directory(source_path, source_id)
-			var count = import_source_debug() # just the one file to debug
+			var count = import_source_directory(source_path, source_id)
+			# var count = import_source_debug() # just the one file to debug
 			total_tune_count += count
 			
 		folder = dir.get_next()
@@ -546,20 +546,20 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	var abc_notation = tune["abc"]
 	var abc_file_name = tune["source_file"]
-	print("NOW HERE")
+	# print("NOW HERE")
 
 	# var tune_start = ABCTools.skip_headers(abc_notation)
 	# print("NOW HERE MOTHAFUCKA")
 	# var just_tune = abc_notation.substr(tune_start)
 	# print("JUST TUNE: NOw herererere")
 	var just_tune = tools.fix_notation_for_tunepal(abc_notation)
-	print("what about here?")
+	# print("what about here?")
 	var stripped_abc = tools.strip_all(just_tune)
-	print("did u make it this far you hoor??")
+	# print("did u make it this far you hoor??")
 	# var processed_abc = ABCTools.fix_notation_for_tunepal(stripped_abc) # ????
 	# print("THE pRocessed ABC IS: ",  processed_abc)	
 	# create the midi sequence or use placeholder
-	print("THE stripped ABC IS: ", stripped_abc)
+	# print("THE stripped ABC IS: ", stripped_abc)
 	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
 	var midi_sequence = get_midi_sequence(abc_notation, abc_file_name, 1, 0, 0, 0)
 	print("got midi sequence")
@@ -571,8 +571,11 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var parsons_code = generate_parsons_code(midi_sequence)
 	# print("parsons code", parsons_code)
 	
-
-	db.query("BEGIN TRANSACTION")
+	var query_result = db.query("BEGIN TRANSACTION")
+	if query_result == false:
+		push_error("Failed to begin transaction: " + db.error_message)
+		db.close_db()
+		return false
 
 	var query = """
 	INSERT OR REPLACE INTO tuneindex (
@@ -612,10 +615,12 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		db.query("ROLLBACK")
 		db.close_db()
 		return false
+	else:
+		print("Inserted tune index successfully")
 
-	var midi_seq_to_store = midi_sequence
-	if midi_sequence == "":
-		midi_seq_to_store = "0"
+	# var midi_seq_to_store = midi_sequence
+	# if midi_sequence == "":
+	# 	midi_seq_to_store = "0"
 
 	var keys_query = """
 	INSERT INTO tunekeys (
@@ -644,7 +649,19 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		db.query("ROLLBACK")
 		db.close_db()
 		return false
-	db.query("COMMIT")
+	else:
+		print("Inserted tune keys successfully")
+		
+
+# Commit transaction
+	if db.query("COMMIT") == false:
+		push_error("Failed to commit transaction: " + db.error_message)
+		db.query("ROLLBACK")
+		db.close_db()
+		return false
+	else:
+		print("Successfully committed transaction for tune ID: ", next_id)
+		
 	db.close_db()
 	return true
 
