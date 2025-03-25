@@ -90,6 +90,7 @@ func _ready():
 # 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
 # 	return true
 
+
 func import_source_directory(directory_path: String, source_id: int) -> int:
 	print("Processing source directory: " + directory_path + " with source ID: " + str(source_id))
 	var dir = DirAccess.open(directory_path)
@@ -97,26 +98,23 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 		push_error("Failed to open directory: " + directory_path)
 		return 0
 		
-
 	dir.list_dir_begin()
 	var file = dir.get_next()
 	var tune_count = 0
 	
+
 	while file != "":
-	
 		if file.ends_with(".abc"):
 			print("Processing " + file + " (source ID: " + str(source_id) + ")")
 			var file_path = directory_path + file
 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
-			print("here")
+			
 			if abc_file != null:
 				var content = abc_file.get_as_text()
 				abc_file.close()
-				print("here now")
+				
 				var tunes_data = parse_abc_content(content)
-				print("the tunes data")
 				for tune in tunes_data:
-					print("here I am: ", tune)
 					tune["source_file"] = file
 					add_tune_to_db(tune, source_id)
 					tune_count += 1
@@ -128,6 +126,47 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 	dir.list_dir_end()
 	print("Added " + str(tune_count) + " tunes from source ID " + str(source_id))
 	return tune_count
+
+## OLD
+
+# func import_source_directory(directory_path: String, source_id: int) -> int:
+# 	print("Processing source directory: " + directory_path + " with source ID: " + str(source_id))
+# 	var dir = DirAccess.open(directory_path)
+# 	if !dir:
+# 		push_error("Failed to open directory: " + directory_path)
+# 		return 0
+		
+
+# 	dir.list_dir_begin()
+# 	var file = dir.get_next()
+# 	var tune_count = 0
+	
+# 	while file != "":
+	
+# 		if file.ends_with(".abc"):
+# 			print("Processing " + file + " (source ID: " + str(source_id) + ")")
+# 			var file_path = directory_path + file
+# 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
+# 			print("here")
+# 			if abc_file != null:
+# 				var content = abc_file.get_as_text()
+# 				abc_file.close()
+# 				print("here now")
+# 				var tunes_data = parse_abc_content(content)
+# 				print("the tunes data")
+# 				for tune in tunes_data:
+# 					print("here I am: ", tune)
+# 					tune["source_file"] = file
+# 					add_tune_to_db(tune, source_id)
+# 					tune_count += 1
+# 			else:
+# 				push_error("Failed to open file: " + file_path)
+				
+# 		file = dir.get_next()
+	
+# 	dir.list_dir_end()
+# 	print("Added " + str(tune_count) + " tunes from source ID " + str(source_id))
+# 	return tune_count
 
 func load_db(path):
 	var return_tune = []
@@ -358,8 +397,8 @@ func import_files_from_directory(base_directory: String):
 			var source_id = folder.to_int()
 			var source_path = base_directory + folder + "/"
 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
-			# var count = import_source_directory(source_path, source_id)
-			var count = import_source_debug() # just the one file to debug
+			var count = import_source_directory(source_path, source_id)
+			# var count = import_source_debug() # just the one file to debug
 			total_tune_count += count
 			
 		folder = dir.get_next()
@@ -377,53 +416,6 @@ func import_files_from_directory(base_directory: String):
 # PARSING  the ABC FILE
 ###########
 
-# func parse_abc_content(content: String) -> Array: # Creates a big array of the tunes
-# 	var tunes_data = []
-# 	var current_tune = {}
-# 	var in_tune = false
-# 	var tune_body = ""
-# 	var tune_number = 0
-
-# 	var tune_blocks = content.split("\n\n")
-# 	print("TUNE BLOCKS: ", tune_blocks)
-# 	for i in range(tune_blocks.size()):
-# 		var block = tune_blocks[i].strip_edges()
-# 		if block.is_empty():
-# 			continue
-
-# 		if block.begins_with("X:"):
-# 			tune_number += 1
-# 			current_tune = {
-# 				"title": "",
-# 				"alt_title": "",
-# 				"type": "",
-# 				"meter": "",
-# 				"key_sig": "",
-# 				"x": "",
-# 				"abc": block
-# 			}
-
-# 		# extract key metadata values
-# 		var lines = block.split("\n")
-# 		for line in lines:
-# 			line = line.strip_edges()
-
-# 			if line.begins_with("X:"):
-# 				current_tune["x"] = line.split(":")[1].strip_edges()
-# 			elif line.begins_with("T:"):
-# 				current_tune["title"] = line.split(":")[1].strip_edges()
-# 			elif line.begins_with("T2:"):
-# 				current_tune["alt_title"] = line.split(":")[1].strip_edges()
-# 			elif line.begins_with("M:"):
-# 				current_tune["meter"] = line.split(":")[1].strip_edges()
-# 			elif line.begins_with("K:"):
-# 				current_tune["key_sig"] = line.split(":")[1].strip_edges()
-# 			elif line.begins_with("R:"):
-# 				current_tune["type"] = line.split(":")[1].strip_edges()
-
-# 		tunes_data.append(current_tune)
-
-# 	return tunes_data
 
 func parse_abc_content(content):
 	print("Processing ABC content...")
@@ -579,21 +571,11 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	var abc_notation = tune["abc"]
 	var abc_file_name = tune["source_file"]
-	# print("NOW HERE")
-
-	# var tune_start = ABCTools.skip_headers(abc_notation)
-	# print("NOW HERE MOTHAFUCKA")
-	# var just_tune = abc_notation.substr(tune_start)
-	# print("JUST TUNE: NOw herererere")
+	
 	var just_tune = tools.fix_notation_for_tunepal(abc_notation)
 	# print("what about here?")
 	var stripped_abc = tools.strip_all(just_tune)
-	# print("did u make it this far you hoor??")
-	# var processed_abc = ABCTools.fix_notation_for_tunepal(stripped_abc) # ????
-	# print("THE pRocessed ABC IS: ",  processed_abc)	
-	# create the midi sequence or use placeholder
-	# print("THE stripped ABC IS: ", stripped_abc)
-	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
+
 	var midi_sequence = get_midi_sequence(abc_notation, abc_file_name, 1, 0, 0, 0)
 	print("got midi sequence")
 	
@@ -602,13 +584,6 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		midi_sequence = "0"
 
 	var parsons_code = generate_parsons_code(midi_sequence)
-	# print("parsons code", parsons_code)
-	
-	# var query_result = db.query("BEGIN TRANSACTION")
-	# if query_result == false:
-	# 	push_error("Failed to begin transaction: " + db.error_message)
-	# 	db.close_db()
-	# 	return false
 
 	var query = """
 	INSERT OR REPLACE INTO tuneindex (
