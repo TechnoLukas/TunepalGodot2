@@ -53,7 +53,6 @@ const session_base_url = "https://thesession.org/tunes/" # x/abc"
 
 func _ready():
 	var path = clientside.prefix + "://assets/data/tunepal.db"
-	verify_db_schema()
 	# verify_db_writeable()
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
@@ -106,22 +105,6 @@ func load_db(path):
 	var count_result = db.query_result
 	if count_result.size() > 0:
 		print("Database contains " + str(count_result[0]["count"]) + " tunes")
-
-		# Try a more limited query that avoids problematic text fields
-		db.query("""
-			SELECT 
-				tuneindex.id as id,
-				tuneindex.title,
-				tuneindex.key_sig, 
-				tuneindex.time_sig,
-				source.id as sourceid
-			FROM tuneindex
-			JOIN source ON tuneindex.source = source.id
-			LIMIT 10;  
-		""")
-	# Check if this basic query works
-	if db.query_result.size() > 0:
-		print("Basic query successful, retrieved " + str(db.query_result.size()) + " rows")
 		
 		db.query("""
 				select tuneindex.id as id, 
@@ -636,22 +619,3 @@ func generate_parsons_code(midi_sequence: String) -> String:
 			
 	return parsons
 	
-func verify_db_schema():
-	var db = SQLite.new()
-	db.path = clientside.prefix + "://assets/data/tunepal.db"
-	db.open_db()
-	
-	print("=== Checking Database Schema ===")
-	db.query("PRAGMA table_info(tuneindex)")
-	print("tuneindex columns:", db.query_result)
-	
-	db.query("PRAGMA table_info(tunekeys)")
-	print("tunekeys columns:", db.query_result)
-	
-	db.query("PRAGMA table_info(source)")
-	print("source columns:", db.query_result)
-	
-	db.query("PRAGMA foreign_key_list(tunekeys)")
-	print("tunekeys foreign keys:", db.query_result)
-	
-	db.close_db()
