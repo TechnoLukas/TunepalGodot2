@@ -58,38 +58,6 @@ func _ready():
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
 
-# func import_all_files():
-# 	var base_directory = "res://assets/abc/" # Base directory for all sources
-# 	var dir = DirAccess.open(base_directory)
-# 	if !dir:
-# 		push_error("Failed to open base directory: " + base_directory)
-# 		return false
-		
-# 	var total_tune_count = 0
-	
-# 	# Look for numbered folders (like "1", "2", "3", etc) in the base directory
-# 	dir.list_dir_begin()
-# 	var folder = dir.get_next()
-	
-# 	while folder != "":
-# 		if dir.current_is_dir() and folder.is_valid_int():
-# 			var source_id = folder.to_int()
-# 			var source_path = base_directory + folder + "/"
-# 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
-# 			var count = import_source_directory(source_path, source_id)
-# 			total_tune_count += count
-			
-# 		folder = dir.get_next()
-# 	dir.list_dir_end()
-	
-# 	# Also import directly from the base directory with default source ID 1
-# 	# (keeping this for backward compatibility)
-# 	var default_count = import_source_directory(base_directory, 1)
-# 	total_tune_count += default_count
-	
-# 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
-# 	return true
-
 
 func import_source_directory(directory_path: String, source_id: int) -> int:
 	print("Processing source directory: " + directory_path + " with source ID: " + str(source_id))
@@ -127,47 +95,6 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 	print("Added " + str(tune_count) + " tunes from source ID " + str(source_id))
 	return tune_count
 
-## OLD
-
-# func import_source_directory(directory_path: String, source_id: int) -> int:
-# 	print("Processing source directory: " + directory_path + " with source ID: " + str(source_id))
-# 	var dir = DirAccess.open(directory_path)
-# 	if !dir:
-# 		push_error("Failed to open directory: " + directory_path)
-# 		return 0
-		
-
-# 	dir.list_dir_begin()
-# 	var file = dir.get_next()
-# 	var tune_count = 0
-	
-# 	while file != "":
-	
-# 		if file.ends_with(".abc"):
-# 			print("Processing " + file + " (source ID: " + str(source_id) + ")")
-# 			var file_path = directory_path + file
-# 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
-# 			print("here")
-# 			if abc_file != null:
-# 				var content = abc_file.get_as_text()
-# 				abc_file.close()
-# 				print("here now")
-# 				var tunes_data = parse_abc_content(content)
-# 				print("the tunes data")
-# 				for tune in tunes_data:
-# 					print("here I am: ", tune)
-# 					tune["source_file"] = file
-# 					add_tune_to_db(tune, source_id)
-# 					tune_count += 1
-# 			else:
-# 				push_error("Failed to open file: " + file_path)
-				
-# 		file = dir.get_next()
-	
-# 	dir.list_dir_end()
-# 	print("Added " + str(tune_count) + " tunes from source ID " + str(source_id))
-# 	return tune_count
-
 func load_db(path):
 	var return_tune = []
 	var db = SQLite.new()
@@ -196,30 +123,6 @@ func load_db(path):
 	if db.query_result.size() > 0:
 		print("Basic query successful, retrieved " + str(db.query_result.size()) + " rows")
 		
-		# If basic query works, try the full query with error handling
-		# db.query("""
-		# 	SELECT 
-		# 		tuneindex.id as id,
-		# 		COALESCE(midi_sequence, '') as midi_sequence, 
-		# 		COALESCE(tune_type, '') as tune_type, 
-		# 		COALESCE(time_sig, '') as time_sig, 
-		# 		'' as notation, -- Skip loading full notation text for now
-		# 		source.id as sourceid, 
-		# 		COALESCE(shortName, '') as shortName, 
-		# 		COALESCE(url, '') as url, 
-		# 		COALESCE(source.source, '') as sourcename, 
-		# 		COALESCE(title, '') as title, 
-		# 		COALESCE(alt_title, '') as alt_title, 
-		# 		COALESCE(tunepalid, '') as tunepalid, 
-		# 		COALESCE(x, '') as x, 
-		# 		COALESCE(midi_file_name, '') as midi_file_name, 
-		# 		COALESCE(key_sig, '') as key_sig, 
-		# 		COALESCE(search_key, '') as search_key
-		# 	FROM tuneindex
-		# 	LEFT JOIN tunekeys ON tunekeys.tuneid = tuneindex.id
-		# 	LEFT JOIN source ON tuneindex.source = source.id;
-		# 	""")
-
 		db.query("""
 				select tuneindex.id as id, 
 				midi_sequence, 
@@ -238,7 +141,7 @@ func load_db(path):
 				key_sig, 
 				search_key from tuneindex, 
 				tunekeys, 
-				source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;
+				source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id;
 				""")
 	return_tune = db.query_result
 	db.close_db()
@@ -309,22 +212,7 @@ func check_inserted_tunes():
 	
 	db.close_db()
 
-# func build_session_database():
-
-# 	import_all_files()
-# 	return true
-
-# 	var file = FileAccess.open(clientside.prefix + "://assets/abc/tunes.abc", FileAccess.WRITE)
-
-
-# signal build_progress(progress_text: String)
-
 func _on_build_db_button_pressed():
-	# var success = build_session_database()
-	# if success:
-	# 	print("build_progress", "Database build successful")
-	# else:
-	# 	print("build_progress", "Database build failed")
 	show_directory_select_dialog()
 
 func show_directory_select_dialog():
@@ -416,34 +304,32 @@ func import_files_from_directory(base_directory: String):
 # PARSING  the ABC FILE
 ###########
 
-
 func parse_abc_content(content):
 	print("Processing ABC content...")
 	var tunes_data = []
 
 	# Normalise line endings
 	content = content.replace("\r\n", "\n")
-	# First try to split by double newline and X:
-	var tune_blocks = content.split("\n\nX:")
-	
-	# If that didn't work, try other common patterns
-	if tune_blocks.size() <= 1:
+
+	var tune_blocks = []
+
+	if content.find("\n\nX:") > -1:
+		# Split by X: prefix
+		tune_blocks = content.split("\n\nX:")
+	elif content.find("\n\nX:") > -1:
+		# Split by X: prefix
 		tune_blocks = content.split("\nX:")
+	else:
+		# last resort just split by x
+		tune_blocks = content.split("X:")
 		
-	# Ensure the first block has the X: prefix if needed
 	if tune_blocks.size() > 0:
-		if tune_blocks[0].begins_with("X:"):
-			# First block already has X: prefix
-			pass
-		else:
-			# Need to handle the first block which may or may not contain a tune
+		if not tune_blocks[0].strip_edges().begins_with("X:") and not tune_blocks[0].strip_edges().begins_with("X:"):
 			if tune_blocks[0].strip_edges() == "":
-				# If first block is empty, remove it
 				tune_blocks.remove_at(0)
 			else:
-				# Add X: prefix to first block
 				tune_blocks[0] = "X:" + tune_blocks[0]
-				
+		
 	print("Found %d potential tune blocks" % tune_blocks.size())
 
 	for block in tune_blocks:
@@ -451,22 +337,33 @@ func parse_abc_content(content):
 			continue
 			
 		var tune = {			
-			"x": "1",            # Default index if none specified
+			"x": "1",      # Default index if none specified
 			"title": "Untitled", # Default title
-			"type": "reel",      # Default tune type
-			"meter": "4/4",      # Default meter
-			"key_sig": "Cmaj",   # Default key signature
+			"type": "reel",   # Default tune type
+			"meter": "4/4",   # Default meter
+			"key_sig": "Cmaj",  # Default key signature
 			"source_file": "unknown.abc"
 		}
+
+		# Split block into lines
 		var lines = block.split("\n")
-		# print("the lines: ", lines)
 		if lines.size() == 0:
 			continue
 		
+		# process all header fields first.. keep going until we hit the K: field
+		var header_complete = false  # Fixed variable name typo
+		var header_lines = []
+		var notation_lines = []
+
 		for line in lines:
 			line = line.strip_edges()
 			if line == "":
 				continue
+
+			if not header_complete:
+				header_lines.append(line)
+			else:
+				notation_lines.append(line)
 				
 			if line.length() >= 2 and line[1] == ":":
 				var field_type = line[0]
@@ -474,73 +371,59 @@ func parse_abc_content(content):
 				
 				match field_type:
 					"X": # Index number
-						tune["index"] = field_content
 						tune["x"] = field_content  # Ensure x is always set
 					"T": # Title
-						if "title" in tune:
-							if not "alt_title" in tune:
-								tune["alt_title"] = field_content
-							elif tune["alt_title"] is String:
-								tune["alt_title"] = [tune["alt_title"], field_content]
+						if field_content.strip_edges() != "":
+							if tune["title"] == "Untitled":
+								tune["title"] = field_content
 							else:
-								tune["alt_title"].append(field_content)
-						else:
-							tune["title"] = field_content
+								if not "alt_title" in tune:
+									tune["alt_title"] = field_content
+								elif tune["alt_title"] is String and tune["alt_title"] != "":
+									tune["alt_title"] = [tune["alt_title"], field_content]
+								elif tune["alt_title"] is Array:
+									tune["alt_title"].append(field_content)
+								else:
+									tune["alt_title"] += " " + field_content
 					"R": # Rhythm
-						tune["tune_type"] = field_content
 						tune["type"] = field_content  # Add this field directly
 					"M": # Meter/Time signature
-						tune["time_sig"] = field_content
 						tune["meter"] = field_content  # Add this field directly
 					"K": # Key
 						tune["key_sig"] = field_content
+						# K field typically marks the end
+						header_complete = true
 					"L": # Default note length
 						tune["L"] = field_content
 					"Z": # Transcriber
 						tune["transcriber"] = field_content
 					"S": # Source
-						tune["source"] = field_content
+						tune["source_info"] = field_content
 					"N": # Notes/Annotations
-						if "annotations" in tune:
-							tune["annotations"] += " " + field_content
+						if not "notes" in tune:
+							tune["notes"] = field_content
 						else:
-							tune["annotations"] = field_content
-							
-							# Only add tunes with at least a title and key signature
-		if "title" in tune and "key_sig" in tune:
-			var notation_start = false
-			var notation_lines = []
-			var header_lines = []
-			
-			# First collect all header lines to reconstruct full ABC
-			for line in lines:
-				line = line.strip_edges()
-				if line == "":
-					continue
-					
-				if line.length() >= 2 and line[1] == ":":
-					header_lines.append(line)
-				
-				if notation_start:
-					notation_lines.append(line)
-				elif line.begins_with("K:"):
-					notation_start = true
-					notation_lines.append(line)  # Include the K: line in notation
-					
-			tune["notation"] = "\n".join(notation_lines)
+							tune["notes"] += " " + field_content
+
+			elif header_complete:
+				notation_lines.append(line)
+
+		# make sure we got min required info
+		if tune["title"] != "Untitled" or tune["key_sig"] != "Cmaj":
+			# construct full abc string for the notation field
 			tune["abc"] = "\n".join(header_lines + notation_lines)
-			
-			# Make sure required fields exis
-			if not "source_file" in tune:
-				tune["source_file"] = "unknown.abc"
+			tune["notation"] = "\n".join(notation_lines)
+
+			# ensure all req fields exist
 			if not "alt_title" in tune:
 				tune["alt_title"] = ""
-				
+
+			print("Parsed tune: ", tune["title"])
 			tunes_data.append(tune)
-			
+
 	print("Successfully parsed %d tunes" % tunes_data.size())
 	return tunes_data
-	
+							
 ##### ADD A TUNE TO THE DATABASE: INDEXING ABC FILES ####
 
 func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
@@ -624,26 +507,6 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		db.close_db()
 		return false
 
-	# var insert_result = db.query_with_bindings(query, params)
-	# print("Insert tuneindex result code: ", insert_result)
-	# if insert_result == false:
-	# 	push_error("Failed to insert into tuneindex: " + db.error_message)
-	# 	# db.query("ROLLBACK")
-	# 	db.close_db()
-	# 	return false
-	# else:
-	# 	# Check if any rows were affected
-	# 	db.query("SELECT changes() as rows")
-	# 	var changes = db.query_result[0]["rows"]
-	# 	print("Rows affected by tuneindex insert: ", changes)
-	# 	if changes == 0:
-	# 		push_error("No rows were inserted into tuneindex!")
-	# 		# db.query("ROLLBACK")
-	# 		db.close_db()
-	# 		return false
-	# 	else:
-	# 		print("Inserted tune index successfully")
-
 	var keys_query = """
 	INSERT OR REPLACE INTO tunekeys (
 		id,
@@ -663,29 +526,7 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		parsons_code, # parsons (empty placeholder)
 		midi_sequence # midi_sequence
 	]
-# # check for duplicate primary keys
-# 	db.query_with_bindings("SELECT id FROM tuneindex WHERE id = ?", [next_id])
-# 	if db.query_result.size() > 0:
-# 		print("WARNING: Tune ID " + str(next_id) + " already exists in tuneindex!")
-# 		# Generate a new ID
-# 		next_id = next_id + 1
-# 		print("Using new ID: " + str(next_id))
-# 		# Update the params array with the new ID
-# 		params[0] = next_id
-# 		# Update tune_identifier with the new ID
-# 		tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
-# 		params[1] = tune_identifier
 
-	
-	# db.query_with_bindings(keys_query, keys_params)
-	# if db.error_message:
-	# 	# push_error("SQLite error: " + db.error_message)
-	# 	print("Error during insertion: " + db.error_message)
-	# 	# db.query("ROLLBACK")
-	# 	db.close_db()
-	# 	return false
-	# else:
-	# 	print("Inserted tune keys successfully")
 	var keys_result = db.query_with_bindings(keys_query, keys_params)
 	if !keys_result:
 		push_error("Failed to insert into tunekeys: " + db.error_message)
@@ -696,18 +537,6 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	print("Successfully inserted tune: " + tune["title"] + " (ID: " + str(next_id) + ")")
 	db.close_db()
 	return true
-
-# # Commit transaction
-# 	if db.query("COMMIT") == false:
-# 		push_error("Failed to commit transaction: " + db.error_message)
-# 		# db.query("ROLLBACK")
-# 		db.close_db()
-# 		return false
-# 	else:
-# 		print("Successfully committed transaction for tune ID: ", next_id)
-		
-# 	db.close_db()
-# 	return true
 
 func get_next_tune_id(db) -> int:
 	db.query("select max(id) from tuneindex;")
@@ -821,17 +650,3 @@ func verify_db_schema():
 	
 	db.close_db()
 
-
-# func verify_db_writeable():
-# 	var db_path = clientside.prefix + "://assets/data/tunepal.db"
-# 	print("Checking if database is writeable: ", db_path)
-# 	# Try to open the file for writing
-# 	var file = FileAccess.open(db_path, FileAccess.WRITE_READ)
-# 	if file == null:
-# 		print("ERROR: Cannot write to database file - check permissions!")
-# 		print("Error code: ", FileAccess.get_open_error())
-# 		return false
-	
-# 	file.close()
-# 	print("Database file is writeable")
-# 	return true
