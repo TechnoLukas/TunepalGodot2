@@ -4,6 +4,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <algorithm>
 #include <cctype>
+#include <godot_cpp/variant/char_string.hpp>
 
 namespace tunepal {
 
@@ -330,11 +331,18 @@ godot::String ABCTools::strip_advanced_abc(const godot::String &body) {
     return result;
 }
 
+// Add this function to the ABCTools namespace
+godot::String ABCTools::ensure_valid_utf8(const godot::String &input) {
+    // Convert to UTF-8 and back to ensure valid encoding
+    godot::CharString utf8 = input.utf8();
+    return godot::String::utf8(utf8.get_data());
+}
+
 godot::String ABCTools::strip_all(const godot::String &key) {
     flag = true;
     
     // Create a copy to work with
-    godot::String result = key;
+    godot::String result = ensure_valid_utf8(key);;
     
     // Apply all transformations in sequence
     result = strip_comments(result);
@@ -368,7 +376,7 @@ void ABCTools::_bind_methods() {
     godot::ClassDB::bind_static_method("ABCTools", godot::D_METHOD("strip_advanced_abc", "body"), &ABCTools::strip_advanced_abc);
     godot::ClassDB::bind_static_method("ABCTools", godot::D_METHOD("strip_all", "key"), &ABCTools::strip_all);
     godot::ClassDB::bind_static_method("ABCTools", godot::D_METHOD("get_flag"), &ABCTools::get_flag);
-    
+    godot::ClassDB::bind_static_method("ABCTools", godot::D_METHOD("ensure_valid_utf8", "input"), &ABCTools::ensure_valid_utf8);
     // Add a static property for the flag
     ADD_GROUP("State", "");
     godot::ClassDB::bind_static_method("ABCTools", godot::D_METHOD("get_flag"), &ABCTools::get_flag);

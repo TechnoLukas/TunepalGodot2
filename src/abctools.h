@@ -36,6 +36,7 @@ public:
     static godot::String strip_comments(const godot::String &transcription);
     static godot::String strip_advanced_abc(const godot::String &body);
     static godot::String strip_all(const godot::String &key);
+    static godot::String ensure_valid_utf8(const godot::String &input);
     
     // Get the status flag
     static bool get_flag();

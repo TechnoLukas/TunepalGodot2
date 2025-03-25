@@ -53,6 +53,7 @@ const session_base_url = "https://thesession.org/tunes/" # x/abc"
 
 func _ready():
 	var path = clientside.prefix + "://assets/data/tunepal.db"
+	verify_db_schema()
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
 
@@ -95,11 +96,13 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 		push_error("Failed to open directory: " + directory_path)
 		return 0
 		
+
 	dir.list_dir_begin()
 	var file = dir.get_next()
 	var tune_count = 0
 	
 	while file != "":
+	
 		if file.ends_with(".abc"):
 			print("Processing " + file + " (source ID: " + str(source_id) + ")")
 			var file_path = directory_path + file
@@ -110,7 +113,7 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 				abc_file.close()
 				print("here now")
 				var tunes_data = parse_abc_content(content)
-				print("the tunes data", tunes_data)
+				print("the tunes data")
 				for tune in tunes_data:
 					print("here I am: ", tune)
 					tune["source_file"] = file
@@ -126,12 +129,58 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 	return tune_count
 
 func load_db(path):
-	var return_tune
+	var return_tune = []
 	var db = SQLite.new()
 	db.path = path
 	db.open_db()
 	db.read_only = true
-	db.query("""
+
+	db.query("SELECT COUNT(*) as count FROM tuneindex;")
+	var count_result = db.query_result
+	if count_result.size() > 0:
+		print("Database contains " + str(count_result[0]["count"]) + " tunes")
+
+		# Try a more limited query that avoids problematic text fields
+		db.query("""
+			SELECT 
+				tuneindex.id as id,
+				tuneindex.title,
+				tuneindex.key_sig, 
+				tuneindex.time_sig,
+				source.id as sourceid
+			FROM tuneindex
+			JOIN source ON tuneindex.source = source.id
+			LIMIT 10;  
+		""")
+	# Check if this basic query works
+	if db.query_result.size() > 0:
+		print("Basic query successful, retrieved " + str(db.query_result.size()) + " rows")
+		
+		# If basic query works, try the full query with error handling
+		# db.query("""
+		# 	SELECT 
+		# 		tuneindex.id as id,
+		# 		COALESCE(midi_sequence, '') as midi_sequence, 
+		# 		COALESCE(tune_type, '') as tune_type, 
+		# 		COALESCE(time_sig, '') as time_sig, 
+		# 		'' as notation, -- Skip loading full notation text for now
+		# 		source.id as sourceid, 
+		# 		COALESCE(shortName, '') as shortName, 
+		# 		COALESCE(url, '') as url, 
+		# 		COALESCE(source.source, '') as sourcename, 
+		# 		COALESCE(title, '') as title, 
+		# 		COALESCE(alt_title, '') as alt_title, 
+		# 		COALESCE(tunepalid, '') as tunepalid, 
+		# 		COALESCE(x, '') as x, 
+		# 		COALESCE(midi_file_name, '') as midi_file_name, 
+		# 		COALESCE(key_sig, '') as key_sig, 
+		# 		COALESCE(search_key, '') as search_key
+		# 	FROM tuneindex
+		# 	LEFT JOIN tunekeys ON tunekeys.tuneid = tuneindex.id
+		# 	LEFT JOIN source ON tuneindex.source = source.id;
+		# 	""")
+
+		db.query("""
 				select tuneindex.id as id, 
 				midi_sequence, 
 				tune_type, 
@@ -148,9 +197,8 @@ func load_db(path):
 				midi_file_name, 
 				key_sig, 
 				search_key from tuneindex, 
-				tunekeys,
-				source 
-				where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id;
+				tunekeys, 
+				source where tunekeys.tuneid = tuneindex.id and tuneindex.source = source.id and source.id = 2;
 				""")
 	return_tune = db.query_result
 	db.close_db()
@@ -233,6 +281,33 @@ func _on_directory_selected(path: String):
 	print("Selected Directory: ", path)
 	import_files_from_directory(path)
 
+func import_source_debug() -> int:
+	var source_id = 1  # or change as needed
+	var directory_path = "C:/dev/final-project/tunepal-local-3/TunepalGodot2/assets/abc/"  # adjust if needed
+	var target_file = "stickacrossthehob.abc"
+	var file_path = directory_path + target_file
+	print("Processing single file: " + target_file + " (source ID: " + str(source_id) + ")")
+	
+	var abc_file = FileAccess.open(file_path, FileAccess.READ)
+	if abc_file == null:
+		push_error("Failed to open file: " + file_path)
+		return 0
+	var content = abc_file.get_as_text()
+	abc_file.close()
+	
+	var tunes_data = parse_abc_content(content)
+	# print("Parsed tunes data: ", tunes_data)
+	
+	var tune_count = 0
+	for tune in tunes_data:
+		# print("Processing tune: ", tune)
+		tune["source_file"] = target_file
+		add_tune_to_db(tune, source_id)
+		tune_count += 1
+	
+	print("Added " + str(tune_count) + " tunes from file " + target_file)
+	return tune_count
+
 func import_files_from_directory(base_directory: String):
 	# ensure proper separator at the end of the path
 	if not base_directory.ends_with("/") and not base_directory.ends_with("\\"):
@@ -255,7 +330,8 @@ func import_files_from_directory(base_directory: String):
 			var source_id = folder.to_int()
 			var source_path = base_directory + folder + "/"
 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
-			var count = import_source_directory(source_path, source_id)
+			# var count = import_source_directory(source_path, source_id)
+			var count = import_source_debug() # just the one file to debug
 			total_tune_count += count
 			
 		folder = dir.get_next()
@@ -354,8 +430,17 @@ func parse_abc_content(content):
 		if block.strip_edges() == "":
 			continue
 			
-		var tune = {}
+		var tune = {
+			# Initialize with defaults to avoid "key not found" errors
+			"x": "1",            # Default index if none specified
+			"title": "Untitled", # Default title
+			"type": "reel",      # Default tune type
+			"meter": "4/4",      # Default meter
+			"key_sig": "Cmaj",   # Default key signature
+			"source_file": "unknown.abc"
+		}
 		var lines = block.split("\n")
+		# print("the lines: ", lines)
 		if lines.size() == 0:
 			continue
 		
@@ -441,7 +526,7 @@ func parse_abc_content(content):
 
 func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var db = SQLite.new()
-	var ABCTools = ABCTools.new()
+	var tools = ABCTools.new()
 	db.path = clientside.prefix + "://assets/data/tunepal.db"
 	var result = db.open_db()
 
@@ -467,9 +552,9 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	# print("NOW HERE MOTHAFUCKA")
 	# var just_tune = abc_notation.substr(tune_start)
 	# print("JUST TUNE: NOw herererere")
-	var just_tune = ABCTools.fix_notation_for_tunepal(abc_notation)
+	var just_tune = tools.fix_notation_for_tunepal(abc_notation)
 	print("what about here?")
-	var stripped_abc = ABCTools.strip_all(just_tune)
+	var stripped_abc = tools.strip_all(just_tune)
 	print("did u make it this far you hoor??")
 	# var processed_abc = ABCTools.fix_notation_for_tunepal(stripped_abc) # ????
 	# print("THE pRocessed ABC IS: ",  processed_abc)	
@@ -477,12 +562,20 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	print("THE stripped ABC IS: ", stripped_abc)
 	# Parameters: abc notation, s=1 (skip headers), t=0 (transpose), m=0 (mode), c=0 (channel)
 	var midi_sequence = get_midi_sequence(abc_notation, abc_file_name, 1, 0, 0, 0)
+	print("got midi sequence")
+	
+	if midi_sequence.is_empty():
+		print("MIDI generation failed, proceeding with empty sequence")
+		midi_sequence = "0"
 
 	var parsons_code = generate_parsons_code(midi_sequence)
-	# var midi_sequence = "0000" #place holder
+	# print("parsons code", parsons_code)
+	
+
+	db.query("BEGIN TRANSACTION")
 
 	var query = """
-	INSERT INTO tuneindex (
+	INSERT OR REPLACE INTO tuneindex (
 		id,
 		tunepalid,
 		file_name,
@@ -513,6 +606,16 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	]
 
 	db.query_with_bindings(query, params)
+	if db.error_message != "":
+		print("Error during insertion: " + db.error_message)
+		# push_error("SQLite error: " + db.error_message)
+		db.query("ROLLBACK")
+		db.close_db()
+		return false
+
+	var midi_seq_to_store = midi_sequence
+	if midi_sequence == "":
+		midi_seq_to_store = "0"
 
 	var keys_query = """
 	INSERT INTO tunekeys (
@@ -535,6 +638,13 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	]
 	
 	db.query_with_bindings(keys_query, keys_params)
+	if db.error_message != "":
+		# push_error("SQLite error: " + db.error_message)
+		print("Error during insertion: " + db.error_message)
+		db.query("ROLLBACK")
+		db.close_db()
+		return false
+	db.query("COMMIT")
 	db.close_db()
 	return true
 
@@ -547,32 +657,56 @@ func get_next_tune_id(db) -> int:
 		return result[0]["max(id)"] + 1
 
 func get_midi_sequence(abc: String, filename: String, s: int, t: int, m: int, c: int) -> String:
+
 	var tunepal = Tunepal.new()
-	var user_dir = ProjectSettings.globalize_path("user://")
-	print("User directory: " + user_dir)
-
-	var abc_file_path = user_dir + "temp.abc"
-	var midi_file_path = user_dir + "temp.mid"
-
-	print("Using ABC path: " + abc_file_path)
-	print("Using MIDI path: " + midi_file_path)
-	# Create MIDI file
-	tunepal.create_midi_file(abc, abc_file_path, midi_file_path, s, t, m, c)
-	
-	# Read MIDI file into memory
-	if not FileAccess.file_exists(midi_file_path):
-		print("MIDI file not found, returning placeholder")
+	if tunepal == null:
+		push_error("Failed to create Tunepal instance")
 		return ""
 		
+	var user_dir = ProjectSettings.globalize_path("user://")
+	var abc_file_path = user_dir + "temp.abc"
+	var midi_file_path = user_dir + "temp.mid"
+	
+	# Create ABC file first to ensure correct input to MIDI converter
+	var abc_file = FileAccess.open(abc_file_path, FileAccess.WRITE)
+	print("opened and written the abc file")
+	if abc_file == null:
+		print("failed to create abc file")
+		push_error("Failed to create ABC file: " + abc_file_path)
+		return ""
+	abc_file.store_string(abc)
+	abc_file.close()
+	
+	# Try to create MIDI file with better error handling
+	print("Creating MIDI file...")
+	tunepal.create_midi_file(abc, abc_file_path, midi_file_path, s, t, m, c)
+	print("MIDI file created")
+	#print("MIDI creation result: " + str(midi_result))
+	
+	# Check if MIDI file exists
+	if not FileAccess.file_exists(midi_file_path):
+		print("No midi file created")
+		push_error("MIDI file not created: " + midi_file_path)
+		return ""
+	
+	# Rest of the function as before...
+		
 	var midi_file = FileAccess.open(midi_file_path, FileAccess.READ)
+	print("opened the midi file")
 	if midi_file == null:
+		print("didn't open the midi file")
 		push_error("Failed to open MIDI file: " + midi_file_path)
 		return ""
 		
 	# Extract notes directly
 	var midi_data = midi_file.get_buffer(midi_file.get_length())
+	# print("the midi data: ", midi_data)
 	midi_file.close()
-	return tunepal.extract_notes_from_midi(midi_data)
+	print("closed the midi file")
+	var midi_notes = tunepal.extract_notes_from_midi(midi_data)
+	# print("the midi notes: ", midi_notes)
+	return midi_notes
+	
 #########
 
 func generate_parsons_code(midi_sequence: String) -> String:
@@ -605,3 +739,23 @@ func generate_parsons_code(midi_sequence: String) -> String:
 			parsons += "S"
 			
 	return parsons
+	
+func verify_db_schema():
+	var db = SQLite.new()
+	db.path = clientside.prefix + "://assets/data/tunepal.db"
+	db.open_db()
+	
+	print("=== Checking Database Schema ===")
+	db.query("PRAGMA table_info(tuneindex)")
+	print("tuneindex columns:", db.query_result)
+	
+	db.query("PRAGMA table_info(tunekeys)")
+	print("tunekeys columns:", db.query_result)
+	
+	db.query("PRAGMA table_info(source)")
+	print("source columns:", db.query_result)
+	
+	db.query("PRAGMA foreign_key_list(tunekeys)")
+	print("tunekeys foreign keys:", db.query_result)
+	
+	db.close_db()
