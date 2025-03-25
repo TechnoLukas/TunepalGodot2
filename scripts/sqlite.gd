@@ -54,6 +54,7 @@ const session_base_url = "https://thesession.org/tunes/" # x/abc"
 func _ready():
 	var path = clientside.prefix + "://assets/data/tunepal.db"
 	verify_db_schema()
+	# verify_db_writeable()
 	tunes = load_db(path)
 	open_json(clientside.prefix + default_user_tunes_path)
 
@@ -244,6 +245,31 @@ func open_json(path: String) -> void:
 	file.close()
 
 
+func check_inserted_tunes():
+	print("Verifying database contents immediately after insertion...")
+	var db = SQLite.new()
+	db.path = clientside.prefix + "://assets/data/tunepal.db"
+	db.open_db()
+	
+	# Check if any tunes exist
+	db.query("SELECT COUNT(*) as count FROM tuneindex")
+	var count = 0
+	if db.query_result.size() > 0:
+		count = db.query_result[0]["count"]
+	print("Tune count in tuneindex immediately after insertion: ", count)
+	
+	if count > 0:
+		# Get the first few tunes to verify data
+		db.query("SELECT id, title, x, key_sig FROM tuneindex LIMIT 3")
+		print("Sample tunes: ", db.query_result)
+	
+	# Check tunekeys as well
+	db.query("SELECT COUNT(*) as count FROM tunekeys")
+	if db.query_result.size() > 0:
+		print("Tune count in tunekeys: ", db.query_result[0]["count"])
+	
+	db.close_db()
+
 # func build_session_database():
 
 # 	import_all_files()
@@ -304,8 +330,10 @@ func import_source_debug() -> int:
 		tune["source_file"] = target_file
 		add_tune_to_db(tune, source_id)
 		tune_count += 1
+		print ("Added tune: ", tune["title"])
 	
 	print("Added " + str(tune_count) + " tunes from file " + target_file)
+	check_inserted_tunes()
 	return tune_count
 
 func import_files_from_directory(base_directory: String):
@@ -330,8 +358,8 @@ func import_files_from_directory(base_directory: String):
 			var source_id = folder.to_int()
 			var source_path = base_directory + folder + "/"
 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
-			var count = import_source_directory(source_path, source_id)
-			# var count = import_source_debug() # just the one file to debug
+			# var count = import_source_directory(source_path, source_id)
+			var count = import_source_debug() # just the one file to debug
 			total_tune_count += count
 			
 		folder = dir.get_next()
@@ -430,8 +458,7 @@ func parse_abc_content(content):
 		if block.strip_edges() == "":
 			continue
 			
-		var tune = {
-			# Initialize with defaults to avoid "key not found" errors
+		var tune = {			
 			"x": "1",            # Default index if none specified
 			"title": "Untitled", # Default title
 			"type": "reel",      # Default tune type
@@ -533,15 +560,21 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	if result == false:
 		push_error("Failed to open database: " + db.get_error_message())
 		return false
-	
+		
+		# Create source if needed
+	db.query_with_bindings("SELECT id FROM source WHERE id = ?", [source_id])
+	if db.query_result.size() == 0:
+		print("Creating missing source with ID: ", source_id)
+		db.query_with_bindings(
+			"INSERT INTO source (id, source, shortName, url) VALUES (?, ?, ?, ?)", 
+			[source_id, "Source " + str(source_id), "S" + str(source_id), "https://example.com/source/" + str(source_id)]
+		)
+
 	# FIND THE next tune id
 	db.query("SELECT MAX(id) as max_id FROM tuneindex;")
 	var next_id = 1
 	if db.query_result.size() > 0 and db.query_result[0]["max_id"] != null:
 		next_id = db.query_result[0]["max_id"] + 1
-	print("HERE")
-	# format the tune identifier
-
 	var tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
 
 	var abc_notation = tune["abc"]
@@ -571,11 +604,11 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var parsons_code = generate_parsons_code(midi_sequence)
 	# print("parsons code", parsons_code)
 	
-	var query_result = db.query("BEGIN TRANSACTION")
-	if query_result == false:
-		push_error("Failed to begin transaction: " + db.error_message)
-		db.close_db()
-		return false
+	# var query_result = db.query("BEGIN TRANSACTION")
+	# if query_result == false:
+	# 	push_error("Failed to begin transaction: " + db.error_message)
+	# 	db.close_db()
+	# 	return false
 
 	var query = """
 	INSERT OR REPLACE INTO tuneindex (
@@ -608,22 +641,36 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		tune["meter"] # time_sig
 	]
 
-	db.query_with_bindings(query, params)
-	if db.error_message != "":
-		print("Error during insertion: " + db.error_message)
-		# push_error("SQLite error: " + db.error_message)
-		db.query("ROLLBACK")
+	print("params", params)
+
+	var index_result = db.query_with_bindings(query, params)
+	if !index_result:
+		push_error("Failed to insert into tuneindex: " + db.error_message)
 		db.close_db()
 		return false
-	else:
-		print("Inserted tune index successfully")
 
-	# var midi_seq_to_store = midi_sequence
-	# if midi_sequence == "":
-	# 	midi_seq_to_store = "0"
+	# var insert_result = db.query_with_bindings(query, params)
+	# print("Insert tuneindex result code: ", insert_result)
+	# if insert_result == false:
+	# 	push_error("Failed to insert into tuneindex: " + db.error_message)
+	# 	# db.query("ROLLBACK")
+	# 	db.close_db()
+	# 	return false
+	# else:
+	# 	# Check if any rows were affected
+	# 	db.query("SELECT changes() as rows")
+	# 	var changes = db.query_result[0]["rows"]
+	# 	print("Rows affected by tuneindex insert: ", changes)
+	# 	if changes == 0:
+	# 		push_error("No rows were inserted into tuneindex!")
+	# 		# db.query("ROLLBACK")
+	# 		db.close_db()
+	# 		return false
+	# 	else:
+	# 		print("Inserted tune index successfully")
 
 	var keys_query = """
-	INSERT INTO tunekeys (
+	INSERT OR REPLACE INTO tunekeys (
 		id,
 		search_key,
 		tuneid,
@@ -641,29 +688,51 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		parsons_code, # parsons (empty placeholder)
 		midi_sequence # midi_sequence
 	]
-	
-	db.query_with_bindings(keys_query, keys_params)
-	if db.error_message != "":
-		# push_error("SQLite error: " + db.error_message)
-		print("Error during insertion: " + db.error_message)
-		db.query("ROLLBACK")
-		db.close_db()
-		return false
-	else:
-		print("Inserted tune keys successfully")
-		
+# # check for duplicate primary keys
+# 	db.query_with_bindings("SELECT id FROM tuneindex WHERE id = ?", [next_id])
+# 	if db.query_result.size() > 0:
+# 		print("WARNING: Tune ID " + str(next_id) + " already exists in tuneindex!")
+# 		# Generate a new ID
+# 		next_id = next_id + 1
+# 		print("Using new ID: " + str(next_id))
+# 		# Update the params array with the new ID
+# 		params[0] = next_id
+# 		# Update tune_identifier with the new ID
+# 		tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
+# 		params[1] = tune_identifier
 
-# Commit transaction
-	if db.query("COMMIT") == false:
-		push_error("Failed to commit transaction: " + db.error_message)
-		db.query("ROLLBACK")
+	
+	# db.query_with_bindings(keys_query, keys_params)
+	# if db.error_message:
+	# 	# push_error("SQLite error: " + db.error_message)
+	# 	print("Error during insertion: " + db.error_message)
+	# 	# db.query("ROLLBACK")
+	# 	db.close_db()
+	# 	return false
+	# else:
+	# 	print("Inserted tune keys successfully")
+	var keys_result = db.query_with_bindings(keys_query, keys_params)
+	if !keys_result:
+		push_error("Failed to insert into tunekeys: " + db.error_message)
+		# Important: since we're not using transactions, we need to clean up the earlier insert
+		db.query_with_bindings("DELETE FROM tuneindex WHERE id = ?", [next_id])
 		db.close_db()
 		return false
-	else:
-		print("Successfully committed transaction for tune ID: ", next_id)
-		
+	print("Successfully inserted tune: " + tune["title"] + " (ID: " + str(next_id) + ")")
 	db.close_db()
 	return true
+
+# # Commit transaction
+# 	if db.query("COMMIT") == false:
+# 		push_error("Failed to commit transaction: " + db.error_message)
+# 		# db.query("ROLLBACK")
+# 		db.close_db()
+# 		return false
+# 	else:
+# 		print("Successfully committed transaction for tune ID: ", next_id)
+		
+# 	db.close_db()
+# 	return true
 
 func get_next_tune_id(db) -> int:
 	db.query("select max(id) from tuneindex;")
@@ -776,3 +845,18 @@ func verify_db_schema():
 	print("tunekeys foreign keys:", db.query_result)
 	
 	db.close_db()
+
+
+# func verify_db_writeable():
+# 	var db_path = clientside.prefix + "://assets/data/tunepal.db"
+# 	print("Checking if database is writeable: ", db_path)
+# 	# Try to open the file for writing
+# 	var file = FileAccess.open(db_path, FileAccess.WRITE_READ)
+# 	if file == null:
+# 		print("ERROR: Cannot write to database file - check permissions!")
+# 		print("Error code: ", FileAccess.get_open_error())
+# 		return false
+	
+# 	file.close()
+# 	print("Database file is writeable")
+# 	return true
