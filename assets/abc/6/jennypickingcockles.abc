@@ -1,0 +1,134 @@
+X: 1
+T: Jenny Picking Cockles
+Z: JD
+S: https://thesession.org/tunes/202#setting202
+R: reel
+M: 4/4
+L: 1/8
+K: Gdor
+=fagf dc~c2|Bcde =fefa|g2=fg dc~c2|Ac=fc AG~G2|
+g2g=f dc~c2|Bcde =fefa|g2=fg dc~c2|Ac=fc AG~G2||
+dgga bgag|^fdde fdcA|dgga bgag|^fdcA AG~G2|
+dgga b2ag|^f2ga fdga|bgag ^fdeg|^fdcA AG~G2||
+
+X: 2
+T: Jenny Picking Cockles
+Z: Dr. Dow
+S: https://thesession.org/tunes/202#setting12863
+R: reel
+M: 4/4
+L: 1/8
+K: Gmix
+fagf dc~c2|Bcde f2fa|g2fg dc~c2|Acfc AGG^F|
+Gg~g2 dc~c2|Bcde f2fa|g2fg dc~c2|Acfc AGG^F||
+K: Gmaj
+Gg~g2 bgag|fd~d2 fdcA|dgga bgag|fdcA AGGB|
+dgga bgag|f2ga fdga|bgaf gbag|fdcA G2g2||
+
+X: 3
+T: Jenny Picking Cockles
+Z: Dr. Dow
+S: https://thesession.org/tunes/202#setting12864
+R: reel
+M: 4/4
+L: 1/8
+K: Gmaj
+^fagf dc~c2|Bcde f2fa|g2fg dc~c2|Acfc AGG^F|
+Gg~g2 dc~c2|Bcde f2fa|g2fg dc~c2|Acfc AGG^F||
+Gg~g2 bgag|fd~d2 fdcA|dgga bgag|fdcA AGGB|
+dgga bgag|f2ga fdga|bgaf gbag|fdcA G2g2||
+
+X: 4
+T: Jenny Picking Cockles
+Z: mutatis mutandis
+S: https://thesession.org/tunes/202#setting12865
+R: reel
+M: 4/4
+L: 1/8
+K: Cmaj
+~g2||fagf dc~c2|Bcde {a}fe{a}+A2.f2+|~g2fg dc~c2|Acfc AG~G2|
+[G,G]B~g2dc~c2|Bcde {a}fe{a}[A2.f2]|~g2fg dc~c2|Acfc AG~G2|
+[G,G]B~g2 dc~c2|Bcde {a}fe{a}[A2.f2]|~g2fg dc~c2|Acfc AG~G2|
+[G,G]B~g2 dc~c2|Bcde {a}fe{a}[A2.f2]|~g2fg dc~c2|Acfc AG~G2||
+K:G
+|:dg~g2 bgag|fd~d2 [df]d[dg][df]|[d2g2][dg][df] gbag|fdcd BG~G2|
+dg~g2bgag|~f2ga fddg|bg~a2 gfga|fdcA [G,G]B~g2:|
+
+X: 5
+T: Jenny Picking Cockles
+Z: JACKB
+S: https://thesession.org/tunes/202#setting29417
+R: reel
+M: 4/4
+L: 1/8
+K: Edor
+|:A2 dc AG G2|(3EFG AB cA A2|dedc AG G2|AGcG ED D2|
+A2 dc AG G2|(3EFG AB cA (3Bcd|ecdc AGEF|GEcG ED D2:|
+|:f3d e3d|cA A2 (3Bcd eg|f3d ed (3Bcd|eaag fdde|
+f3d e3d|cA A2 d2 (3Bcd|ecdc AGEF|GEcG ED D2:|
+
+X: 6
+T: Jenny Picking Cockles
+Z: Hugh Standen
+S: https://thesession.org/tunes/202#setting37501
+R: reel
+M: 4/4
+L: 1/8
+K: Emin
+d2 dc AG (3GGG|FGAB cA GA|d2 dc AG (3GGG|GE c EE D D2|
+d2 dc AG (3GGG|FGAB c3 d|ed (3ddd dcA G|GE c EE D D2:|
+|:f3 de fed|^c AAA ^c AAA|f3 d ed ^cd|ea aged cA|
+f3 de fed|^c AA B =c3 d|ed (3ddd dcA G|GE c EE D D2:|
+
+X: 7
+T: Jenny Picking Cockles
+Z: shanachie
+S: https://thesession.org/tunes/202#setting37509
+R: reel
+M: 4/4
+L: 1/8
+K: Dmix
+d2 dc AG G2|FGAB cAGA-|Addc AG A/B/c|AGcE EDAc|
+dcdc AGAG|FGAB c2 cd|eddc AGEF|GEcE ED D2:|
+|:f2 f/f/f efed|^cAAA cAAe|f2 fd ed^cd|eaag edde|
+fafd efed|^cAAB =c2 cd|eddc AGEF|GEcE ED D2:|
+
+X: 8
+T: Jenny Picking Cockles
+Z: Zach Burky
+S: https://thesession.org/tunes/202#setting48302
+R: reel
+M: 4/4
+L: 1/8
+K: Dmix
+|:Add^c AGEF|GEcE dEcE|Add^c AGEF|GEcE EDD2|
+Add^c AGEF|~G2AB c3d|edd^c AGEF|GEcE EDD2:|
+|:~f3d efed|^cAAB cdeg|~f3d ed^cd|eaag edde|
+~f3d efed|^cAAB ~=c3d|edd^c AGEF|GEcE EDD2:|
+
+X: 9
+T: Jenny Picking Cockles
+Z: Erik-Fiddler
+S: https://thesession.org/tunes/202#setting48712
+R: reel
+M: 4/4
+L: 1/8
+K: Gmix
+g2||fagf dccA|Bcde [f3A3] a|g/a/g fg dc ~(3c/c/c/c|Acfc AGG^F|
+Gg ~(3g/^f/g/g dccA|Bcde [f3A3] a|g/a/g fg dc ~(3c/B/c/c |Acfc AGG^F||
+[G,G]gga bgag|^fd d/d/d fdcA|dgga bgag|^fdcA BGBc|
+dgga bgag|^fd d/d/d fdga|bga^f g/a/b ag|^fdcA G2 g2||
+
+X: 10
+T: Jenny Picking Cockles
+Z: Thierry Masure
+S: https://thesession.org/tunes/202#setting48847
+R: reel
+M: 4/4
+L: 1/8
+K: Dmix
+|:Addc AGEF|GEcE dEcE|Addc AGEF|GEcE EDD2|
+Addc AGEF|GEcE dEcd|eddc AGEF|GEcE EDD2:|
+|:~f3d efed|^cAAB ^cdeg|f~d3 ed^cd|eaag edde|
+~f3d efed|^cAAB =c3d|eddc AGEF|GEcE EDD2:|
+

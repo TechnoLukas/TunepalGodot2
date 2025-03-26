@@ -294,20 +294,20 @@ func parse_abc_content(content):
 	# Normalise line endings
 	content = content.replace("\r\n", "\n")
 
-	var tune_blocks = []
+	# var tune_blocks = []
 
-	if content.find("\n\nX:") > -1:
-		# Split by X: prefix
-		tune_blocks = content.split("\n\nX:")
-	elif content.find("\n\nX:") > -1:
-		# Split by X: prefix
-		tune_blocks = content.split("\nX:")
-	else:
-		# last resort just split by x
-		tune_blocks = content.split("X:")
+	# if content.find("\n\nX:") > -1:
+	# 	# Split by X: prefix
+	# 	tune_blocks = content.split("\n\nX:")
+	# elif content.find("\n\nX:") > -1:
+	# 	# Split by X: prefix
+	# 	tune_blocks = content.split("\nX:")
+	# else:
+	# 	# last resort just split by x
+	var tune_blocks = content.split("X:")
 		
 	if tune_blocks.size() > 0:
-		if not tune_blocks[0].strip_edges().begins_with("X:") and not tune_blocks[0].strip_edges().begins_with("X:"):
+		if not tune_blocks[0].strip_edges().begins_with("X:"): ### THere is something up here, 
 			if tune_blocks[0].strip_edges() == "":
 				tune_blocks.remove_at(0)
 			else:
@@ -315,9 +315,14 @@ func parse_abc_content(content):
 		
 	print("Found %d potential tune blocks" % tune_blocks.size())
 
-	for block in tune_blocks:
+	for i in range(tune_blocks.size()):
+		var block = tune_blocks[i]
 		if block.strip_edges() == "":
 			continue
+
+		# For all blocks except the first one, we need to re-add the X: prefix that was removed during the split operation
+		if i >= 0 and not block.strip_edges().begins_with("X:"):
+			block = "X:" + block
 			
 		var tune = {			
 			"x": "1",      # Default index if none specified
@@ -349,11 +354,11 @@ func parse_abc_content(content):
 				notation_lines.append(line)
 				
 			if line.length() >= 2 and line[1] == ":":
-				var field_type = line[0]
-				var field_content = line.substr(2).strip_edges()
+				var field_type = line[0] # key
+				var field_content = line.substr(2).strip_edges() # value
 				
 				match field_type:
-					"X": # Index number
+					"X": # Index number / SETTING
 						tune["x"] = field_content  # Ensure x is always set
 					"T": # Title
 						if field_content.strip_edges() != "":
@@ -381,7 +386,7 @@ func parse_abc_content(content):
 					"Z": # Transcriber
 						tune["transcriber"] = field_content
 					"S": # Source
-						tune["source_info"] = field_content
+						tune["source_file"] = field_content
 					"N": # Notes/Annotations
 						if not "notes" in tune:
 							tune["notes"] = field_content
@@ -392,7 +397,7 @@ func parse_abc_content(content):
 				notation_lines.append(line)
 
 		# make sure we got min required info
-		if tune["title"] != "Untitled" or tune["key_sig"] != "Cmaj":
+		if tune["title"] != "Untitled": # or tune["key_sig"] != "Cmaj":
 			# construct full abc string for the notation field
 			tune["abc"] = "\n".join(header_lines + notation_lines)
 			tune["notation"] = "\n".join(notation_lines)
@@ -473,10 +478,12 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		time_sig
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 	"""
+## tunepalid as setting or is "x" the setting I think it's x
+
 	var params = [
 		next_id, # id
 		tune_identifier, # tunepalid
-		tune["source_file"], # file_name
+		tune["source_file"], # file_name / url
 		tune["x"], # x
 		tune["abc"], # notation
 		tune["title"], # title
@@ -490,11 +497,25 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	print("params", params)
 
-	var index_result = db.query_with_bindings(query, params)
-	if !index_result:
-		push_error("Failed to insert into tuneindex: " + db.error_message)
+## checks for duplicates
+	var is_duplicate = false
+	var duplicate_query = """
+	SELECT COUNT(*) as count FROM tuneindex WHERE file_name = ? AND x = ?;
+	"""
+	var duplicate_params = [tune["source_file"], tune["x"]] ## for now using this as the unique identifier
+	db.query_with_bindings(duplicate_query, duplicate_params)
+	var db_result = db.query_result
+	if db_result.size() > 0 and db_result[0]["count"] > 0:
+		print("Duplicate tune found: " + tune["title"])
 		db.close_db()
+		is_duplicate = true
 		return false
+	else:
+		var index_result = db.query_with_bindings(query, params)
+		if !index_result:
+			push_error("Failed to insert into tuneindex: " + db.error_message)
+			db.close_db()
+			return false
 
 	var keys_query = """
 	INSERT OR REPLACE INTO tunekeys (
@@ -509,14 +530,16 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 
 	var keys_params = [
 		next_id, # id (primary key)
-		stripped_abc, # tune["title"].to_lower(),  # search_key
+		stripped_abc, # tune["title"].to_lower() # search_key
 		next_id, # tuneid (references tuneindex.id)
 		tune["source_file"], # midi_file_name
 		parsons_code, # parsons (empty placeholder)
 		midi_sequence # midi_sequence
 	]
-
-	var keys_result = db.query_with_bindings(keys_query, keys_params)
+	var keys_result = false
+	if !is_duplicate:
+		db.query_with_bindings(keys_query, keys_params)
+		keys_result = true
 	if !keys_result:
 		push_error("Failed to insert into tunekeys: " + db.error_message)
 		# Important: since we're not using transactions, we need to clean up the earlier insert
@@ -526,6 +549,31 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	print("Successfully inserted tune: " + tune["title"] + " (ID: " + str(next_id) + ")")
 	db.close_db()
 	return true
+
+
+# 	### Skip duplicate tunes
+# func check_duplicate_tune(tune: Dictionary) -> bool:
+# 	var db = SQLite.new()
+# 	db.path = clientside.prefix + "://assets/data/tunepal.db"
+# 	var result = db.open_db()
+
+# 	if result == false:
+# 		push_error("Failed to open database: " + db.get_error_message())
+# 		return false
+
+# 	var duplicate_query = """
+# 	SELECT COUNT(*) as count FROM tuneindex WHERE title = ? AND key_sig = ?;
+# 	"""
+# 	var duplicate_params = [tune["title"], tune["key_sig"]]
+# 	db.query_with_bindings(duplicate_query, duplicate_params)
+# 	var db_result = db.query_result
+# 	if db_result.size() > 0 and db_result[0]["count"] > 0:
+# 		print("Duplicate tune found: " + tune["title"])
+# 		db.close_db()
+# 		return true
+
+# 	db.close_db()
+# 	return false
 
 func get_next_tune_id(db) -> int:
 	db.query("select max(id) from tuneindex;")
