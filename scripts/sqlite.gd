@@ -359,43 +359,54 @@ func parse_abc_content(content):
 				
 				match field_type:
 					"X": # Index number / SETTING
-						tune["x"] = field_content  # Ensure x is always set
+						if not header_complete:
+							tune["x"] = field_content  # Ensure x is always set
 					"T": # Title
-						if field_content.strip_edges() != "":
-							if tune["title"] == "Untitled":
-								tune["title"] = field_content
-							else:
-								if not "alt_title" in tune:
-									tune["alt_title"] = field_content
-								elif tune["alt_title"] is String and tune["alt_title"] != "":
-									tune["alt_title"] = [tune["alt_title"], field_content]
-								elif tune["alt_title"] is Array:
-									tune["alt_title"].append(field_content)
+						if not header_complete:
+							if field_content.strip_edges() != "":
+								if tune["title"] == "Untitled":
+									tune["title"] = field_content
 								else:
-									tune["alt_title"] += " " + field_content
+									if not "alt_title" in tune:
+										tune["alt_title"] = field_content
+									elif tune["alt_title"] is String and tune["alt_title"] != "":
+										tune["alt_title"] = [tune["alt_title"], field_content]
+									elif tune["alt_title"] is Array:
+										tune["alt_title"].append(field_content)
+									else:
+										tune["alt_title"] += " " + field_content
 					"R": # Rhythm
-						tune["type"] = field_content  # Add this field directly
+						if not header_complete:
+							tune["type"] = field_content  # Add this field directly
 					"M": # Meter/Time signature
-						tune["meter"] = field_content  # Add this field directly
+						if not header_complete:
+							tune["meter"] = field_content  # Add this field directly
 					"K": # Key
-						tune["key_sig"] = field_content
+						if not header_complete:
+							tune["key_sig"] = field_content
+							header_complete = true
+						else:
+							notation_lines.append(line)
 						# K field typically marks the end
 						
 						# in cases where K doesn't mark the end, such as a key change mid-tune
 						# we need to keep processing the header fields
-						if not header_complete:
-							header_complete = true
+				
 					"L": # Default note length
-						tune["L"] = field_content
+						if not header_complete:
+							tune["L"] = field_content
 					"Z": # Transcriber
-						tune["transcriber"] = field_content
+						if not header_complete:
+							tune["transcriber"] = field_content
 					"S": # Source
-						tune["source_file"] = field_content
+						if not header_complete:
+							tune["source_file"] = field_content
 					"N": # Notes/Annotations
-						if not "notes" in tune:
-							tune["notes"] = field_content
-						else:
-							tune["notes"] += " " + field_content
+						if not header_complete:
+							if not "notes" in tune:
+								tune["notes"] = field_content
+							else:
+								tune["notes"] += " " + field_content
 
 			elif header_complete:
 				notation_lines.append(line)
