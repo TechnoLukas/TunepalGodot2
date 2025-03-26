@@ -380,7 +380,11 @@ func parse_abc_content(content):
 					"K": # Key
 						tune["key_sig"] = field_content
 						# K field typically marks the end
-						header_complete = true
+						
+						# in cases where K doesn't mark the end, such as a key change mid-tune
+						# we need to keep processing the header fields
+						if not header_complete:
+							header_complete = true
 					"L": # Default note length
 						tune["L"] = field_content
 					"Z": # Transcriber
