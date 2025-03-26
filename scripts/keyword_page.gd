@@ -13,6 +13,14 @@ func _ready() -> void:
 	update_list("")
 	var time2 = Time.get_ticks_msec()
 	print("time: ",time2-time1)
+
+	var refresh_button = Button.new()
+	refresh_button.text = "Refresh"
+	refresh_button.position = Vector2(275, 60) 
+	refresh_button.size = Vector2(68, 50)
+
+	refresh_button.pressed.connect(_on_refresh_button_pressed)
+	add_child(refresh_button)
 	
 func showpage():
 	self.visible = true
@@ -20,6 +28,11 @@ func showpage():
 func hidepage():
 	self.visible = false
 
+func _on_refresh_button_pressed():
+	sqlite.tunes = sqlite.load_db(clientside.prefix + "://assets/data/tunepal.db") #tunepal.db
+	stuff = sqlite.tunes
+	tunelist.clear_list()
+	update_list(search_line.text)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

@@ -57,14 +57,37 @@ int g_fundamental = 3;
 //    // createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
 // }
 
-void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords)
-{
-
-	const char * notation_chars = notation.ascii().get_data();
-	const char * abc_file_chars = abc_file_name.ascii().get_data();
-	const char * midi_file_chars = midi_file_name.ascii().get_data();
-	createMidiFile(notation_chars, abc_file_chars, midi_file_chars, speed, transpose, melody, chords);
-	UtilityFunctions::print(midi_file_name);
+void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords) {
+    UtilityFunctions::print("Creating MIDI file...");
+    
+    try {
+        // Make sure the notation is valid UTF-8
+        String valid_notation = notation;
+        
+        // Copy the strings to C-style strings using UTF-8 encoding explicitly
+        CharString notation_utf8 = valid_notation.utf8();
+        CharString abc_file_utf8 = abc_file_name.utf8();
+        CharString midi_file_utf8 = midi_file_name.utf8();
+        
+        const char* notation_chars = notation_utf8.get_data();
+        const char* abc_file_chars = abc_file_utf8.get_data();
+        const char* midi_file_chars = midi_file_utf8.get_data();
+        
+        UtilityFunctions::print("Calling createMidiFile with paths:");
+        UtilityFunctions::print(" - ABC file: ", abc_file_name);
+        UtilityFunctions::print(" - MIDI file: ", midi_file_name);
+        
+        // Call the external function
+        createMidiFile(notation_chars, abc_file_chars, midi_file_chars, speed, transpose, melody, chords);
+        
+        UtilityFunctions::print("createMidiFile call completed");
+    }
+    catch (const std::exception& e) {
+        UtilityFunctions::print("Exception in create_midi_file: ", e.what());
+    }
+    catch (...) {
+        UtilityFunctions::print("Unknown exception in create_midi_file");
+    }
 }
 
 godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)
@@ -516,57 +539,190 @@ void Tunepal::say_hello()
 
 godot::String Tunepal::extract_notes_from_midi(const PackedByteArray &midi_data) {
     std::vector<int> notes;
-    size_t i = 0;
     
-    // Find the first track chunk
-    while (i < midi_data.size() - 4) {
-        if (midi_data[i] == 'M' && midi_data[i+1] == 'T' && 
-            midi_data[i+2] == 'r' && midi_data[i+3] == 'k') {
-            i += 8; // Skip MTrk header and size
-            break;
-        }
-        i++;
-    }
-    
-    // Parse MIDI events
-    while (i < midi_data.size()) {
-        // Skip delta time (variable length)
-        while (i < midi_data.size() && (midi_data[i] & 0x80)) i++;
-        if (i < midi_data.size()) i++;
+    // Safer MIDI parsing with bounds checking
+    try {
+        UtilityFunctions::print("Starting MIDI note extraction");
+        size_t i = 0;
         
-        if (i >= midi_data.size()) break;
-        
-        // Check for note-on events
-        uint8_t status = midi_data[i++];
-        if ((status & 0xF0) == 0x90 && i + 1 < midi_data.size()) {
-            uint8_t note = midi_data[i++];
-            uint8_t velocity = midi_data[i++];
-            
-            if (velocity > 0) {
-                notes.push_back(note);
+        // Find the first track chunk - look for MTrk marker
+        while (i + 3 < midi_data.size()) {
+            if (midi_data[i] == 'M' && midi_data[i+1] == 'T' && 
+                midi_data[i+2] == 'r' && midi_data[i+3] == 'k') {
+                i += 8; // Skip MTrk header and chunk length
+                break;
             }
-        }
-        else if ((status & 0xF0) >= 0x80 && (status & 0xF0) <= 0xE0) {
-            // Skip other channel messages
-            i += ((status & 0xF0) == 0xC0 || (status & 0xF0) == 0xD0) ? 1 : 2;
-        }
-        else if (status == 0xFF && i < midi_data.size()) {
-            // Skip meta events
             i++;
-            if (i < midi_data.size()) {
-                uint8_t len = midi_data[i++];
-                if (i + len <= midi_data.size())
-                    i += len;
+        }
+        
+        if (i >= midi_data.size() - 3) {
+            UtilityFunctions::print("No MTrk chunk found in MIDI data");
+            return "";
+        }
+        
+        // Parse MIDI events
+        while (i < midi_data.size()) {
+            // Skip variable-length delta time
+            uint32_t delta_time = 0;
+            uint8_t b;
+            
+            do {
+                if (i >= midi_data.size()) {
+                    UtilityFunctions::print("Reached end of MIDI data while reading delta time");
+                    goto finish_extraction; // Break out of nested loops
+                }
+                b = midi_data[i++];
+                delta_time = (delta_time << 7) | (b & 0x7F);
+            } while (b & 0x80);
+            
+            // End of track?
+            if (i + 2 < midi_data.size() && 
+                midi_data[i] == 0xFF && 
+                midi_data[i+1] == 0x2F && 
+                midi_data[i+2] == 0x00) {
+                break; // End of track marker
+            }
+            
+            // Check for running status
+            uint8_t status;
+            if (midi_data[i] & 0x80) {
+                status = midi_data[i++]; // New status byte
+            } else {
+                // Use running status (last status byte)
+                if (i == 0) {
+                    UtilityFunctions::print("Missing status byte at start of track");
+                    break;
+                }
+            }
+            
+            if (i >= midi_data.size()) break;
+            
+            // Process based on message type
+            if ((status & 0xF0) == 0x90) { // Note On
+                if (i + 1 >= midi_data.size()) break;
+                
+                uint8_t note = midi_data[i++];
+                uint8_t velocity = midi_data[i++];
+                
+                if (velocity > 0) {
+                    notes.push_back(note);
+                }
+            }
+            else if ((status & 0xF0) == 0x80) { // Note Off
+                i += 2; // Skip note and velocity
+            }
+            else if ((status & 0xF0) == 0xA0) { // Aftertouch
+                i += 2; // Skip note and pressure
+            }
+            else if ((status & 0xF0) == 0xB0) { // Controller
+                i += 2; // Skip controller number and value
+            }
+            else if ((status & 0xF0) == 0xC0) { // Program Change
+                i += 1; // Skip program number
+            }
+            else if ((status & 0xF0) == 0xD0) { // Channel Pressure
+                i += 1; // Skip pressure value
+            }
+            else if ((status & 0xF0) == 0xE0) { // Pitch Bend
+                i += 2; // Skip LSB and MSB
+            }
+            else if (status == 0xFF) { // Meta Event
+                if (i >= midi_data.size()) break;
+                
+                uint8_t type = midi_data[i++];
+                
+                if (i >= midi_data.size()) break;
+                
+                uint8_t length = midi_data[i++];
+                
+                if (i + length > midi_data.size()) {
+                    UtilityFunctions::print("Meta event runs past end of data");
+                    break;
+                }
+                
+                i += length; // Skip meta data
+            }
+            else {
+                UtilityFunctions::print("Unknown MIDI status byte: ", status);
+                break; // Unknown status, stop parsing
             }
         }
     }
+    catch (const std::exception& e) {
+        UtilityFunctions::print("Exception in MIDI parsing: ", e.what());
+    }
+    catch (...) {
+        UtilityFunctions::print("Unknown exception in MIDI parsing");
+    }
     
-    // Convert to comma-separated string
+finish_extraction:
+    // Convert notes vector to comma-separated string
     String result;
+    UtilityFunctions::print("Extracted ", notes.size(), " notes from MIDI");
+    
     for (size_t j = 0; j < notes.size(); j++) {
         result += String::num_int64(notes[j]);
-        if (j < notes.size() - 1) result += ",";
+        if (j < notes.size() - 1) {
+            result += ",";
+        }
     }
     
     return result;
 }
+
+// godot::String Tunepal::extract_notes_from_midi(const PackedByteArray &midi_data) {
+//     std::vector<int> notes;
+//     size_t i = 0;
+    
+//     // Find the first track chunk
+//     while (i < midi_data.size() - 4) {
+//         if (midi_data[i] == 'M' && midi_data[i+1] == 'T' && 
+//             midi_data[i+2] == 'r' && midi_data[i+3] == 'k') {
+//             i += 8; // Skip MTrk header and size
+//             break;
+//         }
+//         i++;
+//     }
+    
+//     // Parse MIDI events
+//     while (i < midi_data.size()) {
+//         // Skip delta time (variable length)
+//         while (i < midi_data.size() && (midi_data[i] & 0x80)) i++;
+//         if (i < midi_data.size()) i++;
+        
+//         if (i >= midi_data.size()) break;
+        
+//         // Check for note-on events
+//         uint8_t status = midi_data[i++];
+//         if ((status & 0xF0) == 0x90 && i + 1 < midi_data.size()) {
+//             uint8_t note = midi_data[i++];
+//             uint8_t velocity = midi_data[i++];
+            
+//             if (velocity > 0) {
+//                 notes.push_back(note);
+//             }
+//         }
+//         else if ((status & 0xF0) >= 0x80 && (status & 0xF0) <= 0xE0) {
+//             // Skip other channel messages
+//             i += ((status & 0xF0) == 0xC0 || (status & 0xF0) == 0xD0) ? 1 : 2;
+//         }
+//         else if (status == 0xFF && i < midi_data.size()) {
+//             // Skip meta events
+//             i++;
+//             if (i < midi_data.size()) {
+//                 uint8_t len = midi_data[i++];
+//                 if (i + len <= midi_data.size())
+//                     i += len;
+//             }
+//         }
+//     }
+    
+//     // Convert to comma-separated string
+//     String result;
+//     for (size_t j = 0; j < notes.size(); j++) {
+//         result += String::num_int64(notes[j]);
+//         if (j < notes.size() - 1) result += ",";
+//     }
+    
+//     return result;
+// }
