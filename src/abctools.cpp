@@ -341,8 +341,10 @@ godot::String ABCTools::ensure_valid_utf8(const godot::String &input) {
 godot::String ABCTools::strip_all(const godot::String &key) {
     flag = true;
     
+    int tune_start = skip_headers(key);
+    godot::String tune_body = key.substr(tune_start);
     // Create a copy to work with
-    godot::String result = ensure_valid_utf8(key);;
+    godot::String result = ensure_valid_utf8(tune_body);;
     
     // Apply all transformations in sequence
     result = strip_comments(result);
