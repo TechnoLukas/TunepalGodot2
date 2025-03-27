@@ -258,6 +258,7 @@ func import_files_from_directory(base_directory: String): ### will change this t
 
 	var total_tune_count = 0
 	var has_numbered_folders = false
+	var used_source_ids = [] # track source ids already used
 
 	dir.list_dir_begin()
 	var folder = dir.get_next()
@@ -266,19 +267,32 @@ func import_files_from_directory(base_directory: String): ### will change this t
 		if dir.current_is_dir() and folder.is_valid_int():
 			has_numbered_folders = true
 			var source_id = folder.to_int()
+			used_source_ids.append(source_id) # rack the id numbers
 			var source_path = base_directory + folder + "/"
 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
 			var count = import_source_directory(source_path, source_id)
 			# var count = import_source_debug() # just the one file to debug
 			total_tune_count += count
-		elif dir.current_is_dir() and !folder.is_valid_int():
-			# find the greatest numbered folder
-			var source_id = find_next_source_id(base_directory)
-			var source_path = base_directory + folder + "/"
-			print("Importing from source ID " + str(source_id) + " at path " + source_path)
+			
+		folder = dir.get_next()
+	dir.list_dir_end()
+
+	# sort used ids for gap yah finding
+	used_source_ids.sort()
+
+	# 2nd pass
+	dir.list_dir_begin()
+	folder = dir.get_next()
+
+	while folder != "":
+		if dir.current_is_dir() and !folder.is_valid_int():
+			var source_id = find_next_available_id(used_source_ids)
+			used_source_ids.append(source_id)
+			# var count = import_source_directory(source_path, source_id)
+			var source_path = base_directory + folder + "/"	
+			print("Importing from non-numeric folder '" + folder + "' with source ID " + str(source_id) + " at path " + source_path)
 			var count = import_source_directory(source_path, source_id)
 			total_tune_count += count
-			
 		folder = dir.get_next()
 	dir.list_dir_end()
 
@@ -289,6 +303,17 @@ func import_files_from_directory(base_directory: String): ### will change this t
 	
 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
 	return true
+
+# HELper to find next available id - taking into account used ids
+func find_next_available_id(used_ids: Array) -> int:
+	if used_ids.size() == 0:
+		return 1
+
+	for i in range(1, used_ids[-1] + 1):
+		if i not in used_ids:
+			return i
+
+	return used_ids[-1] + 1
 
 #### helper function to find the next available source id
 func find_next_source_id(base_directory: String) -> int:
