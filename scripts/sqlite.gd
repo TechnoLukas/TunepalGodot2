@@ -246,7 +246,7 @@ func import_source_debug() -> int:
 	check_inserted_tunes()
 	return tune_count
 
-func import_files_from_directory(base_directory: String):
+func import_files_from_directory(base_directory: String): ### will change this to import from all folders
 	# ensure proper separator at the end of the path
 	if not base_directory.ends_with("/") and not base_directory.ends_with("\\"):
 		base_directory += "/"
@@ -271,6 +271,13 @@ func import_files_from_directory(base_directory: String):
 			var count = import_source_directory(source_path, source_id)
 			# var count = import_source_debug() # just the one file to debug
 			total_tune_count += count
+		elif dir.current_is_dir() and !folder.is_valid_int():
+			# find the greatest numbered folder
+			var source_id = find_next_source_id(base_directory)
+			var source_path = base_directory + folder + "/"
+			print("Importing from source ID " + str(source_id) + " at path " + source_path)
+			var count = import_source_directory(source_path, source_id)
+			total_tune_count += count
 			
 		folder = dir.get_next()
 	dir.list_dir_end()
@@ -283,6 +290,37 @@ func import_files_from_directory(base_directory: String):
 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
 	return true
 
+#### helper function to find the next available source id
+func find_next_source_id(base_directory: String) -> int:
+	var numbered_folders = []
+	# list through the subdirectories to find all numbered folders
+	# and 
+	var dir = DirAccess.open(base_directory)
+	if dir:
+		dir.list_dir_begin()
+		var folder = dir.get_next()
+
+		while folder != "":
+			if dir.current_is_dir() and folder.is_valid_int():
+				numbered_folders.append(folder.to_int())
+			folder = dir.get_next()
+		dir.list_dir_end()
+
+	if numbered_folders.size() == 0:
+		return 1
+
+	numbered_folders.sort()
+	var max_id = numbered_folders[-1]
+
+		# check for gap
+	for i in range(1, max_id + 1):
+		if i not in numbered_folders:
+			return i
+
+	return max_id + 1 # if no gaps
+
+				## find next available source id
+				
 ###########
 # PARSING  the ABC FILE
 ###########
