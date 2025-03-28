@@ -776,8 +776,13 @@ func find_source_info(abc_file_contents, folder_path) -> Dictionary:
 
 	var content = abc_file_contents.get_as_text()
 	var lines = content.split("\n")
-	var in_header = true
+	
 	# go through all the lines
+	var found_url_in_header = false
+	var found_url_in_comments = false
+	var comment_url = ""
+
+	var in_header = true
 	for line in lines:
 		line = line.strip_edges()
 		#skip the empty ones
@@ -785,42 +790,41 @@ func find_source_info(abc_file_contents, folder_path) -> Dictionary:
 			continue
 
 		# stop at the first notation line - we only need the header info
-		if !line.begins_with("A:") and !line.begins_with("B:") and !line.begins_with("C:") and \
-		   !line.begins_with("D:") and !line.begins_with("F:") and !line.begins_with("G:") and \
-		   !line.begins_with("H:") and !line.begins_with("I:") and !line.begins_with("K:") and \
-		   !line.begins_with("L:") and !line.begins_with("M:") and !line.begins_with("N:") and \
-		   !line.begins_with("O:") and !line.begins_with("P:") and !line.begins_with("Q:") and \
-		   !line.begins_with("R:") and !line.begins_with("S:") and !line.begins_with("T:") and \
-		   !line.begins_with("U:") and !line.begins_with("V:") and !line.begins_with("W:") and \
-		   !line.begins_with("X:") and !line.begins_with("Z:") and !line.begins_with("%"):
-			in_header = false
-			break
+		if !in_header:
+			if !line.begins_with("A:") and !line.begins_with("B:") and !line.begins_with("C:") and \
+				!line.begins_with("D:") and !line.begins_with("F:") and !line.begins_with("G:") and \
+				!line.begins_with("H:") and !line.begins_with("I:") and !line.begins_with("K:") and \
+				!line.begins_with("L:") and !line.begins_with("M:") and !line.begins_with("N:") and \
+				!line.begins_with("O:") and !line.begins_with("P:") and !line.begins_with("Q:") and \
+				!line.begins_with("R:") and !line.begins_with("S:") and !line.begins_with("T:") and \
+				!line.begins_with("U:") and !line.begins_with("V:") and !line.begins_with("W:") and \
+				!line.begins_with("X:") and !line.begins_with("Z:") and !line.begins_with("%"):
+					in_header = false
+					break
 
-		if line.begins_with("S:"):
-			source_info["source"] = line.substr(2).strip_edges()
-		elif line.begins_with("N:"):
-			source_info["shortName"] = line.substr(2).strip_edges()
-		elif line.begins_with("U:"):
-			source_info["url"] = line.substr(2).strip_edges()
-
-			# look for urls
-		if "http://" in line or "https://" in line:
-			var url_start = -1
-			if "http://" in line:
-				url_start = line.find("http://")
-			else:
-				url_start =	line.find("https://")
-
-			var space_end = line.find(" ", url_start)
-			var bracket_end = line.find(")", url_start)
-			var url_end = line.length()
-
-			if space_end != -1:
-				url_end = space_end
-			if bracket_end != -1 and (bracket_end < space_end or space_end == -1):
-				url_end = bracket_end
-
-			source_info["url"] = line.substr(url_start, url_end - url_start)
+			if line.begins_with("S:"):
+				source_info["source"] = line.substr(2).strip_edges()
+				if "http://" in line or "https://" in line:
+					var extracted_url = extract_url_from_line(line)
+					if extracted_url != "":
+						source_info["url"] = extracted_url
+						found_url_in_header = true
+			elif line.begins_with("N:"):
+				source_info["shortName"] = line.substr(2).strip_edges()
+				# U header first choice for urls
+			elif line.begins_with("U:"):
+				source_info["url"] = line.substr(2).strip_edges()
+				found_url_in_header = true
+	# url not foudn in header, look in everywhere
+		if !found_url_in_header and (("http://" in line or "https://" in line)):
+			var extracted_url = extract_url_from_line(line)
+			if extracted_url != "":
+				comment_url = extracted_url
+				found_url_in_comments = true
+	# url elsewhere in the text but not in the header... then this is the url
+	if found_url_in_comments and !found_url_in_header:
+		source_info["url"] = comment_url
+		print("Found URL in comments: " + comment_url)
 
 	return source_info
 			
@@ -837,3 +841,20 @@ func get_folder_name_from_path(path: String) -> String:
 			return parts[i]
 	return "Unknown"
 				
+func extract_url_from_line(line: String) -> String:
+	var url_start = -1
+	if "http://" in line:
+		url_start = line.find("http://")
+	elif "https://" in line:
+		url_start = line.find("https://")
+	else:
+		return ""
+
+	var end_markers = [" ", ")", "]", ",", ";", "\t", "\"", "'"]
+	var url_end = line.length()
+	for marker in end_markers:
+		var marker_pos = line.find(marker, url_start)
+		if marker_pos != -1 and marker_pos < url_end:
+			url_end = marker_pos
+
+	return line.substr(url_start, url_end - url_start)
