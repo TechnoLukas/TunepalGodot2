@@ -76,14 +76,21 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 			var file_path = directory_path + file
 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
 			
+
 			if abc_file != null:
+				var source_info = find_source_info(abc_file, directory_path) ## hopefully this works
+				abc_file.close()
+				abc_file = FileAccess.open(file_path, FileAccess.READ)
 				var content = abc_file.get_as_text()
 				abc_file.close()
 				
 				var tunes_data = parse_abc_content(content)
 				for tune in tunes_data:
+					tune["source"] = source_info["source"]
+					tune["shortName"] = source_info["shortName"]
+					tune["url"] = source_info["url"] 
 					tune["source_file"] = file
-					add_tune_to_db(tune, source_id)
+					add_tune_to_db(tune, source_id, source_info) # add_tune_to_db(tune, source_id)
 					tune_count += 1
 			else:
 				push_error("Failed to open file: " + file_path)
@@ -170,30 +177,30 @@ func open_json(path: String) -> void:
 	file.close()
 
 
-func check_inserted_tunes():
-	print("Verifying database contents immediately after insertion...")
-	var db = SQLite.new()
-	db.path = clientside.prefix + "://assets/data/tunepal.db"
-	db.open_db()
+# func check_inserted_tunes():
+# 	print("Verifying database contents immediately after insertion...")
+# 	var db = SQLite.new()
+# 	db.path = clientside.prefix + "://assets/data/tunepal.db"
+# 	db.open_db()
 	
-	# Check if any tunes exist
-	db.query("SELECT COUNT(*) as count FROM tuneindex")
-	var count = 0
-	if db.query_result.size() > 0:
-		count = db.query_result[0]["count"]
-	print("Tune count in tuneindex immediately after insertion: ", count)
+# 	# Check if any tunes exist
+# 	db.query("SELECT COUNT(*) as count FROM tuneindex")
+# 	var count = 0
+# 	if db.query_result.size() > 0:
+# 		count = db.query_result[0]["count"]
+# 	print("Tune count in tuneindex immediately after insertion: ", count)
 	
-	if count > 0:
-		# Get the first few tunes to verify data
-		db.query("SELECT id, title, x, key_sig FROM tuneindex LIMIT 3")
-		print("Sample tunes: ", db.query_result)
+# 	if count > 0:
+# 		# Get the first few tunes to verify data
+# 		db.query("SELECT id, title, x, key_sig FROM tuneindex LIMIT 3")
+# 		print("Sample tunes: ", db.query_result)
 	
-	# Check tunekeys as well
-	db.query("SELECT COUNT(*) as count FROM tunekeys")
-	if db.query_result.size() > 0:
-		print("Tune count in tunekeys: ", db.query_result[0]["count"])
+# 	# Check tunekeys as well
+# 	db.query("SELECT COUNT(*) as count FROM tunekeys")
+# 	if db.query_result.size() > 0:
+# 		print("Tune count in tunekeys: ", db.query_result[0]["count"])
 	
-	db.close_db()
+# 	db.close_db()
 
 func _on_build_db_button_pressed():
 	show_directory_select_dialog()
@@ -217,34 +224,34 @@ func _on_directory_selected(path: String):
 	print("Selected Directory: ", path)
 	import_files_from_directory(path)
 
-func import_source_debug() -> int:
-	var source_id = 1  # or change as needed
-	var directory_path = "C:/dev/final-project/tunepal-local-3/TunepalGodot2/assets/abc/"  # adjust if needed
-	var target_file = "stickacrossthehob.abc"
-	var file_path = directory_path + target_file
-	print("Processing single file: " + target_file + " (source ID: " + str(source_id) + ")")
+# func import_source_debug() -> int:
+# 	var source_id = 1  # or change as needed
+# 	var directory_path = "C:/dev/final-project/tunepal-local-3/TunepalGodot2/assets/abc/"  # adjust if needed
+# 	var target_file = "stickacrossthehob.abc"
+# 	var file_path = directory_path + target_file
+# 	print("Processing single file: " + target_file + " (source ID: " + str(source_id) + ")")
 	
-	var abc_file = FileAccess.open(file_path, FileAccess.READ)
-	if abc_file == null:
-		push_error("Failed to open file: " + file_path)
-		return 0
-	var content = abc_file.get_as_text()
-	abc_file.close()
+# 	var abc_file = FileAccess.open(file_path, FileAccess.READ)
+# 	if abc_file == null:
+# 		push_error("Failed to open file: " + file_path)
+# 		return 0
+# 	var content = abc_file.get_as_text()
+# 	abc_file.close()
 	
-	var tunes_data = parse_abc_content(content)
-	# print("Parsed tunes data: ", tunes_data)
+# 	var tunes_data = parse_abc_content(content)
+# 	# print("Parsed tunes data: ", tunes_data)
 	
-	var tune_count = 0
-	for tune in tunes_data:
-		# print("Processing tune: ", tune)
-		tune["source_file"] = target_file
-		add_tune_to_db(tune, source_id)
-		tune_count += 1
-		print ("Added tune: ", tune["title"])
+# 	var tune_count = 0
+# 	for tune in tunes_data:
+# 		# print("Processing tune: ", tune)
+# 		tune["source_file"] = target_file
+# 		add_tune_to_db(tune, source_id)
+# 		tune_count += 1
+# 		print ("Added tune: ", tune["title"])
 	
-	print("Added " + str(tune_count) + " tunes from file " + target_file)
-	check_inserted_tunes()
-	return tune_count
+# 	print("Added " + str(tune_count) + " tunes from file " + target_file)
+# 	# check_inserted_tunes()
+# 	return tune_count
 
 func import_files_from_directory(base_directory: String): ### will change this to import from all folders
 	# ensure proper separator at the end of the path
@@ -492,7 +499,7 @@ func parse_abc_content(content):
 							
 ##### ADD A TUNE TO THE DATABASE: INDEXING ABC FILES ####
 
-func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
+func add_tune_to_db(tune: Dictionary, source_id: int, source_info: Dictionary) -> bool: # func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var db = SQLite.new()
 	var tools = ABCTools.new()
 	db.path = clientside.prefix + "://assets/data/tunepal.db"
@@ -504,11 +511,14 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 		
 		# Create source if needed
 	db.query_with_bindings("SELECT id FROM source WHERE id = ?", [source_id])
-	if db.query_result.size() == 0:
+	var num_source_ids = db.query_result.size()
+	# db.query_with_bindings("SELECT id FROM source WHERE source = ?", [source_info["source"]])
+	# var num_source_names = db.query_result.size()
+	if num_source_ids == 0:
 		print("Creating missing source with ID: ", source_id)
 		db.query_with_bindings(
-			"INSERT INTO source (id, source, shortName, url) VALUES (?, ?, ?, ?)", 
-			[source_id, "Source " + str(source_id), "S" + str(source_id), "https://example.com/source/" + str(source_id)]
+			"INSERT INTO source (id, source, extra, url, shortName) VALUES (?, ?, ?, ?, ?)", 
+			[source_id, source_info["source"], "",  source_info["url"], source_info["shortName"]]
 		)
 
 	# FIND THE next tune id
@@ -521,9 +531,9 @@ func add_tune_to_db(tune: Dictionary, source_id: int) -> bool:
 	var abc_notation = tune["abc"]
 	var abc_file_name = tune["source_file"]
 	
-	var just_tune = tools.fix_notation_for_tunepal(abc_notation)
+	var just_tune = ABCTools.fix_notation_for_tunepal(abc_notation)
 	# print("what about here?")
-	var stripped_abc = tools.strip_all(just_tune)
+	var stripped_abc = ABCTools.strip_all(just_tune)
 
 
 ## Skips tunes that are ridiculously long to prevent crashing
@@ -744,4 +754,86 @@ func generate_parsons_code(midi_sequence: String) -> String:
 			parsons += "S"
 			
 	return parsons
+	## scan a file contents and assemble a dictionary of source info from a source file
+func find_source_info(abc_file_contents, folder_path) -> Dictionary:
+	var source_info = {
+		"source": "Unknown",
+		"shortName": "Unknown",
+		"url": "https://example.com"
+	}
 	
+	if abc_file_contents == null:
+		return source_info
+	
+	var folder_name = get_folder_name_from_path(folder_path)
+	print("Folder name: " + folder_name)
+	if folder_name.is_valid_int():
+		source_info["source"] = "Source " + folder_name
+		source_info["shortName"] = "S" + folder_name
+	else:
+		source_info["source"] = folder_name
+		source_info["shortName"] = folder_name
+
+	var content = abc_file_contents.get_as_text()
+	var lines = content.split("\n")
+	var in_header = true
+	# go through all the lines
+	for line in lines:
+		line = line.strip_edges()
+		#skip the empty ones
+		if line.is_empty():
+			continue
+
+		# stop at the first notation line - we only need the header info
+		if !line.begins_with("A:") and !line.begins_with("B:") and !line.begins_with("C:") and \
+		   !line.begins_with("D:") and !line.begins_with("F:") and !line.begins_with("G:") and \
+		   !line.begins_with("H:") and !line.begins_with("I:") and !line.begins_with("K:") and \
+		   !line.begins_with("L:") and !line.begins_with("M:") and !line.begins_with("N:") and \
+		   !line.begins_with("O:") and !line.begins_with("P:") and !line.begins_with("Q:") and \
+		   !line.begins_with("R:") and !line.begins_with("S:") and !line.begins_with("T:") and \
+		   !line.begins_with("U:") and !line.begins_with("V:") and !line.begins_with("W:") and \
+		   !line.begins_with("X:") and !line.begins_with("Z:") and !line.begins_with("%"):
+			in_header = false
+			break
+
+		if line.begins_with("S:"):
+			source_info["source"] = line.substr(2).strip_edges()
+		elif line.begins_with("N:"):
+			source_info["shortName"] = line.substr(2).strip_edges()
+		elif line.begins_with("U:"):
+			source_info["url"] = line.substr(2).strip_edges()
+
+			# look for urls
+		if "http://" in line or "https://" in line:
+			var url_start = -1
+			if "http://" in line:
+				url_start = line.find("http://")
+			else:
+				url_start =	line.find("https://")
+
+			var space_end = line.find(" ", url_start)
+			var bracket_end = line.find(")", url_start)
+			var url_end = line.length()
+
+			if space_end != -1:
+				url_end = space_end
+			if bracket_end != -1 and (bracket_end < space_end or space_end == -1):
+				url_end = bracket_end
+
+			source_info["url"] = line.substr(url_start, url_end - url_start)
+
+	return source_info
+			
+func get_folder_name_from_path(path: String) -> String:
+	path = path.replace("\\", "/")
+
+	if path.ends_with("/"):
+		path = path.substr(0, path.length() - 1)
+
+	var parts = path.split("/")
+
+	for i in range(parts.size() - 1, -1, -1):
+		if parts[i] != "":
+			return parts[i]
+	return "Unknown"
+				
