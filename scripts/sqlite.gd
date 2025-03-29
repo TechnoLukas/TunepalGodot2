@@ -439,8 +439,8 @@ func parse_abc_content(content):
 						if line.strip_edges() == "":
 							continue
 
-				if line.strip_edges() != "":
-					notation_lines.append(line)
+				# if line.strip_edges() != "":
+				# 	notation_lines.append(line)
 				
 			if line.length() >= 2 and line[1] == ":":
 				var field_type = line[0] # key
@@ -474,8 +474,8 @@ func parse_abc_content(content):
 						if not header_complete:
 							tune["key_sig"] = field_content
 							header_complete = true
-						else:
-							notation_lines.append(line)
+						# else:
+						# 	notation_lines.append(line)
 						# K field typically marks the end
 						
 						# in cases where K doesn't mark the end, such as a key change mid-tune
@@ -501,7 +501,7 @@ func parse_abc_content(content):
 				# Fix double equals in tempo
 					field_content = field_content.replace("==", "=")
 
-			elif header_complete:
+			if header_complete:
 				notation_lines.append(line)
 				
 
