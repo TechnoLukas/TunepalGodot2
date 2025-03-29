@@ -51,10 +51,50 @@ var accented_characters = {
 # const THESESSION_URL = "https://thesession.org/tunes/" # "https://raw.githubusercontent.com/adactio/TheSession-data/refs/heads/main/json/tunes.json"
 const session_base_url = "https://thesession.org/tunes/" # x/abc"
 
+const create_query = """
+	CREATE TABLE IF NOT EXISTS tuneindex (
+		id INTEGER NOT NULL PRIMARY KEY,
+		tunepalid VARCHAR(500),
+		file_name VARCHAR(255),
+		x INTEGER,
+		notation VARCHAR(10240),
+		title VARCHAR(500),
+		alt_title VARCHAR(500),
+		source INTEGER NOT NULL,
+		tune_type VARCHAR(50),
+		key_sig VARCHAR(20),
+		downloaded INTEGER,
+		time_sig VARCHAR(255),
+		FOREIGN KEY (source) REFERENCES source(id)
+	);
+"""
+
+const create_keys_query = """
+	CREATE TABLE IF NOT EXISTS tunekeys (
+		id INTEGER PRIMARY KEY,
+		search_key TEXT,
+		tuneid INTEGER,
+		midi_file_name TEXT,
+		parsons TEXT,
+		midi_sequence TEXT,
+		FOREIGN KEY (tuneid) REFERENCES tuneindex(id)
+	);
+"""
+const create_source_query = """
+	CREATE TABLE IF NOT EXISTS source (
+		id INTEGER PRIMARY KEY,
+		source VARCHAR(100),
+		extra VARCHAR(1000),
+		url VARCHAR(1024),
+		shortName VARCHAR(1024)
+	);
+"""
+
 func _ready():
 	var path = clientside.prefix + "://assets/data/tunepal.db"
 	# verify_db_writeable()
 	tunes = load_db(path)
+
 	open_json(clientside.prefix + default_user_tunes_path)
 
 func load_db(path):
@@ -62,6 +102,9 @@ func load_db(path):
 	var db = SQLite.new()
 	db.path = path
 	db.open_db()
+	db.query(create_query)
+	db.query(create_keys_query)
+	db.query(create_source_query)
 	db.read_only = true
 
 	db.query("SELECT COUNT(*) as count FROM tuneindex;")
