@@ -264,15 +264,16 @@ func import_files_from_directory(base_directory: String): ### will change this t
 		return false
 
 	var total_tune_count = 0
-	var has_numbered_folders = false
+	# var has_numbered_folders = false
 	var used_source_ids = [] # track source ids already used
+	# var has_folders = false
 
 	dir.list_dir_begin()
 	var folder = dir.get_next()
-
+	# First round, index the numbered folders
 	while folder != "":
 		if dir.current_is_dir() and folder.is_valid_int():
-			has_numbered_folders = true
+			# has_numbered_folders = true
 			var source_id = folder.to_int()
 			used_source_ids.append(source_id) # rack the id numbers
 			var source_path = base_directory + folder + "/"
@@ -287,7 +288,7 @@ func import_files_from_directory(base_directory: String): ### will change this t
 	# sort used ids for gap yah finding
 	used_source_ids.sort()
 
-	# 2nd pass
+	# 2nd pass index the folders that AREN't numbered
 	dir.list_dir_begin()
 	folder = dir.get_next()
 
@@ -303,10 +304,10 @@ func import_files_from_directory(base_directory: String): ### will change this t
 		folder = dir.get_next()
 	dir.list_dir_end()
 
-	# if no numbered folders found, import directly from the base directory with default source ID 1
-	if not has_numbered_folders:
-		var default_count = import_source_directory(base_directory, 1)
-		total_tune_count += default_count
+	# last but not least if no numbered folders found, import directly from the base directory with default source ID 1
+	var base_source_id = find_next_available_id(used_source_ids)
+	var default_count = import_source_directory(base_directory, base_source_id) # next available id
+	total_tune_count += default_count
 	
 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
 	return true
