@@ -71,7 +71,7 @@ func import_source_directory(directory_path: String, source_id: int) -> int:
 	
 
 	while file != "":
-		if file.ends_with(".abc"):
+		if file.ends_with(".abc") or file.ends_with(".rtf"): ## include rtfs
 			print("Processing " + file + " (source ID: " + str(source_id) + ")")
 			var file_path = directory_path + file
 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
@@ -363,7 +363,9 @@ func parse_abc_content(content):
 
 	# Normalise line endings
 	content = content.replace("\r\n", "\n")
-
+	content = content.replace("\\\n", "\n") # Remove on end of line \ (causes problems in .rtf files)
+	content = content.replace("\\\\\n", "\n") # Remove on end of line \ (causes problems in .rtf files)
+	content = content.replace("]\n", "\n") # Remove on end of line ] (causes problems in .rtf files)
 	# var tune_blocks = []
 
 	# if content.find("\n\nX:") > -1:
@@ -415,13 +417,30 @@ func parse_abc_content(content):
 
 		for line in lines:
 			line = line.strip_edges()
-			if line == "":
+			if line.begins_with("%%%"):
+				line.substr(3).strip_edges()
 				continue
 
+			if line.begins_with("\"") and line.ends_with("\""):
+				# delete this line
+				line = "\n"
+				continue
+				
 			if not header_complete:
 				header_lines.append(line)
 			else:
-				notation_lines.append(line)
+				# in the notation section
+				# Check for quotation mark
+				if line.begins_with("\""):
+					var close_quote = line.find("\"", 1)
+					if close_quote != -1:
+						line = line.substr(close_quote + 1).strip_edges()
+					
+						if line.strip_edges() == "":
+							continue
+
+				if line.strip_edges() != "":
+					notation_lines.append(line)
 				
 			if line.length() >= 2 and line[1] == ":":
 				var field_type = line[0] # key
@@ -478,8 +497,13 @@ func parse_abc_content(content):
 							else:
 								tune["notes"] += " " + field_content
 
+				if field_type == "Q" and "==" in field_content: ## isabella burke made me put this here
+				# Fix double equals in tempo
+					field_content = field_content.replace("==", "=")
+
 			elif header_complete:
 				notation_lines.append(line)
+				
 
 		# make sure we got min required info
 		if tune["title"] != "Untitled": # or tune["key_sig"] != "Cmaj":
@@ -528,7 +552,7 @@ func add_tune_to_db(tune: Dictionary, source_id: int, source_info: Dictionary) -
 		next_id = db.query_result[0]["max_id"] + 1
 	var tune_identifier = str(next_id) + "-" + tune["source_file"] + "-" + str(source_id) + "-" + tune["title"].replace(" ", "~")
 
-	var abc_notation = tune["abc"]
+	var abc_notation = tune["notation"] # cjanged from abc
 	var abc_file_name = tune["source_file"]
 	
 	var just_tune = ABCTools.fix_notation_for_tunepal(abc_notation)
@@ -722,7 +746,7 @@ func get_midi_sequence(abc: String, filename: String, s: int, t: int, m: int, c:
 	# print("the midi notes: ", midi_notes)
 	return midi_notes
 	
-#########
+######### parsons code = the movement of the melody needed for tune keys
 
 func generate_parsons_code(midi_sequence: String) -> String:
 	if midi_sequence.is_empty():
@@ -754,7 +778,8 @@ func generate_parsons_code(midi_sequence: String) -> String:
 			parsons += "S"
 			
 	return parsons
-	## scan a file contents and assemble a dictionary of source info from a source file
+
+## scan a file contents and assemble a dictionary of source info from a source file
 func find_source_info(abc_file_contents, folder_path) -> Dictionary:
 	var source_info = {
 		"source": "Unknown",
@@ -827,7 +852,8 @@ func find_source_info(abc_file_contents, folder_path) -> Dictionary:
 		print("Found URL in comments: " + comment_url)
 
 	return source_info
-			
+
+## Extract just the name of the folder from a path			
 func get_folder_name_from_path(path: String) -> String:
 	path = path.replace("\\", "/")
 
@@ -840,7 +866,8 @@ func get_folder_name_from_path(path: String) -> String:
 		if parts[i] != "":
 			return parts[i]
 	return "Unknown"
-				
+
+## FInds a URL in a file and returns it				
 func extract_url_from_line(line: String) -> String:
 	var url_start = -1
 	if "http://" in line:
