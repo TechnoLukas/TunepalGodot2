@@ -17,12 +17,12 @@ void process_recording(const PackedByteArray& audioData) {
         Transcriber transcriber(audioData);
         
         // AI-based transcription
-        godot::String aiTranscription = String(transcriber.transcribeWithAI().c_str());
-        if (!aiTranscription.is_empty()) {
-            UtilityFunctions::print("AI Transcription: ", aiTranscription);
-        } else {
-            UtilityFunctions::print("AI Transcription failed");
-        }
+        // godot::String aiTranscription = String(transcriber.transcribeWithAI().c_str());
+        // if (!aiTranscription.is_empty()) {
+        //     UtilityFunctions::print("AI Transcription: ", aiTranscription);
+        // } else {
+        //     UtilityFunctions::print("AI Transcription failed");
+        // }
         
         // Traditional transcription
         godot::String traditionalTranscription = String(transcriber.transcribe(nullptr, nullptr, false).c_str());
