@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dcaikfuw3vf3"]
 
-[ext_resource type="Script" path="res://addons/simple_midi/midi_file_player_example.gd" id="1_lbxca"]
+[ext_resource type="Script" uid="uid://dfr6spvmhn7q6" path="res://addons/simple_midi/midi_file_player_example.gd" id="1_lbxca"]
 
 [node name="MidiDemo" type="Node2D"]
 

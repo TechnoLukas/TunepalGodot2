@@ -17,10 +17,11 @@ static func add_tune_to_db(tune: Dictionary, source_id: int, source_info: Dictio
 	if result == false:
 		push_error("Failed to open database: " + db.get_error_message())
 		return false
-
+	db.query("BEGIN TRANSACTION;")
 	# Create source if needed
 	db.query_with_bindings("SELECT id FROM source WHERE id = ?", [source_id])
 	var num_source_ids = db.query_result.size()
+	var source_result = false
 	# db.query_with_bindings("SELECT id FROM source WHERE source = ?", [source_info["source"]])
 	# var num_source_names = db.query_result.size()
 	if num_source_ids == 0:
@@ -29,6 +30,7 @@ static func add_tune_to_db(tune: Dictionary, source_id: int, source_info: Dictio
 			"INSERT INTO source (id, source, extra, url, shortName) VALUES (?, ?, ?, ?, ?)",
 			[source_id, source_info["source"], "", source_info["url"], source_info["shortName"]]
 		)
+		source_result = true
 
 	# FIND THE next tune id
 	db.query("SELECT MAX(id) as max_id FROM tuneindex;")
@@ -143,7 +145,10 @@ static func add_tune_to_db(tune: Dictionary, source_id: int, source_info: Dictio
 		db.close_db()
 		return false
 	print("Successfully inserted tune: " + tune["title"] + " (ID: " + str(next_id) + ")")
+
+	db.query("COMMIT;")
 	db.close_db()
+	log_memory_usage("After addign a tune ")
 	return true
 
 static func import_source_directory(directory_path: String, source_id: int) -> int:
@@ -179,9 +184,11 @@ static func import_source_directory(directory_path: String, source_id: int) -> i
 					tune["source_file"] = file
 					add_tune_to_db(tune, source_id, source_info) # add_tune_to_db(tune, source_id)
 					tune_count += 1
+
+				tunes_data.clear() # clear the array for the next file
 			else:
 				push_error("Failed to open file: " + file_path)
-
+		OS.delay_msec(1) # delay prevent memory hogging
 		file = dir.get_next()
 
 	dir.list_dir_end()
@@ -213,7 +220,6 @@ static func import_files_from_directory(base_directory: String): # will change t
 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
 			var count = import_source_directory(source_path, source_id)
 			total_tune_count += count
-
 		folder = dir.get_next()
 	dir.list_dir_end()
 
@@ -240,6 +246,10 @@ static func import_files_from_directory(base_directory: String): # will change t
 	var base_source_id = tools.find_next_available_id(used_source_ids)
 	var default_count = import_source_directory(base_directory, base_source_id) # next available id
 	total_tune_count += default_count
-
 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
 	return true
+	
+static func log_memory_usage(tag: String):
+	var total_static_memory = Performance.get_monitor(Performance.MEMORY_STATIC)
+
+	print("%s - MEMORY USAGE ###################: %.2f MB" % [tag, total_static_memory / (1024.0 * 1024.0)])
