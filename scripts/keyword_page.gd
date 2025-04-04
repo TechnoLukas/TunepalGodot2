@@ -59,3 +59,8 @@ func _on_close_field_pressed() -> void:
 	tunelist.clear_list()
 	update_list("")
 	#search_line.emit_signal("text_submitted","")
+
+# func refresh_database():
+# 	var new_tunes = sqlite.load_db(clientside.prefix + "://assets/data/tunepal.db") #tunepal.db
+# 	tunelist.clear_list()
+# 	tunelist.append_items(new_tunes)

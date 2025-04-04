@@ -13,7 +13,7 @@
 #include <vector>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
-#include "transcription_engine.h"
+// #include "transcription_engine.h"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ private:
     int numSamples;
     vector<TranscribedNote> notes;
     string transcription;
-    std::unique_ptr<TranscriptionEngine> transcriptionEngine;
+    // std::unique_ptr<TranscriptionEngine> transcriptionEngine;
 
 public:
     // Constructors
@@ -43,7 +43,7 @@ public:
     // Member functions
     void setSignal(float* signal);
     string transcribe(float* progress, bool* interrupted, bool midi);
-    string transcribeWithAI();
+    // string transcribeWithAI();
     void postProcess(bool midi);
     void printTranscription();
 };

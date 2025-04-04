@@ -22,12 +22,12 @@ Transcriber::Transcriber() : signal(nullptr), numSamples(0) {
     }
     UtilityFunctions::print("Models loaded successfully");
     
-    try {
-        transcriptionEngine = std::make_unique<TranscriptionEngine>();
-        UtilityFunctions::print("TranscriptionEngine created");
-    } catch (const std::exception& e) {
-        UtilityFunctions::print("Failed to create TranscriptionEngine: ");
-    }
+//     try {
+//         transcriptionEngine = std::make_unique<TranscriptionEngine>();
+//         UtilityFunctions::print("TranscriptionEngine created");
+//     } catch (const std::exception& e) {
+//         UtilityFunctions::print("Failed to create TranscriptionEngine: ");
+//     }
 }
 
 Transcriber::Transcriber(const godot::PackedByteArray& audioData)
@@ -68,41 +68,41 @@ void Transcriber::setSignal(float* signal) {
     this->signal = signal;
 }
 
-string Transcriber::transcribeWithAI() {
-    UtilityFunctions::print("Starting AI transcription...");
+// string Transcriber::transcribeWithAI() {
+//     UtilityFunctions::print("Starting AI transcription...");
     
-    if (!signal || numSamples == 0) {
-        UtilityFunctions::print("Error: No audio data");
-        return "";
-    }
+//     if (!signal || numSamples == 0) {
+//         UtilityFunctions::print("Error: No audio data");
+//         return "";
+//     }
 
-    try {
-        // First try AI transcription
-        if (transcriptionEngine) {
-            transcriptionEngine->transcribeAudio(signal, numSamples);
-            string aiTranscription;
+//     try {
+//         // First try AI transcription
+//         if (transcriptionEngine) {
+//             transcriptionEngine->transcribeAudio(signal, numSamples);
+//             string aiTranscription;
             
-            for (const auto& note : transcriptionEngine->getNoteEvents()) {
-                string noteName = PitchSpeller::midiToABC(note.pitch);
-                aiTranscription += noteName;
-                UtilityFunctions::print("Note detected: ", noteName.c_str());
-            }
+//             for (const auto& note : transcriptionEngine->getNoteEvents()) {
+//                 string noteName = PitchSpeller::midiToABC(note.pitch);
+//                 aiTranscription += noteName;
+//                 UtilityFunctions::print("Note detected: ", noteName.c_str());
+//             }
             
-            if (!aiTranscription.empty()) {
-                UtilityFunctions::print("AI Transcription successful: ", aiTranscription.c_str());
-                return aiTranscription;
-            }
-        }
+//             if (!aiTranscription.empty()) {
+//                 UtilityFunctions::print("AI Transcription successful: ", aiTranscription.c_str());
+//                 return aiTranscription;
+//             }
+//         }
 
-        // Fallback to traditional transcription if AI fails
-        UtilityFunctions::print("Falling back to traditional transcription...");
-        return transcribe(nullptr, nullptr, false);
+//         // Fallback to traditional transcription if AI fails
+//         UtilityFunctions::print("Falling back to traditional transcription...");
+//         return transcribe(nullptr, nullptr, false);
 
-    } catch (const std::exception& e) {
-        // UtilityFunctions::print("Transcription error: ", e);
-        return "";
-    }
-}
+//     } catch (const std::exception& e) {
+//         // UtilityFunctions::print("Transcription error: ", e);
+//         return "";
+//     }
+// }
 
 string Transcriber::transcribe(float* progress, bool* interrupted, bool midi) {
     UtilityFunctions::print("Starting traditional transcription...");
