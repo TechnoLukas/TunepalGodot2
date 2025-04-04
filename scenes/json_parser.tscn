@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://bevi061loo6cq"]
+
+[sub_resource type="Resource" id="Resource_xhftq"]
+metadata/__load_path__ = "res://scripts/JSONParser.gd"
+
+[node name="JsonParser" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("Resource_xhftq")

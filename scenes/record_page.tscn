@@ -1,8 +1,7 @@
-[gd_scene load_steps=13 format=3 uid="uid://hm457dvpto61"]
+[gd_scene load_steps=12 format=3 uid="uid://hm457dvpto61"]
 
 [ext_resource type="Script" uid="uid://qk4appgi8v7o" path="res://scripts/record_page.gd" id="1_xbjfh"]
-[ext_resource type="Texture2D" uid="uid://6lp6rn81n33" path="res://assets/splash_logo.png" id="2_1wuus"]
-[ext_resource type="Script" uid="uid://dbrhqq5ppivl7" path="res://scenes/record_indicator.gd" id="3_86vvd"]
+[ext_resource type="Texture2D" uid="uid://c5aavi3u5tjx3" path="res://assets/images/tunepal.png" id="2_8s8ke"]
 [ext_resource type="Script" uid="uid://v5kbuati30v7" path="res://scripts/tunepal_indicator.gd" id="3_erksd"]
 [ext_resource type="PackedScene" uid="uid://dunsex3itg2wp" path="res://scenes/recording_results_page.tscn" id="4_1wuus"]
 
@@ -40,6 +39,25 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.196078, 0.196078, 0.196078, 1)
 
+[node name="tunepal_icon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -448.0
+offset_top = -448.0
+offset_right = 448.0
+offset_bottom = 448.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.25, 0.25)
+pivot_offset = Vector2(448, 448)
+size_flags_horizontal = 0
+size_flags_vertical = 0
+texture = ExtResource("2_8s8ke")
+
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -55,27 +73,6 @@ size_flags_vertical = 3
 [node name="center_part" type="Control" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-
-[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/center_part"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="record_indicator" type="Control" parent="VBoxContainer/center_part/CenterContainer"]
-layout_mode = 2
-script = ExtResource("3_86vvd")
-
-[node name="tunepal_icon" type="TextureRect" parent="VBoxContainer/center_part/CenterContainer"]
-custom_minimum_size = Vector2(200, 100)
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-texture = ExtResource("2_1wuus")
-expand_mode = 2
-stretch_mode = 5
 
 [node name="bottom_part" type="Control" parent="VBoxContainer"]
 layout_mode = 2

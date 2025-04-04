@@ -12,8 +12,7 @@ ext.versions = [
     javaVersion        : JavaVersion.VERSION_17,
     // Also update 'platform/android/detect.py#get_ndk_version()' when this is updated.
     ndkVersion         : '23.2.8568313',
-    splashscreenVersion: '1.0.1',
-    openxrVendorsVersion: '3.1.2-stable'
+    splashscreenVersion: '1.0.1'
 
 ]
 
@@ -69,11 +68,6 @@ ext.getExportTargetSdkVersion = { ->
     } catch (NumberFormatException ignored) {
         return versions.targetSdk
     }
-}
-
-ext.getGodotRenderingMethod = { ->
-    String renderingMethod = project.hasProperty("godot_rendering_method") ? project.property("godot_rendering_method") : ""
-    return renderingMethod
 }
 
 ext.getGodotEditorVersion = { ->

@@ -3,6 +3,7 @@ extends Control
 @onready var item_list = $SectionWithMargin/ScrollContainer/ListContainer
 @onready var item = $SectionWithMargin/ScrollContainer/ListContainer/list_item
 
+var item_data = {}
 
 signal show_tune_page(data)
 
@@ -10,66 +11,33 @@ signal show_tune_page(data)
 func _ready() -> void:
 	pass # Replace with function body.
 
-
-var item_data = []
-
-
 func add_item(data, percentage=""):
-	var new_item:Control = item.duplicate()
+	var new_item = item.duplicate()
 	item_list.add_child(new_item)
-	
-	var title_label = new_item.get_node("v_container/HBoxContainer/title_label")
-	var alt_title = new_item.get_node("v_container/alt_title")
-	var percent_label = new_item.get_node("v_container/HBoxContainer/percent_label")
-	var source = new_item.get_node("v_container/h_container/source")
-	var tune_type:Label = new_item.get_node("v_container/h_container/tune_type")
-	
-	tune_type.add_theme_color_override("font_color", RecordIndicator.tunepal_color)
-	
-	var button:Button = new_item.get_node("button")
-	button.pressed.connect(select_row.bind((item_data.size())))
-	
-	title_label.text=data["accented_title"]
-	if "confidence" in data: 		
+	new_item.get_node("h_container").get_node("title_label").text=data["accented_title"]
+	var percent_label = new_item.get_node("h_container").get_node("percent_label")
+	if "confidence" in data: # TODO: Somehow detect the percentage and visualize it.
 		percent_label.visible=true
 		percent_label.text = str(data["confidence"]) + "%"
 	else:
 		percent_label.visible=false
-	alt_title.text = format_text(data["alt_title"])
-	source.text = format_text(data["sourcename"])
-	tune_type.text = format_text(data["tune_type"]) + " in " + format_text(data["key_sig"])
-
-	item_data.append(data) 
+	new_item.get_node("button").pressed.connect(_button_pressed.bind(new_item.get_node("button"))) #.connect("pressed", self, "_button_pressed",[new_item.get_node("button")])
+	item_data[new_item] = data 
 	new_item.visible=true
 	
-func format_text(txt):
-	if txt == null:
-		return ""
-	else:
-		return str(txt)
+func _button_pressed(which):
+	var data = item_data[which.get_parent()]
+	print(data)
+	show_tune_page.emit(data)
 	
+
 	
 func clear_list():
 	for i in range(1,item_list.get_children().size()):
 		item_list.get_children()[i].queue_free()
-	item_data=[]
+	item_data={}
 	
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
-
-
-func select_row(item_id) -> void:		
-	var data = item_data[item_id]
-	print(data)
-	show_tune_page.emit(data)
-		
-		# handle_item_click(item_id, item)
-	
-	pass # Replace with function body.
-
-
-func _on_button_pressed() -> void:
-	print("Pressed")
-	pass # Replace with function body.

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://brv13q4w4qyed" path="res://scripts/scroll_container.gd" id="1_lohka"]
 [ext_resource type="Script" uid="uid://dht4gp5guhuuq" path="res://scripts/tunelist.gd" id="1_vsy3t"]
-[ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="3_u0vrs"]
+[ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="3_2l4vj"]
 
 [node name="TunesList" type="Control"]
 layout_mode = 3
@@ -64,72 +64,42 @@ theme_override_constants/separation = 0
 
 [node name="list_item" type="Control" parent="SectionWithMargin/ScrollContainer/ListContainer"]
 visible = false
-custom_minimum_size = Vector2(0, 110)
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
-mouse_filter = 1
 
 [node name="button" type="Button" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_bottom = 3.0
 grow_horizontal = 2
 grow_vertical = 2
 focus_mode = 0
-mouse_filter = 1
-theme = ExtResource("3_u0vrs")
+theme = ExtResource("3_2l4vj")
 
-[node name="v_container" type="VBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
+[node name="h_container" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 5.0
 offset_right = -5.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="title_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/HBoxContainer"]
+[node name="title_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/h_container"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_font_sizes/font_size = 24
-text = "Title"
+text = "The Thing"
 vertical_alignment = 1
 text_overrun_behavior = 4
 
-[node name="percent_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/HBoxContainer"]
+[node name="percent_label" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/h_container"]
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 text = "0%"
 horizontal_alignment = 2
-
-[node name="alt_title" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
-layout_mode = 2
-text = "Alt Title"
-
-[node name="h_container" type="HBoxContainer" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-
-[node name="source" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/h_container"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Source"
-
-[node name="tune_type" type="Label" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container/h_container"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "Tune Type"
-horizontal_alignment = 2
-
-[node name="HSeparator" type="HSeparator" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item/v_container"]
-clip_contents = true
-layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="SectionWithMargin/ScrollContainer/ListContainer/list_item"]
 clip_contents = true

@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://d1hk03qmyllbk"]
 
 [ext_resource type="PackedScene" uid="uid://wan12wmkrg8x" path="res://scenes/tunepage.tscn" id="1_2e0wy"]
-[ext_resource type="Script" path="res://scripts/randomtune_page.gd" id="1_j5omh"]
+[ext_resource type="Script" uid="uid://kyqe0e24b2ok" path="res://scripts/randomtune_page.gd" id="1_j5omh"]
 
 [node name="RandomtunePage" type="Control"]
 layout_mode = 3

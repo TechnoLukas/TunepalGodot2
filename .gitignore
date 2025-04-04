@@ -8,12 +8,10 @@
 /export/
 
 # Compiled Object files
-*.aar
+
 *.slo
 *.lo
 *.o
-*.os
-*.obj
 
 # Precompiled Headers
 *.gch
@@ -34,8 +32,7 @@
 *.app
 
 # Build folder
-build
-*.os
+/build/
 
 # IDE specific files
 .vscode/

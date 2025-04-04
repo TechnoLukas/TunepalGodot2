@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://bc40gn47635e1"]
+
+[sub_resource type="Resource" id="Resource_31cr3"]
+metadata/__load_path__ = "res://scripts/DownloadButton.gd"
+
+[node name="DownloadButton" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("Resource_31cr3")
+
+[node name="import_button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="DownloadButton" type="Button" parent="."]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="progress_bar" type="ProgressBar" parent="."]
+layout_mode = 0
+offset_right = 4.0
+offset_bottom = 27.0
+
+[node name="status_label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="file_dialog" type="FileDialog" parent="."]

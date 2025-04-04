@@ -1,9 +1,11 @@
 #include "register_types.h"
 
 #include "tunepal.h"
+#include "abctools.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
+#include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/godot.hpp>
 
 using namespace godot;
@@ -14,6 +16,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	}
 
 	ClassDB::register_class<Tunepal>();
+	ClassDB::register_class<tunepal::ABCTools>();
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
@@ -34,3 +37,11 @@ GDExtensionBool GDE_EXPORT example_library_init(GDExtensionInterfaceGetProcAddre
 	return init_obj.init();
 }
 }
+
+// void register_tunepal_types() {
+//     godot::ClassDB::register_class<tunepal::DBBuilder>();
+// }
+
+// void unregister_tunepal_types() {
+//     // Nothing to do here
+// }

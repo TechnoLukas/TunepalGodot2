@@ -1,12 +1,10 @@
-[gd_scene load_steps=20 format=3 uid="uid://wan12wmkrg8x"]
+[gd_scene load_steps=18 format=3 uid="uid://wan12wmkrg8x"]
 
 [ext_resource type="Script" uid="uid://b4ufh4s6b1hr4" path="res://scripts/tunepage.gd" id="1_7nh84"]
 [ext_resource type="Theme" uid="uid://bggoe68a28vso" path="res://theming/menu_theme.tres" id="1_fdvmm"]
 [ext_resource type="Theme" uid="uid://bmvr8uwjal61r" path="res://theming/menu_selector_theme.tres" id="2_tfmek"]
 [ext_resource type="FontFile" uid="uid://c273sghas3w00" path="res://assets/fonts/icomoon.ttf" id="3_xye2h"]
-[ext_resource type="Script" uid="uid://du6ef4cogx5c1" path="res://scenes/touch_scroll.gd" id="5_3xx33"]
 [ext_resource type="Theme" uid="uid://b6i4uc5xtfrq2" path="res://theming/tunelist_theme.tres" id="5_8j08h"]
-[ext_resource type="Texture2D" uid="uid://bsgs03l4gow32" path="res://tunepal001.svg" id="5_ormb2"]
 [ext_resource type="Script" uid="uid://nugsa7lvntm6" path="res://addons/midi/MidiPlayer.gd" id="6_06vdd"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_nyajq"]
@@ -154,6 +152,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MiddleSection/SectionWithMargin"]
 layout_mode = 1
@@ -167,28 +166,15 @@ offset_bottom = -5.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_spwj8")
-script = ExtResource("5_3xx33")
 
-[node name="ColorRect" type="ColorRect" parent="MiddleSection/SectionWithMargin/ScrollContainer"]
+[node name="abc_field" type="Label" parent="MiddleSection/SectionWithMargin/ScrollContainer"]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="abc_field" type="Label" parent="MiddleSection/SectionWithMargin/ScrollContainer/ColorRect"]
-visible = false
-layout_mode = 0
-offset_right = 332.0
-offset_bottom = 953.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_2kgbk")
-text = "ABCDEFGHIG"
+text = "ABC"
 autowrap_mode = 3
-
-[node name="abc_score" type="Sprite2D" parent="MiddleSection/SectionWithMargin/ScrollContainer/ColorRect"]
-texture = ExtResource("5_ormb2")
-centered = false
 
 [node name="BottomSection" type="Control" parent="."]
 custom_minimum_size = Vector2(0, 60)
@@ -287,46 +273,6 @@ label_settings = SubResource("LabelSettings_do5pl")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="timeline_slider" type="Control" parent="BottomSection/SectionWithMargin/HBoxContainer"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-theme = ExtResource("5_8j08h")
-
-[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.34902, 0.34902, 0.34902, 1)
-
-[node name="slider" type="HSlider" parent="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_right = -20.0
-grow_horizontal = 2
-grow_vertical = 2
-max_value = 1.0
-step = 0.01
-value = 0.1
-
-[node name="label" type="Label" parent="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = ""
-label_settings = SubResource("LabelSettings_do5pl")
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="stop_button" type="Button" parent="BottomSection/SectionWithMargin/HBoxContainer"]
 visible = false
 custom_minimum_size = Vector2(40, 0)
@@ -361,10 +307,6 @@ script = ExtResource("6_06vdd")
 
 [connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
 [connection signal="pressed" from="Container/container/return_button" to="." method="_on_return_button_pressed"]
-[connection signal="gui_input" from="MiddleSection/SectionWithMargin/ScrollContainer/ColorRect" to="MiddleSection/SectionWithMargin/ScrollContainer" method="_on_color_rect_gui_input"]
 [connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button" to="." method="_on_add_and_remove_button_pressed"]
 [connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button" to="." method="_on_play_and_pause_button_pressed"]
-[connection signal="drag_ended" from="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider/slider" to="." method="_on_slider_drag_ended"]
-[connection signal="drag_started" from="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider/slider" to="." method="_on_slider_drag_started"]
 [connection signal="finished" from="MidiPlayer" to="." method="_on_midi_player_finished"]
-[connection signal="inited" from="MidiPlayer" to="." method="_on_midi_player_inited"]
