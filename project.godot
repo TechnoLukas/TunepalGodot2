@@ -20,7 +20,7 @@ config/icon="res://assets/images/icon192x192.png"
 
 general/ios/mix_with_others=true
 driver/enable_input=true
-driver/mix_rate=11025
+driver/mix_rate=22050
 driver/mix_rate.web=22050
 
 [autoload]

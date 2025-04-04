@@ -77,6 +77,12 @@ texture = ExtResource("2_1wuus")
 expand_mode = 2
 stretch_mode = 5
 
+[node name="message_label" type="Label" parent="VBoxContainer/center_part/CenterContainer"]
+visible = false
+layout_mode = 2
+text = "Tunepal could not hear enough notes"
+horizontal_alignment = 1
+
 [node name="bottom_part" type="Control" parent="VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3

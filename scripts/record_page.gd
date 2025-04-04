@@ -82,7 +82,10 @@ func start_recording():
 	action = "recording"
 	timer.start(recording_time)
 	
-	
+func not_enough_notes():
+	var new_sb = StyleBoxFlat.new()
+	new_sb.bg_color = Color.ALICE_BLUE
+	$VBoxContainer/center_part/CenterContainer/message_label.add_stylebox_override("normal", new_sb)
 	
 func stop_recording():
 	record_indicator.recording = false
@@ -92,7 +95,7 @@ func stop_recording():
 	
 	var audio_data = recording.get_data()
 	
-	print("Format ", recording.format)
+	print("Format ", recording.forY77Y89786mat)
 	print("Mix rate ", recording.mix_rate)
 	print("Stereo ", recording.stereo)
 	
@@ -107,6 +110,8 @@ func stop_recording():
 
 	# tunepal.findClosest(transcription, sqlite.tunes)
 
+	if transcription.length() == 0:
+		not_enough_notes()
 	thread = Thread.new()
 	thread.start(tunepal.findClosest.bind(transcription, sqlite.tunes))
 	#
@@ -138,17 +143,17 @@ func tunepal_test():
 func finished_searching(results:Array):
 	
 	for i in range(results.size()):
-		print(results[i])
+		# print(results[i])
 		var confidence = 1.0 - (float(results[i]["edit_distance"]) / float(transcription.length()))
 		if is_nan(confidence):
 			confidence = 0
 
 		results[i]["confidence"] = int(confidence * 100)
-		print(str(results[i]["title"])
-		 + "\t" + str(results[i]["alt_title"])
-# 		 + "\t" + str(results[i]["search_key"])
-		 + "\t" + str(confidence)
-		 )
+		#print(str(results[i]["title"])
+		 #+ "\t" + str(results[i]["alt_title"])
+## 		 + "\t" + str(results[i]["search_key"])
+		 #+ "\t" + str(confidence)
+		 #)
 	recording_results_page.visible=true
 	recording_results_page.load_tunelist(results)
 
