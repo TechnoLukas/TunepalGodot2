@@ -95,7 +95,7 @@ func stop_recording():
 	
 	var audio_data = recording.get_data()
 	
-	print("Format ", recording.forY77Y89786mat)
+	print("Format ", recording.format)
 	print("Mix rate ", recording.mix_rate)
 	print("Stereo ", recording.stereo)
 	
@@ -103,7 +103,7 @@ func stop_recording():
 	# print(sqlite.tunes[0]["midi_sequence"])
 	# print("Audio buffer as array of floats:", audio_data)
 	
-	transcription = tunepal.transcribe(audio_data, 3)
+	transcription = tunepal.transcribe(audio_data, 3, recording.mix_rate, recording_time)
 	
 	print("Transcription: " + transcription)
 	# transcription = "ABACDEFGEDBGGBGDBBDEFGGFGEACBAEACBACDEFGGFGAFGEDBGABDBAAGFEACAEACBAC"

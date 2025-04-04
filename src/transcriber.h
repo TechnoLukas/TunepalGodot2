@@ -30,6 +30,8 @@ class Transcriber {
 private:
     float* signal;
     int numSamples;
+    int sampleRate;
+    float duration;
     vector<TranscribedNote> notes;
     string transcription;
     // std::unique_ptr<TranscriptionEngine> transcriptionEngine;
@@ -37,12 +39,12 @@ private:
 public:
     // Constructors
     Transcriber();
-    explicit Transcriber(const godot::PackedByteArray& audioData);
+    explicit Transcriber(const godot::PackedByteArray& audioData, int sampleRate, float duration);
     ~Transcriber();
 
     // Member functions
     void setSignal(float* signal);
-    string transcribe(float* progress, bool* interrupted, bool midi);
+    string transcribe(float* progress, bool * interrupted, bool midi);
     // string transcribeWithAI();
     void postProcess(bool midi);
     void printTranscription();

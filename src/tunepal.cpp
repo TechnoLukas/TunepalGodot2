@@ -68,9 +68,9 @@ void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_na
 }
 
 
-godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)
+godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental, int sampleRate, float duration)
 {
-		Transcriber transcriber(signal);
+		Transcriber transcriber(signal, sampleRate, duration);
 
 		g_fundamental = fundamental;
 

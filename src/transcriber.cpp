@@ -31,10 +31,13 @@ Transcriber::Transcriber() : signal(nullptr), numSamples(0) {
     */
 }
 
-Transcriber::Transcriber(const godot::PackedByteArray& audioData)
+Transcriber::Transcriber(const godot::PackedByteArray& audioData, int sampleRate, float duration)
 {
     // Since we're getting stereo data (4 bytes per sample - 2 bytes per channel),
     // the number of mono samples will be size/4
+
+    this->sampleRate = sampleRate;
+    this->duration = duration;
     int numSamples = audioData.size() / 4;
     signal = new float[numSamples];
     
@@ -130,7 +133,7 @@ string Transcriber::transcribe(float* progress, bool* interrupted, bool midi) {
         WindowFunc(HANNING, FRAME_SIZE, signal + startAt);
         PowerSpectrum(FRAME_SIZE, signal + startAt, spectrum);
         
-        float frequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, SAMPLE_RATE, FRAME_SIZE);
+        float frequency = mikelsFrequency(spectrum, FRAME_SIZE / 2, sampleRate, FRAME_SIZE);
         string currentNote = midi ? speller.spellFrequencyAsMidi(frequency) : speller.spellFrequency(frequency);
         
         UtilityFunctions::print("Detected frequency: ", frequency, " Note: ", currentNote.c_str());
@@ -139,7 +142,7 @@ string Transcriber::transcribe(float* progress, bool* interrupted, bool midi) {
             TranscribedNote note;
             note.spelling = currentNote;
             note.frequency = frequency;
-            note.onset = ((float)startAt) / SAMPLE_RATE;
+            note.onset = ((float)startAt) / (float) sampleRate;
             lastNote = currentNote;
             notes.push_back(note);
         }
@@ -168,7 +171,7 @@ void Transcriber::postProcess(bool midi)
 		notes[i].duration = notes[i + 1].onset - notes[i].onset;
 	}
 	// Now do the last note
-	notes[notes.size() - 1].duration = SAMPLE_TIME - notes[notes.size() - 1].onset;
+	notes[notes.size() - 1].duration = duration - notes[notes.size() - 1].onset;
 			
 	// Hardcode!!!
 	float durations[10000];

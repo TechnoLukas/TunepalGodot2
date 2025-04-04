@@ -25,7 +25,7 @@ public:
 	int edSubstring(const godot::String pattern_param, const godot::String text_param, const int thread_id);
 	int edSubstringOld(const godot::String pattern_param, const godot::String text_param, const int thread_id);
 
-	godot::String transcribe(const godot::PackedByteArray & signal, const int fundamental);
+	godot::String transcribe(const godot::PackedByteArray & signal, const int fundamental, int sampleRate, float duration);
 
 	godot::Array findClosest(const godot::String needle, const godot::Array haystack);
 
