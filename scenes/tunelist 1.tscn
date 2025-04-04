@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://clsijvkbb0ox7"]
+[gd_scene load_steps=4 format=3 uid="uid://igo6jskimo1g"]
 
 [ext_resource type="Script" uid="uid://brv13q4w4qyed" path="res://scripts/scroll_container.gd" id="1_lohka"]
 [ext_resource type="Script" uid="uid://dht4gp5guhuuq" path="res://scripts/tunelist.gd" id="1_vsy3t"]

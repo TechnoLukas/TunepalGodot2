@@ -287,6 +287,46 @@ label_settings = SubResource("LabelSettings_do5pl")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="timeline_slider" type="Control" parent="BottomSection/SectionWithMargin/HBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme = ExtResource("5_8j08h")
+
+[node name="background" type="ColorRect" parent="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.34902, 0.34902, 0.34902, 1)
+
+[node name="slider" type="HSlider" parent="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+max_value = 1.0
+step = 0.01
+value = 0.1
+
+[node name="label" type="Label" parent="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = ""
+label_settings = SubResource("LabelSettings_do5pl")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="stop_button" type="Button" parent="BottomSection/SectionWithMargin/HBoxContainer"]
 visible = false
 custom_minimum_size = Vector2(40, 0)
@@ -324,4 +364,7 @@ script = ExtResource("6_06vdd")
 [connection signal="gui_input" from="MiddleSection/SectionWithMargin/ScrollContainer/ColorRect" to="MiddleSection/SectionWithMargin/ScrollContainer" method="_on_color_rect_gui_input"]
 [connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button" to="." method="_on_add_and_remove_button_pressed"]
 [connection signal="pressed" from="BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button" to="." method="_on_play_and_pause_button_pressed"]
+[connection signal="drag_ended" from="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider/slider" to="." method="_on_slider_drag_ended"]
+[connection signal="drag_started" from="BottomSection/SectionWithMargin/HBoxContainer/timeline_slider/slider" to="." method="_on_slider_drag_started"]
 [connection signal="finished" from="MidiPlayer" to="." method="_on_midi_player_finished"]
+[connection signal="inited" from="MidiPlayer" to="." method="_on_midi_player_inited"]
