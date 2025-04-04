@@ -28,7 +28,7 @@ static func get_midi_sequence(abc: String, filename: String, s: int, t: int, m: 
 	tunepal.create_midi_file(abc, abc_file_path, midi_file_path, s, t, m, c)
 	print("MIDI file created")
 	#print("MIDI creation result: " + str(midi_result))
-	
+	DirAccess.remove_absolute(abc_file_path)
 	# Check if MIDI file exists
 	if not FileAccess.file_exists(midi_file_path):
 		print("No midi file created")
@@ -43,7 +43,8 @@ static func get_midi_sequence(abc: String, filename: String, s: int, t: int, m: 
 		print("didn't open the midi file")
 		push_error("Failed to open MIDI file: " + midi_file_path)
 		return ""
-		
+	DirAccess.remove_absolute(midi_file_path)
+
 	# Extract notes directly
 	var midi_data = midi_file.get_buffer(midi_file.get_length())
 	# print("the midi data: ", midi_data)

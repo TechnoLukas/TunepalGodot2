@@ -60,7 +60,7 @@ static func add_tune_to_db(tune: Dictionary, source_id: int, source_info: Dictio
 		midi_sequence = "0"
 
 	var parsons_code = tools.generate_parsons_code(midi_sequence)
-
+	tools.free()
 	var query = """
 	INSERT OR REPLACE INTO tuneindex (
 		id,
@@ -161,42 +161,64 @@ static func import_source_directory(directory_path: String, source_id: int) -> i
 	dir.list_dir_begin()
 	var file = dir.get_next()
 	var tune_count = 0
+	var batch_size = 10
 
 	while file != "":
 		if file.ends_with(".abc") or file.ends_with(".rtf"): # include rtfs
-			print("Processing " + file + " (source ID: " + str(source_id) + ")")
+			# print("Processing " + file + " (source ID: " + str(source_id) + ")")
 			var file_path = directory_path + file
 			var abc_file = FileAccess.open(file_path, FileAccess.READ)
-
+			var tunes_data = process_abc_file(file_path)
 			if abc_file != null:
-				var tools = ABCToolsClass.new()
-				var source_info = tools.find_source_info(abc_file, directory_path) # hopefully this works
+			 	# var tools = ABCToolsClass.new()
+				var source_info = ABCToolsClass.find_source_info(abc_file, directory_path) # hopefully this works
 				abc_file.close()
-				abc_file = FileAccess.open(file_path, FileAccess.READ)
-				var content = abc_file.get_as_text()
-				abc_file.close()
+				# DirAccess.remove_absolute(file_path)
+				#abc_file = FileAccess.open(file_path, FileAccess.READ)
+				# var content = abc_file.get_as_text()
+				# abc_file.close()
+				for i in range(tunes_data.size()):
+					var end_idx = min(i + batch_size, tunes_data.size())
+					var batch = tunes_data.slice(i, end_idx)
+					tune_count = process_batch(batch, tune_count, source_info, file_path, source_id)
+					OS.delay_msec(10) # to prevent freezing
+				# var tunes_data = ABCParser.parse_abc_content(content)
+				 # process the ABC file
+				# for tune in tunes_data:
+				# 	tune["source"] = source_info["source"]
+				# 	tune["shortName"] = source_info["shortName"]
+				# 	tune["url"] = source_info["url"]
+				# 	tune["source_file"] = file_path
+				# 	add_tune_to_db(tune, source_id, source_info) # add_tune_to_db(tune, source_id)
+				# 	tune_count += 1
 
-				var tunes_data = ABCParser.parse_abc_content(content)
-				for tune in tunes_data:
-					tune["source"] = source_info["source"]
-					tune["shortName"] = source_info["shortName"]
-					tune["url"] = source_info["url"]
-					tune["source_file"] = file
-					add_tune_to_db(tune, source_id, source_info) # add_tune_to_db(tune, source_id)
-					tune_count += 1
+			tunes_data.clear() # clear the array for the next file
 
-				tunes_data.clear() # clear the array for the next file
-			else:
-				push_error("Failed to open file: " + file_path)
 		OS.delay_msec(1) # delay prevent memory hogging
 		file = dir.get_next()
 
 	dir.list_dir_end()
 	print("Added " + str(tune_count) + " tunes from source ID " + str(source_id))
 	return tune_count
+	
+static func process_abc_file(file_path: String) -> Array:
+	var abc_file = FileAccess.open(file_path, FileAccess.READ)
+	if abc_file == null:
+		push_error("Failed to open file: " + file_path)
+		return []
+		
+	var content = abc_file.get_as_text()
+	abc_file.close()
+	# Process the content
+	# DirAccess.remove_absolute(file_path)
+	var tunes_data = ABCParser.parse_abc_content(content)
+	# Clear variables to help GarbageCollection
+	content = ""
+	return tunes_data
 
 static func import_files_from_directory(base_directory: String): # will change this to import from all folders
-	var tools = ABCToolsClass.new()
+	
+	# var tools = ABCToolsClass.new()
 	# ensure proper separator at the end of the path
 	if not base_directory.ends_with("/") and not base_directory.ends_with("\\"):
 		base_directory += "/"
@@ -208,6 +230,8 @@ static func import_files_from_directory(base_directory: String): # will change t
 
 	var total_tune_count = 0
 	var used_source_ids = [] # track source ids already used
+	var batch_size = 10
+	var processed_in_batch = 0
 
 	dir.list_dir_begin()
 	var folder = dir.get_next()
@@ -220,6 +244,12 @@ static func import_files_from_directory(base_directory: String): # will change t
 			print("Importing from source ID " + str(source_id) + " at path " + source_path)
 			var count = import_source_directory(source_path, source_id)
 			total_tune_count += count
+			processed_in_batch += count
+			
+			if processed_in_batch >= batch_size:
+				print("Processed %d tunes in this batch" % processed_in_batch)
+				OS.delay_msec(100) # to prevent freezing
+				processed_in_batch = 0
 		folder = dir.get_next()
 	dir.list_dir_end()
 
@@ -229,23 +259,35 @@ static func import_files_from_directory(base_directory: String): # will change t
 	# 2nd pass index the folders that AREN'T numbered
 	dir.list_dir_begin()
 	folder = dir.get_next()
-
+	var tools_class = ABCToolsClass.new()
 	while folder != "":
 		if dir.current_is_dir() and !folder.is_valid_int():
-			var tools_class = ABCToolsClass.new()
+			#var tools_class = ABCToolsClass.new()
 			var source_id = tools_class.find_next_available_id(used_source_ids)
 			used_source_ids.append(source_id)
 			var source_path = base_directory + folder + "/"
 			print("Importing from non-numeric folder '" + folder + "' with source ID " + str(source_id) + " at path " + source_path)
 			var count = import_source_directory(source_path, source_id)
 			total_tune_count += count
+			processed_in_batch += count
+			if processed_in_batch >= batch_size:
+				print("Processed %d tunes in this batch" % processed_in_batch)
+				OS.delay_msec(100)
+				processed_in_batch = 0
+			# tools_class.free()
 		folder = dir.get_next()
 	dir.list_dir_end()
-
+	# var tools = ABCToolsClass.new()
 	# last but not least if no numbered folders found, import directly from the base directory with default source ID 1
-	var base_source_id = tools.find_next_available_id(used_source_ids)
+	var base_source_id = tools_class.find_next_available_id(used_source_ids)
 	var default_count = import_source_directory(base_directory, base_source_id) # next available id
 	total_tune_count += default_count
+	processed_in_batch += default_count
+	if processed_in_batch >= batch_size:
+		print("Processed %d tunes in this batch" % processed_in_batch)
+		OS.delay_msec(100)
+		processed_in_batch = 0
+	tools_class.free()
 	print("Added " + str(total_tune_count) + " tunes to the database from all sources")
 	return true
 	
@@ -253,3 +295,17 @@ static func log_memory_usage(tag: String):
 	var total_static_memory = Performance.get_monitor(Performance.MEMORY_STATIC)
 
 	print("%s - MEMORY USAGE ###################: %.2f MB" % [tag, total_static_memory / (1024.0 * 1024.0)])
+
+static func process_batch(tunes: Array, tune_count: int, source_info: Dictionary, file_path: String, source_id: int) -> int:
+	# Process the batch of tunes
+	for tune in tunes:
+		tune["source"] = source_info["source"]
+		tune["shortName"] = source_info["shortName"]
+		tune["url"] = source_info["url"]
+		tune["source_file"] = file_path
+		add_tune_to_db(tune, source_id, source_info)
+		print("Processing tune: " + tune["title"])
+		# Add your processing code here
+		OS.delay_msec(10) # to prevent freezing
+		tune_count += 1
+	return tune_count
