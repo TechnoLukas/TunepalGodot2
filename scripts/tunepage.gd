@@ -3,11 +3,15 @@ extends Control
 @onready var return_button = $Container/container/return_button
 
 @onready var tune_label = $Container/container/label
-@onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/abc_field
+@onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect/abc_field
 @onready var abc_score:Sprite2D = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect/abc_score
 
 @onready var add_and_remove_button = $BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button
 @onready var play_and_pause_button = $BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button
+
+@onready var timeline_slider = $BottomSection/SectionWithMargin/HBoxContainer/timeline_slider/slider
+
+@onready var color_rect = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect
 
 @onready var midi_player = $MidiPlayer
 var midi_player_stoped_position = 0.0
@@ -18,9 +22,13 @@ var play_and_pause_symbols_idx = 0
 var add_and_remove_symbols = ["",""]
 var add_and_remove_symbols_idx = 0
 
+var timeline_slider_is_dragging = false
+
 var this_tune
 
 var tunepal = Tunepal.new()
+
+var midi_length = 0
 
 signal returned
 
@@ -32,7 +40,25 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	pass
+	if midi_player:
+		if midi_player.playing:
+			if not timeline_slider_is_dragging:
+				update_timeline_slider_position()
+			#var length = float(len( midi_player.track_status.events ))
+			#var pos = float(midi_player.track_status.event_pointer)
+			#var midi_position = snapped(midi_player.position, 0.1)
+			#var midi_k = snapped(midi_position/pos,1)
+			#print("1: ",pos, " / " ,length, " / ", pos/length, "\n2: ",midi_position, " / ", midi_k, " / ", length*midi_k, "\n3: ", midi_length)
+
+func update_timeline_slider_position():
+	timeline_slider.value = snapped(midi_player.position/midi_length, 0.01)
+	
+func update_tune_from_slider(v):
+	if midi_player.playing:
+		midi_player.stop()
+		midi_player.play(midi_length*v)
+	else:
+		midi_player_stoped_position = midi_length*v
 
 func string_to_packed_byte_array(input_string: String) -> PackedByteArray:
 	var byte_array = PackedByteArray()
@@ -110,8 +136,20 @@ func show_tune_page(data: Variant) -> void:
 	var latest_file = get_highest_tunepal_file(data_folder)
 	var texture = load_texture_from_path(latest_file)
 	abc_score.texture = texture
+	color_rect.custom_minimum_size = texture.get_size()
+	
 	midi_player.file = data_folder + "/tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
+	
+	midi_player_stoped_position = 0.0
+	timeline_slider.value = 0.00
+	midi_player._prepare_to_play()
+	midi_player.playing = false
+	play_and_pause_symbols_idx = 0
+	update_play_and_pause_button_icon()
+	
+
+	
 	#midi_player.soundfont # "res://assets/Live HQ Natural SoundFont GM.sf2" is good
 	
 	if this_tune in sqlite.user_tunes:
@@ -156,6 +194,29 @@ func _on_midi_player_finished() -> void:
 	update_play_and_pause_button_icon()
 	midi_player_stoped_position = 0.0
 	
+
+func _on_midi_player_inited(length) -> void:
+	#var length = midi_player.track_status_events[len(midi_player.track_status_events)-1].time
+	print("inited: ", length)
+	midi_length = length
+
+
+func _on_slider_drag_started() -> void:
+	timeline_slider_is_dragging = true
+	play_and_pause_symbols_idx = 1
+	update_play_and_pause_button_icon()
+
+
+func _on_slider_drag_ended(value_changed: bool) -> void:
+	timeline_slider_is_dragging = false
+	if midi_player.playing:
+		play_and_pause_symbols_idx = 1
+	else:
+		play_and_pause_symbols_idx = 0
+	update_play_and_pause_button_icon()
+	update_tune_from_slider(timeline_slider.value)
+
+
 
 ## BOOKMARKS BUTTONS 
 

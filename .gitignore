@@ -8,7 +8,7 @@
 /export/
 
 # Compiled Object files
-
+*.aar
 *.slo
 *.lo
 *.o
@@ -34,7 +34,8 @@
 *.app
 
 # Build folder
-/build/
+build
+*.os
 
 # IDE specific files
 .vscode/
