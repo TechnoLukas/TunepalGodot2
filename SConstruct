@@ -32,7 +32,7 @@ src_dirs = [
     "src/*.cpp",
     # "src/Model/*.cpp",
     "src/abc2midi/*.c",
-    # "src/abcm2ps/*.c",
+    "src/abcm2ps/*.c",
 ]
 
 sources = []
