@@ -297,8 +297,7 @@ custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 size_flags_horizontal = 3
 theme = ExtResource("2_63dwq")
-text = "Help
-"
+text = "Help"
 label_settings = SubResource("LabelSettings_v3415")
 
 [node name="about_scene_button" type="Button" parent="Menu/VBoxContainer"]

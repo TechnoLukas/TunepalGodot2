@@ -55,11 +55,9 @@ void convCRLF(char * newLine, char * dest, char * src) {
     * dest = '\0';
 }
 
-// char * createSvgFile(const char * notation, const char * abcFileName, const char * svgFileName)
-// {
-
-    
-//     char fixed[2048];
+void createSvgFile(const char * notation, const char * abcFileName, const char * svgFileName)
+{
+    char fixed[2048];
 
 //     convCRLF("\n", fixed, (char *) notation);
 
@@ -70,24 +68,24 @@ void convCRLF(char * newLine, char * dest, char * src) {
 
 //     pastX = strstr(pastX, "\n");
 
-//     FILE* fp = fopen(abcFileName, "wb");
-//     // FILE * fp = fopen(abcFileName, "wb");
-//     if (fp == NULL)
-//     {
-//         UtilityFunctions::print("ERROR: Could not open abc file");
-//         return "ERROR: Could not open abc file return";
-//     }
-//     int ret = fprintf(fp, "X:1\n");
-//     if (ret < 0)
-//     {
-//         return "ERROR: fprint returned negative value";
-//     }
+    FILE* fp = fopen(abcFileName, "wb");
+    // FILE * fp = fopen(abcFileName, "wb");
+    if (fp == NULL)
+    {
+        UtilityFunctions::print("ERROR: Could not open abc file");
+        return;
+    }
+    int ret = fprintf(fp, "X:1\n");
+    if (ret < 0)
+    {
+        return;
+    }
 
-//     ret = fprintf(fp, "%s", pastX + 1);
-//     if (ret < 0)
-//     {
-//         return "ERROR: fprint returned negative value";
-//     }
+    ret = fprintf(fp, "%s", pastX + 1);
+    if (ret < 0)
+    {
+        return;
+    }
 
 //     fflush(fp);
 
@@ -95,28 +93,24 @@ void convCRLF(char * newLine, char * dest, char * src) {
 
 //     // abcm2ps -g tunepal.abc -O tunepal.svg
 
-//     char * argv[5];
-//     argv[0] = "abcm2ps"; // Dummy value because we dont actually spawn the program
-//     argv[1] = "-g";
-//     argv[2] = "tunepal.abc";
-//     argv[3] = "-O";
-//     argv[4] = "tunepal.svg";
+    char * argv[5];
+    argv[0] = "abcm2ps"; // Dummy value because we dont actually spawn the program
+    argv[1] = "-v"; // Dummy value because we dont actually spawn the program
+    argv[2] = (char *) abcFileName;    
+    argv[3] = "-O";
+    argv[4] = (char *) svgFileName;    
 
 
-
-//     abc2psmain(5, argv);
-
-//     static char retstr[2000];
-//     sprintf(retstr, "svgFileName = %s", svgFileName);
-
-//     UtilityFunctions::print("after");
-    
-//     UtilityFunctions::print(abcFileName);
-//     UtilityFunctions::print(svgFileName);
+    UtilityFunctions::print(abcFileName);
+    UtilityFunctions::print(svgFileName);
 
 
-//     return retstr;
-// }
+    UtilityFunctions::print("before");
+    int r = abc2psmain(5, argv);
+    printf("I got to the end!!!: %d ", r);
+
+    return;
+}
 
 char * createMidiFile(const char * notation, const char * abcFileName, const char * midiFileName, int speed, int transpose, int melody, int chords)
 {

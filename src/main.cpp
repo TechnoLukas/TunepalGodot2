@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 using namespace godot;
+/*
 
 void process_recording(const PackedByteArray& audioData) {
     try {
@@ -36,6 +37,8 @@ void process_recording(const PackedByteArray& audioData) {
         // UtilityFunctions::print("Error processing recording: ", e.what());
     }
 }
+
+*
 
 int main() {
     return 0;

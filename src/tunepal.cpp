@@ -88,6 +88,10 @@ void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_na
     catch (...) {
         UtilityFunctions::print("Unknown exception in create_midi_file");
     }
+    char svg_file_chars[2048];
+    strcpy(svg_file_chars, svg_file_name.ascii().get_data());
+    createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
+    UtilityFunctions::print("I got past the end!!");
 }
 
 godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)

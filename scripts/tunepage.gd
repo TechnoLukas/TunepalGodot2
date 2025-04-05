@@ -3,10 +3,15 @@ extends Control
 @onready var return_button = $Container/container/return_button
 
 @onready var tune_label = $Container/container/label
-@onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/abc_field
+@onready var abc_field = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect/abc_field
+@onready var abc_score:Sprite2D = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect/abc_score
 
 @onready var add_and_remove_button = $BottomSection/SectionWithMargin/HBoxContainer/add_and_remove_button
 @onready var play_and_pause_button = $BottomSection/SectionWithMargin/HBoxContainer/play_and_pause_button
+
+@onready var timeline_slider = $BottomSection/SectionWithMargin/HBoxContainer/timeline_slider/slider
+
+@onready var color_rect = $MiddleSection/SectionWithMargin/ScrollContainer/ColorRect
 
 @onready var midi_player = $MidiPlayer
 var midi_player_stoped_position = 0.0
@@ -17,9 +22,13 @@ var play_and_pause_symbols_idx = 0
 var add_and_remove_symbols = ["",""]
 var add_and_remove_symbols_idx = 0
 
+var timeline_slider_is_dragging = false
+
 var this_tune
 
 var tunepal = Tunepal.new()
+
+var midi_length = 0
 
 signal returned
 
@@ -31,7 +40,25 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	pass
+	if midi_player:
+		if midi_player.playing:
+			if not timeline_slider_is_dragging:
+				update_timeline_slider_position()
+			#var length = float(len( midi_player.track_status.events ))
+			#var pos = float(midi_player.track_status.event_pointer)
+			#var midi_position = snapped(midi_player.position, 0.1)
+			#var midi_k = snapped(midi_position/pos,1)
+			#print("1: ",pos, " / " ,length, " / ", pos/length, "\n2: ",midi_position, " / ", midi_k, " / ", length*midi_k, "\n3: ", midi_length)
+
+func update_timeline_slider_position():
+	timeline_slider.value = snapped(midi_player.position/midi_length, 0.01)
+	
+func update_tune_from_slider(v):
+	if midi_player.playing:
+		midi_player.stop()
+		midi_player.play(midi_length*v)
+	else:
+		midi_player_stoped_position = midi_length*v
 
 func string_to_packed_byte_array(input_string: String) -> PackedByteArray:
 	var byte_array = PackedByteArray()
@@ -40,11 +67,59 @@ func string_to_packed_byte_array(input_string: String) -> PackedByteArray:
 		byte_array.push_back(int(value.strip_edges()))  # Convert each item to integer and add to array
 	return byte_array
 	
+func load_texture_from_path(path: String) -> Texture2D:
+	var image = Image.new()
+	var error = image.load(path)  # Load the image from disk
+	
+	if error != OK:
+		print("Failed to load image:", path)
+		return null
+	
+	var texture = ImageTexture.create_from_image(image)
+	return texture
+
+func delete_svg_files():
+	var data_folder = OS.get_user_data_dir()
+	var dir = DirAccess.open(data_folder)
+	
+	if dir:
+		for file_name in dir.get_files():
+			if file_name.ends_with(".svg"):
+				var file_path = data_folder.path_join(file_name)
+				var err = dir.remove(file_path)
+				if err == OK:
+					print("Deleted: ", file_path)
+				else:
+					print("Failed to delete: ", file_path)
+	else:
+		print("Failed to open directory")
+
+func get_highest_tunepal_file(folder_path: String) -> String:
+	var dir = DirAccess.open(folder_path)
+	if not dir:
+		print("Failed to open directory")
+		return ""
+	
+	var highest_number = -1
+	var highest_file_path = ""
+	
+	for file_name in dir.get_files():
+		if file_name.begins_with("tunepal") and file_name.ends_with(".svg"):
+			var number_part = file_name.lstrip("tunepal").rstrip(".svg")
+			var file_number = number_part.to_int()
+			
+			if file_number > highest_number:
+				highest_number = file_number
+				highest_file_path = folder_path.path_join(file_name)
+	
+	return highest_file_path
 
 func show_tune_page(data: Variant) -> void:
-	this_tune = data
+
 	add_and_remove_symbols_idx = 0
-	
+		
+	delete_svg_files()
+	this_tune = data
 	# tunepal.create_s
 	
 	self.visible=true
@@ -52,14 +127,29 @@ func show_tune_page(data: Variant) -> void:
 	var midi_sequence = string_to_packed_byte_array(data["midi_sequence"])
 	tune_label.text = data["accented_title"]
 	abc_field.text=data["notation"]
+	# delete_svg_files()
 	
 	var data_folder = OS.get_user_data_dir()
-	# tunepal.create_midi_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.mid", 4, 0, 0, 0)
-	
-	# tunepal.create_svg_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.svg")
+	tunepal.create_midi_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.mid", 4, 0, 0, 0)
+
+	tunepal.create_svg_file(data["notation"], data_folder + "/tunepal.abc", data_folder + "/tunepal.svg")	
+	var latest_file = get_highest_tunepal_file(data_folder)
+	var texture = load_texture_from_path(latest_file)
+	abc_score.texture = texture
+	color_rect.custom_minimum_size = texture.get_size()
 	
 	midi_player.file = data_folder + "/tunepal.mid"
 	midi_player.soundfont = clientside.prefix + "://assets/soundfonts/GM.sf2"
+	
+	midi_player_stoped_position = 0.0
+	timeline_slider.value = 0.00
+	midi_player._prepare_to_play()
+	midi_player.playing = false
+	play_and_pause_symbols_idx = 0
+	update_play_and_pause_button_icon()
+	
+
+	
 	#midi_player.soundfont # "res://assets/Live HQ Natural SoundFont GM.sf2" is good
 	
 	if this_tune in sqlite.user_tunes:
@@ -104,6 +194,29 @@ func _on_midi_player_finished() -> void:
 	update_play_and_pause_button_icon()
 	midi_player_stoped_position = 0.0
 	
+
+func _on_midi_player_inited(length) -> void:
+	#var length = midi_player.track_status_events[len(midi_player.track_status_events)-1].time
+	print("inited: ", length)
+	midi_length = length
+
+
+func _on_slider_drag_started() -> void:
+	timeline_slider_is_dragging = true
+	play_and_pause_symbols_idx = 1
+	update_play_and_pause_button_icon()
+
+
+func _on_slider_drag_ended(value_changed: bool) -> void:
+	timeline_slider_is_dragging = false
+	if midi_player.playing:
+		play_and_pause_symbols_idx = 1
+	else:
+		play_and_pause_symbols_idx = 0
+	update_play_and_pause_button_icon()
+	update_tune_from_slider(timeline_slider.value)
+
+
 
 ## BOOKMARKS BUTTONS 
 

@@ -70,7 +70,10 @@ dependencies {
     }
 
     // .NET dependencies
-    monoImplementation fileTree(dir: 'monoLibs', include: ['*.jar'])
+    String jar = '../../../../modules/mono/thirdparty/libSystem.Security.Cryptography.Native.Android.jar'
+    if (file(jar).exists()) {
+        monoImplementation files(jar)
+    }
 }
 
 android {
@@ -102,7 +105,10 @@ android {
             abiFilters export_abi_list
         }
 
-        manifestPlaceholders = [godotEditorVersion: getGodotEditorVersion()]
+        manifestPlaceholders = [
+            godotEditorVersion: getGodotEditorVersion(),
+            godotRenderingMethod: getGodotRenderingMethod()
+        ]
 
         // Feel free to modify the application id to your own.
         applicationId getExportPackageName()
@@ -250,7 +256,7 @@ task copyAndRenameBinary(type: Copy) {
 
     boolean isAab = exportFormat == "aab"
     boolean isMono = exportEdition == "mono"
-    String filenameSuffix = exportBuildType
+    String filenameSuffix = isAab ? "${exportEdition}-${exportBuildType}" : exportBuildType
     if (isMono) {
         filenameSuffix = isAab ? "${exportEdition}-${exportBuildType}" : "${exportEdition}${exportBuildTypeCapitalized}"
     }
