@@ -384,4 +384,12 @@ void ABCTools::_bind_methods() {
     godot::ClassDB::bind_static_method("ABCTools", godot::D_METHOD("get_flag"), &ABCTools::get_flag);
 }
 
+void initialize_module(godot::ModuleInitializationLevel level) {
+    // Initialize the module here if needed
+    if (level == godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
+        godot::ClassDB::register_class<ABCTools>();
+    }
+
+}
+
 } // namespace tunepal
