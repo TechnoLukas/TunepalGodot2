@@ -81,6 +81,7 @@ void createSvgFile(const char * notation, const char * abcFileName, const char *
         return;
     }
 
+    float pastX = 0.0f;
     ret = fprintf(fp, "%s", pastX + 1);
     if (ret < 0)
     {

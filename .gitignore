@@ -33,7 +33,7 @@
 
 # Build folder
 build
-*.os
+# *.os
 
 # IDE specific files
 .vscode/
@@ -51,8 +51,4 @@ src/ThirdParty/external/xsimd/**
 
 # Environment variables
 .env
-<<<<<<< HEAD
 env.local
-=======
-env.local
->>>>>>> dev-3

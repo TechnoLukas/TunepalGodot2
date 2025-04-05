@@ -20,7 +20,7 @@ void Tunepal::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("finished_searching"), &Tunepal::finished_searching);
 	ClassDB::bind_method(D_METHOD("create_midi_file"), &Tunepal::create_midi_file);
     // ClassDB::bind_method(D_METHOD("create_midi_in_memory"), &Tunepal::create_midi_in_memory);
-	// ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
+	ClassDB::bind_method(D_METHOD("create_svg_file"), &Tunepal::create_svg_file);
     ClassDB::add_signal("Tunepal", MethodInfo("search_completed", PropertyInfo(Variant::ARRAY, "results")));
     ClassDB::bind_method(D_METHOD("extract_notes_from_midi"), &Tunepal::extract_notes_from_midi);
 	
@@ -45,17 +45,18 @@ int g_fundamental = 3;
 
 
 
-// void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
-// {
-//     char notation_chars[2048];    
-//     strcpy(notation_chars, notation.ascii().get_data());
-//     char abc_file_chars[2048];
-//     strcpy(abc_file_chars, abc_file_name.ascii().get_data());
+void Tunepal::create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name)
+{
+    char notation_chars[2048];    
+    strcpy(notation_chars, notation.ascii().get_data());
+    char abc_file_chars[2048];
+    strcpy(abc_file_chars, abc_file_name.ascii().get_data());
     
-//     char svg_file_chars[2048];
-//     strcpy(svg_file_chars, svg_file_name.ascii().get_data());
-//    // createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
-// }
+    char svg_file_chars[2048];
+    strcpy(svg_file_chars, svg_file_name.ascii().get_data());
+    createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
+    UtilityFunctions::print("I got past the end!!");
+}
 
 void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords) {
     UtilityFunctions::print("Creating MIDI file...");
@@ -88,10 +89,6 @@ void Tunepal::create_midi_file(godot::String notation, godot::String abc_file_na
     catch (...) {
         UtilityFunctions::print("Unknown exception in create_midi_file");
     }
-    char svg_file_chars[2048];
-    strcpy(svg_file_chars, svg_file_name.ascii().get_data());
-    createSvgFile(notation_chars, abc_file_chars, svg_file_chars);
-    UtilityFunctions::print("I got past the end!!");
 }
 
 godot::String Tunepal::transcribe(const godot::PackedByteArray & signal, const int fundamental)

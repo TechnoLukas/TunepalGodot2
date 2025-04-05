@@ -36,7 +36,7 @@ public:
 	void create_midi_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords);
 	void create_html_file(godot::String notation, godot::String abc_file_name, godot::String midi_file_name, int speed, int transpose, int melody, int chords);
 	// godot::PackedByteArray create_midi_in_memory(const godot::String &notation, int speed, int transpose, int melody, int chords);
-	// void create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name);
+	void create_svg_file(godot::String notation, godot::String abc_file_name, godot::String svg_file_name);
 	godot::String extract_notes_from_midi(const godot::PackedByteArray &midi_data);
     // int edSubstring(string
 };
