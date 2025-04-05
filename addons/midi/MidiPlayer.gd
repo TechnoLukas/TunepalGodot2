@@ -324,11 +324,8 @@ signal looped
 ## 終了
 signal finished
 
-<<<<<<< HEAD
-=======
 signal inited # init happened
 
->>>>>>> dev-3
 ## 準備
 func _ready( ):
 	if AudioServer.get_bus_index( self.midi_master_bus_name ) == -1:
@@ -463,11 +460,8 @@ func _init_track( ) -> void:
 	self.last_position = track_status_events[len(track_status_events)-1].time
 	self.track_status.events = track_status_events
 	self.track_status.event_pointer = 0
-<<<<<<< HEAD
-=======
 	
 	self.emit_signal( "inited", self.last_position )
->>>>>>> dev-3
 
 ## SMF解析
 func _analyse_smf( ) -> void:
