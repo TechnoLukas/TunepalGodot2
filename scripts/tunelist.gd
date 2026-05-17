@@ -14,7 +14,18 @@ func _ready() -> void:
 func add_item(data):
 	var new_item = item.duplicate()
 	item_list.add_child(new_item)
-	new_item.get_node("label").text=data["accented_title"]
+	
+	var meta = []
+	if data["tune_type"] != null:
+		meta.append(data["tune_type"])
+	if data["key_sig"] != null:
+		meta.append(data["key_sig"])
+		
+	var label_text = data["accented_title"]
+	if meta.size() > 0:
+		label_text += "  (" + ", ".join(meta) + ")"
+		
+	new_item.get_node("label").text=label_text
 	new_item.get_node("button").pressed.connect(_button_pressed.bind(new_item.get_node("button"))) #.connect("pressed", self, "_button_pressed",[new_item.get_node("button")])
 	item_data[new_item] = data 
 	new_item.visible=true
